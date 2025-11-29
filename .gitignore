@@ -53,3 +53,4 @@ build/
 *.db
 *.sqlite
 
+.cursor
