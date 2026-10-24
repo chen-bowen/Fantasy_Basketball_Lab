@@ -53,4 +53,8 @@ build/
 *.db
 *.sqlite
 
-.cursor
+.cursor.cache
+
+# fantasy draft lab runtime state
+backend/app/store/
+backend/.cache/

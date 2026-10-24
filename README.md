@@ -1,244 +1,108 @@
-# Category Edge - AI-Powered Fantasy Basketball Streaming Assistant
+# Fantasy Draft Lab — Draft Simulator
 
-An AI-powered tool for making optimal daily streaming decisions in fantasy basketball category leagues.
+Single-player, category-league fantasy basketball mock draft. You pick against
+11 rule-based bots, watch your team's category identity develop, and review
+the result.
 
-## Features
+**League format:** head-to-head categories · 12 teams · snake draft · 13-round
+rosters · one human slot. Categories: PTS, REB, AST, STL, BLK, 3PM, FG%, FT%,
+TO. No positional requirements (deliberate V1 simplification).
 
-- **Auto-Sync Leagues**: Connect Yahoo and ESPN leagues automatically
-- **AI Recommendations**: Personalized streaming recommendations that learn from your decisions
-- **Real-Time Updates**: Live category standings during games
-- **Optimal Add/Drop Pairs**: AI suggests who to add AND who to drop
-- **Mid-Game Breakout Alerts**: Push notifications for breakout performances
+**Architecture:** Python/FastAPI backend owns the draft engine, bot logic,
+category analysis, player data pipeline, and JSON persistence. The React
+frontend is a thin presentation client over `http://localhost:8000/api`.
 
-## Tech Stack
-
-### Frontend
-- Next.js 14 (App Router)
-- TypeScript
-- TailwindCSS
-
-### Backend
-- FastAPI (Python)
-- PostgreSQL
-- Redis
-- Celery (background tasks)
-
-### APIs
-- Yahoo Fantasy Sports API (free)
-- NBA Stats API (free)
-- ESPN (web scraping)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- Python 3.11+
-- PostgreSQL 15+ (or Docker)
-- Redis 7+ (or Docker)
-- Docker Desktop (recommended for easiest setup)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd fantasy_ring
-   ```
-
-2. **Set up frontend**
-   ```bash
-   npm install
-   ```
-
-3. **Set up backend**
-   ```bash
-   # Install uv if not already installed
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   # Or with pip: pip install uv
-   
-   cd backend
-   # uv will create a virtual environment automatically
-   uv sync
-   ```
-
-4. **Set up environment variables**
-   ```bash
-   cp backend/.env.example backend/.env
-   # Edit backend/.env with your configuration
-   ```
-
-5. **Set up Docker (if using Docker Compose)**
-   
-   **Ensure Docker is available:**
-   ```bash
-   # Run setup script to add Docker to PATH
-   ./scripts/setup-docker-path.sh
-   source ~/.zshrc  # or ~/.bash_profile
-   
-   # Or ensure Docker is running (auto-starts if installed)
-   ./scripts/docker-ensure.sh
-   ```
-   
-   **Install Docker Desktop (if not installed):**
-   ```bash
-   # Option 1: Homebrew
-   brew install --cask docker
-   
-   # Option 2: Download from website
-   # Visit: https://www.docker.com/products/docker-desktop/
-   ```
-   
-   **Installation:** Download from https://www.docker.com/products/docker-desktop/ or `brew install --cask docker`
-
-6. **Set up database**
-   
-   **Option A: Using Docker Compose (recommended)**
-   ```bash
-   # Ensure Docker is running
-   ./scripts/docker-ensure.sh
-   
-   # Start services:
-   docker compose up -d db redis
-   
-   # Or start everything (backend + celery + db + redis):
-   docker compose up -d
-   
-   # See DOCKER_SETUP.md for detailed Docker instructions
-   ```
-   
-   **Option B: Manual Setup (if Docker is not available)**
-   
-   **PostgreSQL:**
-   ```bash
-   # Install PostgreSQL (macOS with Homebrew)
-   brew install postgresql@15
-   brew services start postgresql@15
-   
-   # Create database
-   createdb category_edge
-   
-   # Or using psql
-   psql postgres
-   CREATE DATABASE category_edge;
-   \q
-   ```
-   
-   **Redis:**
-   ```bash
-   # Install Redis (macOS with Homebrew)
-   brew install redis
-   brew services start redis
-   
-   # Verify Redis is running
-   redis-cli ping
-   # Should return: PONG
-   ```
-   
-   **Update .env file:**
-   ```bash
-   # Edit backend/.env and set:
-   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/category_edge
-   REDIS_URL=redis://localhost:6379/0
-   ```
-
-7. **Run database migrations**
-   ```bash
-   cd backend
-   uv run alembic upgrade head
-   # Or: make migrate
-   ```
-
-8. **Start development servers**
-
-   Terminal 1 - Backend:
-   ```bash
-   cd backend
-   uv run uvicorn app.main:app --reload
-   ```
-
-   Terminal 2 - Celery Worker:
-   ```bash
-   cd backend
-   uv run celery -A app.tasks.sync_tasks.celery_app worker --loglevel=info
-   ```
-
-   Terminal 3 - Frontend:
-   ```bash
-   npm run dev
-   ```
-
-8. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Docs: http://localhost:8000/docs
-
-## Quick Start with Docker (Recommended)
+## Commands
 
 ```bash
-# 1. Ensure Docker is in PATH (one-time setup)
-./scripts/setup-docker-path.sh
-source ~/.zshrc
+# one-time setup
+npm install                                # frontend deps
+uv venv && uv pip install -r backend/requirements.txt   # backend deps
 
-# 2. Ensure Docker is running
-./scripts/docker-ensure.sh
+# run both servers (two terminals)
+npm run dev:backend    # FastAPI on :8000
+npm run dev            # Vite on :5173 (proxies /api → :8000)
 
-# 3. Start all services
-docker compose up -d
-
-# 4. Run migrations
-docker compose exec backend uv run alembic upgrade head
-
-# 5. Access the app
-# Frontend: http://localhost:3000
-# Backend: http://localhost:8000/docs
+# tests & checks
+npm test               # pytest: engine/analysis/bot/persistence suite
+npm run build          # typecheck + production build
+npm run smoke          # headless end-to-end UI test (needs both servers)
+npm run data:fetch     # regenerate backend/app/data/players.json from live stats
 ```
 
-## Project Structure
+## Player data
+
+The engine consumes one **frozen dataset**: `backend/app/data/players.json`
+(280 players). `npm run data:fetch` regenerates it:
+
+- Per-game stats from `stats.nba.com` (`leaguedashplayerstats`), current
+  season.
+- Players who missed most of the season fall back to the prior season's
+  stats ("last available season" rule) — tagged via `asOfSeason`.
+- Positions from ESPN's roster API; unmatched players get a stats-based guess.
+- Raw responses cache in `.cache/` for 12h (`--no-cache` to bypass).
+
+## Backend layout
 
 ```
-fantasy_ring/
-├── app/                    # Next.js frontend
-│   ├── page.tsx          # Home page
-│   ├── login/            # Login page
-│   └── dashboard/        # Dashboard page
-├── backend/               # FastAPI backend
-│   ├── app/
-│   │   ├── api/          # API routes
-│   │   ├── models/       # Database models
-│   │   ├── services/     # Business logic
-│   │   └── tasks/        # Celery tasks
-│   └── alembic/          # Database migrations
-└── docker-compose.yml     # Docker setup
+backend/
+  app/
+    engine/       types.py · random.py · snake.py · draft.py · bots.py
+                  (pure, JSON-serializable state)
+    analysis/     player_values.py · roster_profile.py · category_weights.py
+    data/         pool.py (frozen pool loader) + players.json
+    store.py      JSON-file persistence (sessions + saved runs)
+    views.py      DraftView serializer (state + derived analysis per response)
+    main.py       FastAPI routes
+  scripts/fetch_players.py   data pipeline
+  tests/          pytest suite
 ```
 
-## Development
+The frontend (`src/`) keeps only UI state: `api/client.ts` is a typed HTTP
+client, `state/useSession.ts` drives mutations and spaces out bot ticks, and
+`components/` render the DraftView the API returns.
 
-### Running Tests
-```bash
-# Backend tests (when implemented)
-cd backend
-pytest
+## API
 
-# Frontend tests (when implemented)
-npm test
-```
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/players` | frozen pool with overall scores |
+| `POST /api/drafts` | create draft `{seed, userSlot}` → DraftView |
+| `GET /api/drafts` / `GET /api/drafts/{id}` | list / resume |
+| `POST /api/drafts/{id}/picks` | apply a pick (validated, snake order) |
+| `POST /api/drafts/{id}/bot-pick` | advance one bot pick |
+| `POST .../pause` `.../resume` | status control |
+| `PUT /api/drafts/{id}/punts` | user punt categories → rescored view |
+| `POST /api/drafts/{id}/preview` | before/after roster profile for a player |
+| `POST /api/drafts/{id}/rewind` | rewind to pick n (saves abandoned branch) |
+| `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
-### Database Migrations
-```bash
-cd backend
-# Create new migration
-uv run alembic revision --autogenerate -m "description"
+Every mutation returns a full `DraftView` — draft state plus derived
+analysis (team profiles, per-category ranks, player scores under punt
+settings). Persistence is JSON files under `backend/app/store/`.
 
-# Apply migrations
-uv run alembic upgrade head
+Design notes:
 
-# Or use Makefile
-make migrate-create msg="description"
-make migrate
-```
+- **Determinism:** all randomness is a hash of `(seed, context)` — no mutable
+  RNG state, so serialize/replay/rewind are exact by construction.
+- **Bot scoring:** `S(p,t) = Σ w(t,c) · v(p,c) + ε` where `v` is the player's
+  standardized category contribution and `ε` is small seeded noise.
+  Personalities: value (uniform weights), needs (boosts weak categories,
+  capped), punt (zeroes an assigned category). Visible as badges in the UI.
+- **Player values:** z-scores per category; TO sign-flipped; FG%/FT% use
+  volume-adjusted impact (`FGM − lg%·FGA`) so percentages carry attempt
+  volume.
+- **Roster profiles:** raw per-game totals (FG%/FT% = Σ makes ÷ Σ attempts)
+  plus per-slot z for fair mid-draft comparison. Labeled equal-games
+  projections, not weekly forecasts.
+- **Rewind:** `rewind_to_pick` replays the pick log to any point; the
+  abandoned branch is auto-saved to runs for comparison in the report.
 
-## License
+## Milestone acceptance
 
-MIT
-
+- Full 12×13 draft: 156 unique picks, 13 per team — `tests/test_draft.py`
+- Reproducibility / save-restore / snake order — `tests/test_draft.py`
+- Punt weights change displayed rankings, not stats — `tests/test_analysis.py`
+- Same seed + picks → same bot selections; strategy change → new picks —
+  `tests/test_bots.py`
+- Rewind/branch legality and divergence — `tests/test_bots.py`

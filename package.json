@@ -1,28 +1,27 @@
 {
-  "name": "category-edge",
-  "version": "0.1.0",
+  "name": "fantasy-draft-lab",
   "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite",
+    "dev:backend": ".venv/bin/uvicorn app.main:app --app-dir backend --port 8000",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "cd backend && ../.venv/bin/python -m pytest tests/ -q",
+    "smoke": "node scripts/smoke.mjs",
+    "data:fetch": "cd backend && ../.venv/bin/python -m scripts.fetch_players"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.3.3",
-    "@types/node": "^20.10.6",
-    "@types/react": "^18.2.46",
-    "@types/react-dom": "^18.2.18"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.0",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4"
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.0",
+    "vitest": "^3.2.4"
   }
 }
-

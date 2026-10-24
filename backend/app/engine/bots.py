@@ -1,0 +1,96 @@
+"""Bot drafters.
+
+choose_bot_pick is pure selection: the bot sees only the current draft
+state — no future picks leak in. S(p,t) = Σ w(t,c)·v(p,c) + ε where ε is
+small noise derived from (seed, pick_index, team, player).
+"""
+
+from __future__ import annotations
+
+from ..analysis.category_weights import needs_weights, punt_bot_weights
+from ..analysis.player_values import (
+    UNIFORM_WEIGHTS,
+    CategoryWeights,
+    score_player,
+)
+from ..analysis.roster_profile import build_roster_profile
+from .draft import DraftState, available_player_ids
+from .random import centered_random, seeded_pick, unit_random
+from .types import CATEGORIES, BotSpec, Player
+
+# Scale of seeded jitter — reorders near-ties without reaching deep.
+EPSILON_SCALE = 0.6
+
+
+def _epsilon(seed: str, pick_index: int, team_id: int, player_id: str) -> float:
+    return centered_random(seed, "eps", pick_index, team_id, player_id) * EPSILON_SCALE
+
+
+def bot_weights(
+    state: DraftState,
+    pool: dict[str, Player],
+    values: dict[str, dict[str, float]],
+    team_id: int,
+) -> CategoryWeights:
+    """The w_{t,c} term for a bot team at the current draft state."""
+    spec = state.config.bot_specs[team_id]
+    if spec.kind == "value":
+        return dict(UNIFORM_WEIGHTS)
+    if spec.kind == "punt":
+        return punt_bot_weights(spec.punt_category or "TO")
+    if spec.kind == "needs":
+        profiles = [
+            build_roster_profile([pool[i] for i in roster], values)
+            for roster in state.rosters
+        ]
+        return needs_weights(profiles, team_id)
+    raise ValueError(f"unknown bot kind {spec.kind}")
+
+
+def choose_bot_pick(
+    state: DraftState,
+    pool: dict[str, Player],
+    values: dict[str, dict[str, float]],
+    team_id: int,
+) -> str:
+    w = bot_weights(state, pool, values, team_id)
+    pick_index = len(state.picks)
+    best_id: str | None = None
+    best_score = float("-inf")
+    for pid in available_player_ids(state, pool):
+        z = values.get(pid)
+        if z is None:
+            continue
+        s = score_player(z, w) + _epsilon(
+            state.config.seed, pick_index, team_id, pid
+        )
+        if s > best_score:
+            best_score = s
+            best_id = pid
+    if best_id is None:
+        raise RuntimeError("No available players to draft")
+    return best_id
+
+
+def assign_bot_specs(seed: str, num_teams: int, user_slot: int) -> tuple[BotSpec, ...]:
+    """Deterministically assign personalities to all non-user slots —
+    roughly even split; punt bots get a seeded category up front."""
+    bot_slots = [t for t in range(num_teams) if t != user_slot]
+
+    kinds = [
+        "value" if i % 3 == 0 else "needs" if i % 3 == 1 else "punt"
+        for i in range(len(bot_slots))
+    ]
+    # Deterministic Fisher-Yates shuffle.
+    for i in range(len(kinds) - 1, 0, -1):
+        j = int(unit_random(seed, "kindshuffle", i) * (i + 1))
+        kinds[i], kinds[j] = kinds[j], kinds[i]
+
+    specs: list[BotSpec] = [BotSpec(kind="value")] * num_teams
+    for team_id, kind in zip(bot_slots, kinds):
+        if kind == "punt":
+            cat = seeded_pick(list(CATEGORIES), seed, "puntcat", team_id)
+            specs[team_id] = BotSpec(kind="punt", punt_category=cat)
+        else:
+            specs[team_id] = BotSpec(kind=kind)
+    return tuple(specs)
