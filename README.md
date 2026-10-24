@@ -15,8 +15,8 @@ frontend is a thin presentation client over `http://localhost:8000/api`.
 ## Commands
 
 ```bash
-# one-time setup
-npm install                                # frontend deps
+# one-time setup (from repo root)
+npm run setup:web                          # frontend deps (web/)
 uv venv && uv pip install -r backend/requirements.txt   # backend deps
 
 # run both servers (two terminals)
@@ -29,6 +29,9 @@ npm run build          # typecheck + production build
 npm run smoke          # headless end-to-end UI test (needs both servers)
 npm run data:fetch     # regenerate backend/app/data/players.json from live stats
 ```
+
+Root `package.json` delegates everything; `web/package.json` holds the
+real frontend deps/scripts if you prefer to work inside `web/` directly.
 
 ## Player data
 
@@ -58,9 +61,9 @@ backend/
   tests/          pytest suite
 ```
 
-The frontend (`src/`) keeps only UI state: `api/client.ts` is a typed HTTP
-client, `state/useSession.ts` drives mutations and spaces out bot ticks, and
-`components/` render the DraftView the API returns.
+The frontend (`web/`) keeps only UI state: `src/api/client.ts` is a typed
+HTTP client, `src/state/useSession.ts` drives mutations and spaces out bot
+ticks, and `src/components/` render the DraftView the API returns.
 
 ## API
 
