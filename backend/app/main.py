@@ -32,6 +32,7 @@ from .engine.draft import (
     rewind_to_pick,
     serialize_draft,
 )
+from .suggestions import suggestions
 from .views import draft_view, player_to_json, preview_view
 
 app = FastAPI(title="Fantasy Draft Lab API")
@@ -90,7 +91,7 @@ def _maybe_save_completed_run(draft_id: str, state: DraftState, blob: dict) -> N
         store.save_run(
             f"run-{draft_id}",
             {
-                "label": f"Completed — seed \"{state.config.seed}\"",
+                "label": f"Completed — replay code {state.config.seed}",
                 "createdAt": int(time.time() * 1000),
                 "draft": serialize_draft(state),
                 "userPunts": blob.get("userPunts", []),
@@ -131,8 +132,20 @@ def health() -> dict[str, str]:
 @app.get("/api/players")
 def players() -> dict[str, Any]:
     return {
-        "players": [player_to_json(p, OVERALL.get(p.id)) for p in PLAYERS],
+        "players": [
+            player_to_json(p, OVERALL.get(p.id), PLAYER_VALUES.get(p.id))
+            for p in PLAYERS
+        ],
         "count": len(PLAYERS),
+    }
+
+
+@app.get("/api/league-preview")
+def league_preview(seed: str, userSlot: int) -> dict[str, Any]:
+    """Bot personalities a new draft with this seed and slot would get."""
+    specs = assign_bot_specs(seed, NUM_TEAMS, userSlot)
+    return {
+        "botSpecs": [{"kind": s.kind, "puntCategory": s.punt_category} for s in specs]
     }
 
 
@@ -218,6 +231,13 @@ def set_punts(draft_id: str, req: PuntsReq):
     return _view(draft_id, state, blob)
 
 
+@app.get("/api/drafts/{draft_id}/suggestions")
+def get_suggestions(draft_id: str):
+    """Simulated build options for the user's first or second pick."""
+    state, blob = _load(draft_id)
+    return suggestions(state, blob.get("userPunts", []))
+
+
 @app.post("/api/drafts/{draft_id}/preview")
 def preview(draft_id: str, req: PickReq):
     state, _ = _load(draft_id)
@@ -235,7 +255,7 @@ def rewind(draft_id: str, req: RewindReq):
         {
             "label": (
                 f"Branch before pick {req.pickIndex + 1} — "
-                f"seed \"{state.config.seed}\""
+                f"replay code {state.config.seed}"
             ),
             "createdAt": int(time.time() * 1000),
             "draft": serialize_draft(state),

@@ -17,11 +17,11 @@ frontend is a thin presentation client over `http://localhost:8000/api`.
 ```bash
 # one-time setup (from repo root)
 npm run setup:web                          # frontend deps (web/)
-uv venv && uv pip install -r backend/requirements.txt   # backend deps
+npm run setup:backend                      # backend deps via uv (backend/)
 
 # run both servers (two terminals)
 npm run dev:backend    # FastAPI on :8000
-npm run dev            # Vite on :5173 (proxies /api → :8000)
+npm run dev            # Vite on :5173 (proxies /api → :8000; set API_URL to change)
 
 # tests & checks
 npm test               # pytest: engine/analysis/bot/persistence suite
@@ -42,7 +42,10 @@ The engine consumes one **frozen dataset**: `backend/app/data/players.json`
   season.
 - Players who missed most of the season fall back to the prior season's
   stats ("last available season" rule) — tagged via `asOfSeason`.
-- Positions from ESPN's roster API; unmatched players get a stats-based guess.
+- Current team and positions from ESPN's roster API (stats rows only know
+  last season's team). Players on no current roster keep `lastTeam`, get
+  `signed: false`, and stay draftable with a "Free agent" tag. Unmatched
+  positions get a stats-based guess.
 - Raw responses cache in `.cache/` for 12h (`--no-cache` to bypass).
 
 ## Backend layout
@@ -55,6 +58,9 @@ backend/
     analysis/     player_values.py · roster_profile.py · category_weights.py
     data/         pool.py (frozen pool loader) + players.json
     store.py      JSON-file persistence (sessions + saved runs)
+    analysis/     … fit.py (needs-aware Fit) · standings.py (head-to-head records)
+    suggestions.py  first/second-pick build options, by simulating the rest
+                    of the draft (process pool, cached per draft position)
     views.py      DraftView serializer (state + derived analysis per response)
     main.py       FastAPI routes
   scripts/fetch_players.py   data pipeline
@@ -78,6 +84,15 @@ ticks, and `src/components/` render the DraftView the API returns.
 | `PUT /api/drafts/{id}/punts` | user punt categories → rescored view |
 | `POST /api/drafts/{id}/preview` | before/after roster profile for a player |
 | `POST /api/drafts/{id}/rewind` | rewind to pick n (saves abandoned branch) |
+| `GET /api/drafts/{id}/suggestions` | build options for the user's 1st/2nd pick (simulated) |
+| `GET /api/league-preview?seed=&userSlot=` | bot personalities a new draft would get |
+
+**Fit** (in every DraftView as `fit`) is a player's category z-scores
+weighted by the user's needs — categories the team trails the field in get
+up to 2× weight — with punted categories zeroed. **Build suggestions** fix
+the candidate pick(s), let every later user pick take the best Fit under
+that punt, and average the head-to-head record over 6 drafts (this seed
+plus 5 noise variants with the same bot personalities).
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived

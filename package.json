@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "npm --prefix web run dev",
-    "dev:backend": ".venv/bin/uvicorn app.main:app --app-dir backend --port 8000",
+    "dev:backend": "uv --directory backend run uvicorn app.main:app --port 8000",
     "build": "npm --prefix web run build",
-    "test": "cd backend && ../.venv/bin/python -m pytest tests/ -q",
+    "test": "uv --directory backend run pytest tests/ -q",
     "smoke": "npm --prefix web run smoke",
-    "data:fetch": "cd backend && ../.venv/bin/python -m scripts.fetch_players",
-    "setup:web": "npm --prefix web install"
+    "data:fetch": "uv --directory backend run python -m scripts.fetch_players",
+    "setup:web": "npm --prefix web install",
+    "setup:backend": "uv --directory backend sync"
   },
   "devDependencies": {}
 }

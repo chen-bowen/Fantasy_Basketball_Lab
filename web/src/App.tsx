@@ -1,14 +1,11 @@
-import { useMemo } from "react";
-import type { Category } from "./api/client";
-import { useSession } from "./state/useSession";
+import { useSession, userPickCount } from "./state/useSession";
 import { SetupScreen } from "./components/SetupScreen";
-import { DraftControls } from "./components/DraftControls";
-import { PlayerTable } from "./components/PlayerTable";
-import { PlayerDetails } from "./components/PlayerDetails";
-import { TeamRoster } from "./components/TeamRoster";
-import { CategoryProfile } from "./components/CategoryProfile";
-import { DraftBoard } from "./components/DraftBoard";
+import { DraftHeader, PickTicker } from "./components/DraftHeader";
+import { FirstPickScreen } from "./components/FirstPickScreen";
+import { SecondPickScreen } from "./components/SecondPickScreen";
+import { DraftRoom } from "./components/DraftRoom";
 import { DraftReport } from "./components/DraftReport";
+import { TeamsScreen } from "./components/TeamsScreen";
 
 export default function App() {
   const { state, actions } = useSession();
@@ -19,7 +16,9 @@ export default function App() {
     playerMap,
     speed,
     inspectedId,
-    preview,
+    suggestions,
+    browseAll,
+    screen,
     savedDrafts,
     runs,
     viewingRun,
@@ -27,24 +26,16 @@ export default function App() {
     error,
   } = state;
 
-  const punts = useMemo(
-    () => new Set<Category>(view?.userPunts ?? []),
-    [view],
-  );
-
-  const drafted = useMemo(
-    () => new Set(view?.draftedIds ?? []),
-    [view],
+  const errorBanner = error && (
+    <button className="error-banner" onClick={actions.clearError}>
+      {error} <span className="muted">(dismiss)</span>
+    </button>
   );
 
   if (phase === "setup" || !view || !players || !playerMap) {
     return (
       <>
-        {error && (
-          <div className="error-banner" onClick={actions.clearError}>
-            {error}
-          </div>
-        )}
+        {errorBanner}
         <SetupScreen
           playerCount={players?.length ?? 0}
           savedDrafts={savedDrafts}
@@ -55,86 +46,76 @@ export default function App() {
     );
   }
 
-  const available = players.filter((p) => !drafted.has(p.id));
-  const userRoster = view.rosters[view.userSlot].map(
-    (id) => playerMap.get(id)!,
-  );
-  const userPickIndices = view.picks
-    .filter((p) => p.teamId === view.userSlot)
-    .map((p) => p.index);
-  const inspected = inspectedId ? playerMap.get(inspectedId) : null;
-  const shown = viewingRun ?? view;
+  // The user's first two turns get the build screens unless they chose to browse.
+  const buildTurn = view.isUserTurn && !browseAll ? userPickCount(view) : null;
+  const ready = suggestions && suggestions.stage !== null ? suggestions : null;
+
+  let body;
+  if (screen === "teams") {
+    body = <TeamsScreen view={viewingRun ?? view} playerMap={playerMap} />;
+  } else if (view.complete) {
+    body = (
+      <DraftReport
+        view={viewingRun ?? view}
+        isLive={!viewingRun}
+        playerMap={playerMap}
+        runs={runs}
+        selectedRun={viewingRunId}
+        onSelectRun={actions.viewRun}
+        onNewDraft={actions.reset}
+        onRewind={actions.rewind}
+      />
+    );
+  } else if (buildTurn === 0) {
+    body = (
+      <FirstPickScreen
+        key={view.pickIndex}
+        view={view}
+        playerMap={playerMap}
+        options={ready?.stage === "first" ? ready.options : null}
+        onDraft={actions.draftWithPunt}
+        onBrowse={() => actions.setBrowseAll(true)}
+      />
+    );
+  } else if (buildTurn === 1) {
+    body = (
+      <SecondPickScreen
+        key={view.pickIndex}
+        view={view}
+        playerMap={playerMap}
+        options={ready?.stage === "second" ? ready.options : null}
+        onDraft={actions.draftWithPunt}
+        onBrowse={() => actions.setBrowseAll(true)}
+      />
+    );
+  } else {
+    body = (
+      <DraftRoom
+        view={view}
+        playerMap={playerMap}
+        inspectedId={inspectedId}
+        onInspect={actions.inspect}
+        onDraft={actions.userPick}
+        onTogglePunt={actions.togglePunt}
+      />
+    );
+  }
 
   return (
-    <div className="app">
-      {error && (
-        <div className="error-banner" onClick={actions.clearError}>
-          {error}
-        </div>
-      )}
-      <DraftControls
+    <div className="page">
+      {errorBanner}
+      <DraftHeader
         view={view}
         speed={speed}
+        screen={screen}
+        onNavigate={actions.setScreen}
         onPause={actions.pause}
         onResume={actions.resume}
         onSpeed={actions.setSpeed}
         onExit={actions.reset}
       />
-
-      {view.complete ? (
-        <DraftReport
-          view={shown}
-          isLive={!viewingRun}
-          playerMap={playerMap}
-          runs={runs}
-          selectedRun={viewingRunId}
-          onSelectRun={actions.viewRun}
-          onNewDraft={actions.reset}
-          onRewind={actions.rewind}
-        />
-      ) : (
-        <>
-          <main className="draft-grid">
-            <div className="left">
-              <PlayerTable
-                players={available}
-                scores={view.scores}
-                punts={punts}
-                inspectedId={inspectedId}
-                onInspect={actions.inspect}
-              />
-            </div>
-            <div className="right">
-              <TeamRoster
-                roster={userRoster}
-                rosterSize={view.rosterSize}
-                pickIndices={userPickIndices}
-                onRewind={actions.rewind}
-              />
-              <CategoryProfile
-                profile={view.profiles[view.userSlot]}
-                ranks={view.ranks}
-                teamId={view.userSlot}
-                numTeams={view.numTeams}
-                punts={punts}
-                onTogglePunt={actions.togglePunt}
-              />
-            </div>
-          </main>
-          <DraftBoard view={view} playerMap={playerMap} />
-          {inspected && (
-            <PlayerDetails
-              player={inspected}
-              puntScore={view.scores[inspected.id] ?? null}
-              punts={punts}
-              preview={preview}
-              canDraft={view.isUserTurn}
-              onDraft={() => actions.userPick(inspected.id)}
-              onClose={() => actions.inspect(null)}
-            />
-          )}
-        </>
-      )}
+      <PickTicker view={view} playerMap={playerMap} />
+      {body}
     </div>
   );
 }

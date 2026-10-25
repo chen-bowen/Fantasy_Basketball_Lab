@@ -14,7 +14,9 @@ from .analysis.player_values import (
     punt_weights,
     score_player,
 )
+from .analysis.fit import fit_score, fit_weights, needed_categories
 from .analysis.roster_profile import build_roster_profile, rank_teams
+from .analysis.standings import records
 from .engine.draft import (
     DraftState,
     current_pick_in_round,
@@ -27,12 +29,15 @@ from .engine.draft import (
 from .engine.types import Player
 
 
-def player_to_json(p: Player, overall: float | None = None) -> dict[str, Any]:
+def player_to_json(
+    p: Player, overall: float | None = None, z: dict[str, float] | None = None
+) -> dict[str, Any]:
     return {
         "id": p.id,
         "nbaId": p.nba_id,
         "name": p.name,
         "team": p.team,
+        "signed": p.signed,
         "positions": list(p.positions),
         "asOfSeason": p.as_of_season,
         "gp": p.gp,
@@ -49,6 +54,7 @@ def player_to_json(p: Player, overall: float | None = None) -> dict[str, Any]:
         "fta": p.fta,
         "tov": p.tov,
         "overall": overall,
+        "z": z,
     }
 
 
@@ -76,6 +82,11 @@ def draft_view(
     ranks = rank_teams(profiles)
     weights = punt_weights(set(user_punts))
     scores = {pid: score_player(z, weights) for pid, z in values.items()}
+    drafted = drafted_set(state)
+    fit_w = fit_weights(profiles, state.config.user_slot, set(user_punts))
+    fit = {
+        pid: fit_score(z, fit_w) for pid, z in values.items() if pid not in drafted
+    }
 
     n = state.config.num_teams
     pick_index = len(state.picks)
@@ -101,10 +112,16 @@ def draft_view(
         "complete": is_complete(state),
         "picks": [p.to_dict() for p in state.picks],
         "rosters": [list(r) for r in state.rosters],
-        "draftedIds": sorted(drafted_set(state)),
+        "draftedIds": sorted(drafted),
         "scores": scores,
+        "fit": fit,
+        "fitWeights": fit_w,
+        "neededCategories": [
+            c for c in needed_categories(fit_w) if c not in user_punts
+        ],
         "profiles": [profile_to_json(p) for p in profiles],
         "ranks": ranks,
+        "records": records(ranks),
         "userPunts": list(user_punts),
     }
 

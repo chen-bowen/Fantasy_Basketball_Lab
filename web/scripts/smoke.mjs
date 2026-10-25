@@ -11,7 +11,7 @@ const BIN =
   process.env.HOME +
   "/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell";
 const PORT = 9333;
-const URL = "http://localhost:5173";
+const URL = process.env.SMOKE_URL ?? "http://localhost:5173";
 
 const proc = spawn(BIN, [
   "--headless",
@@ -78,6 +78,24 @@ const bodyHas = (s) =>
 
 const log = (name, val) => console.log(`${val ? "PASS" : "FAIL"}  ${name}${val === true || val === false ? "" : " = " + val}`);
 
+const waitFor = async (pred, tries = 80, ms = 200) => {
+  for (let w = 0; w < tries; w++) {
+    if (await pred()) return true;
+    await sleep(ms);
+  }
+  return false;
+};
+const count = (sel) => evalJs(`document.querySelectorAll(${JSON.stringify(sel)}).length`);
+const setSpeed = (v) =>
+  evalJs(`(() => {
+    const s = [...document.querySelectorAll('select')].find(x => [...x.options].some(o => o.value === 'instant'));
+    if (!s) return false;
+    Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, ${JSON.stringify(v)});
+    s.dispatchEvent(new Event('change', { bubbles: true }));
+    return true;
+  })()`);
+const myRoster = () => count(".team-panel .roster li:not(.now):not(.empty)");
+
 // ---- 1. Setup ----
 await send("Page.navigate", { url: URL });
 await sleep(2500);
@@ -85,77 +103,72 @@ log("setup screen renders", await bodyHas("Choose your draft slot"));
 
 // pick slot 4 (index 3) so bots pick first
 await evalJs(`document.querySelectorAll('.slot-grid .slot')[3].click()`);
+await sleep(600);
+log("opponents preview shown", await bodyHas("Your opponents"));
 await evalJs(
   `[...document.querySelectorAll('button')].find(b => b.innerText.startsWith('Start draft'))?.click()`,
 );
 await sleep(800);
-log("draft screen renders", await bodyHas("Available players"));
+await setSpeed("instant");
 
-// ---- 2. Bots pick until user's turn ----
-await clickText("instant");
-for (let w = 0; w < 50; w++) {
-  if (await bodyHas("Your pick")) break;
-  await sleep(200);
-}
-log("user turn reached after bot picks", await bodyHas("Your pick"));
+// ---- 2. First pick: build options ----
+log("first-pick screen reached", await waitFor(() => bodyHas("Your first pick sets your build")));
+log("build options load", await waitFor(() => count(".pick-card").then((n) => n > 0), 150));
+await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
 
-// ---- 3. Inspect + draft a player ----
-await evalJs(`document.querySelector('.player-table tbody tr')?.click()`);
-await sleep(300);
-log("inspection panel opens", await bodyHas("Draft player"));
-log("before/after preview shown", await bodyHas("Roster projection"));
-await clickText("Draft player");
-await sleep(400);
-log("roster has 1 player", (await evalJs(`document.querySelectorAll('.roster-list li:not(.empty)').length`)) === 1);
-log("pick appears on board", await bodyHas("Recent:"));
+// ---- 3. Second pick: finish the build ----
+log("second-pick screen reached", await waitFor(() => bodyHas("Finish your build")));
+log("second-pick options load", await waitFor(() => count(".option-card").then((n) => n > 0), 150));
+await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
 
-// ---- 4. Autosave + resume after reload ----
+// ---- 4. Draft room ----
+log("draft room renders", await waitFor(() => bodyHas("Best fit for your team")));
+log("build banner shows punt", await bodyHas("Your build"));
+await waitFor(() => bodyHas("Draft ") && evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
+log("roster has 2 players", (await myRoster()) === 2);
+
+// ---- 5. Autosave + resume after reload ----
 await sleep(500);
 await send("Page.navigate", { url: URL });
 await sleep(1800);
-log("resume offered after reload", await bodyHas("Saved drafts"));
-await clickText("Resume");
-await sleep(800);
-log("roster restored", (await evalJs(`document.querySelectorAll('.roster-list li:not(.empty)').length`)) === 1);
+log("resume offered after reload", await bodyHas("Pick up where you left off"));
+await clickText("Resume draft");
+await waitFor(() => bodyHas("Best fit for your team"));
+log("roster restored", (await myRoster()) === 2);
 
-// ---- 5. Pause/resume ----
+// ---- 6. Pause/resume ----
 await clickText("Pause");
 await sleep(300);
-// badge renders uppercase via CSS text-transform — check case-insensitively
-log(
-  "paused badge shows",
-  await evalJs(`document.body.innerText.toLowerCase().includes('paused')`),
-);
+log("paused badge shows", await evalJs(`document.body.innerText.toLowerCase().includes('paused')`));
 await clickText("Resume");
-await clickText("instant");
+await setSpeed("instant");
 
-// ---- 6. Finish the draft (auto-pick top row on each user turn) ----
+// ---- 7. Finish the draft (take the top Fit on each user turn) ----
 let drafted = 0;
 for (let i = 0; i < 16; i++) {
-  for (let w = 0; w < 80; w++) {
-    if ((await bodyHas("Your pick")) || (await bodyHas("Draft complete"))) break;
-    await sleep(150);
-  }
+  await waitFor(
+    async () =>
+      (await bodyHas("Draft complete")) ||
+      (await evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`)),
+  );
   if (await bodyHas("Draft complete")) break;
-  await evalJs(`document.querySelector('.player-table tbody tr')?.click()`);
-  await sleep(120);
-  await clickText("Draft player");
+  await evalJs(`document.querySelector('.player-panel .btn.primary:not(:disabled)')?.click()`);
   drafted++;
-  await sleep(150);
+  await sleep(300);
 }
 await sleep(1200);
-log("all 13 user picks made", drafted >= 12);
+log("remaining 11 user picks made", drafted >= 11);
 log("draft completes", await bodyHas("Draft complete"));
-log("report renders", await bodyHas("Draft report"));
-log("category matrix shown", await bodyHas("Category standings"));
-log("pick history shown", await bodyHas("Pick history"));
+log("record shown", await evalJs(`!!document.querySelector('.record')`));
+log("league table shown", await bodyHas("League table"));
+log("pick history shown", (await count(".picks-card .roster li")) === 13);
 
-// ---- 7. Rewind ----
+// ---- 8. Rewind ----
 const rewindClicked = await evalJs(
-  `[...document.querySelectorAll('.pick-history .tiny')].at(-1)?.click(); true`,
+  `[...document.querySelectorAll('.picks-card .link-btn')].at(-1)?.click(); true`,
 );
 await sleep(800);
-log("rewind returns to draft screen", rewindClicked === true && (await bodyHas("Available players")));
+log("rewind returns to draft room", rewindClicked === true && (await bodyHas("Best fit for your team")));
 
 console.log("\n--- console errors:", consoleErrors.length ? "" : "none");
 consoleErrors.slice(0, 6).forEach((e) => console.log("  " + e));

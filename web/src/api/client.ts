@@ -16,7 +16,8 @@ export interface ApiPlayer {
   id: string;
   nbaId: number | null;
   name: string;
-  team: string;
+  team: string; // current team; "" when unsigned
+  signed: boolean; // false: on no current NBA roster
   positions: string[];
   asOfSeason: string | null;
   gp: number;
@@ -33,6 +34,7 @@ export interface ApiPlayer {
   fta: number;
   tov: number;
   overall: number | null;
+  z: Record<Category, number> | null; // per-category z vs. the pool (TO flipped)
 }
 
 export interface BotSpecView {
@@ -74,10 +76,45 @@ export interface DraftView {
   rosters: string[][];
   draftedIds: string[];
   scores: Record<string, number>; // player id → score under user's punts
+  fit: Record<string, number>; // available player id → Fit for the user's team
+  fitWeights: Record<Category, number>;
+  neededCategories: Category[];
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
+  records: TeamRecord[];
   userPunts: Category[];
 }
+
+export interface TeamRecord {
+  wins: number;
+  losses: number;
+  ties: number;
+}
+
+export interface FirstPickOption {
+  playerId: string;
+  punt: Category;
+  wins: number;
+  runs: number;
+  noPlanWins: number | null;
+  finishRanks: number[] | null;
+  nextOptions: string[];
+}
+
+export interface SecondPickOption {
+  playerId: string;
+  punt: Category;
+  keepsPunt: boolean;
+  wins: number;
+  runs: number;
+  ranksAfter: number[] | null;
+  nextOptions: string[];
+}
+
+export type Suggestions =
+  | { stage: "first"; options: FirstPickOption[] }
+  | { stage: "second"; options: SecondPickOption[] }
+  | { stage: null; options: [] };
 
 export interface DraftSummary {
   id: string;
@@ -147,6 +184,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ pickIndex }),
     }),
+  suggestions: (id: string) => req<Suggestions>(`/drafts/${id}/suggestions`),
+  leaguePreview: (seed: string, userSlot: number) =>
+    req<{ botSpecs: BotSpecView[] }>(
+      `/league-preview?seed=${encodeURIComponent(seed)}&userSlot=${userSlot}`,
+    ),
   listRuns: () => req<RunSummary[]>("/runs"),
   getRun: (id: string) => req<DraftView>(`/runs/${id}`),
 };

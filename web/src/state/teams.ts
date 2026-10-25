@@ -1,4 +1,4 @@
-import type { DraftView } from "../api/client";
+import type { Category, DraftView } from "../api/client";
 
 const BOT_NAMES = [
   "Reapers", "Spiders", "Kings", "Aces", "Wolves", "Tigers",
@@ -27,4 +27,35 @@ export function teamBadge(view: TeamLike, teamId: number): string {
   return spec.kind === "punt"
     ? `${KIND_LABELS.punt} ${spec.puntCategory}`
     : KIND_LABELS[spec.kind];
+}
+
+/** Categories a team has punted — the user's chosen punts, or a punt bot's category. */
+export function teamPunts(view: TeamLike & { userPunts: Category[] }, teamId: number): Set<Category> {
+  if (teamId === view.userSlot) return new Set(view.userPunts);
+  const s = view.botSpecs[teamId];
+  return new Set(s.kind === "punt" && s.puntCategory ? [s.puntCategory] : []);
+}
+
+/** Team on the clock at overall pick index `i` (0-based) in a snake draft. */
+export function snakeTeam(i: number, numTeams: number): number {
+  const round = Math.floor(i / numTeams);
+  const pos = i % numTeams;
+  return round % 2 === 0 ? pos : numTeams - 1 - pos;
+}
+
+/** Overall pick numbers (1-based) a slot gets in its first `rounds` rounds. */
+export function slotPicks(slot: number, numTeams: number, rounds: number): number[] {
+  return Array.from({ length: rounds }, (_, r) =>
+    r * numTeams + (r % 2 === 0 ? slot : numTeams - 1 - slot) + 1,
+  );
+}
+
+export function ordinal(n: number): string {
+  const t = n % 100;
+  if (t >= 11 && t <= 13) return `${n}th`;
+  return n + (["th", "st", "nd", "rd"][n % 10] ?? "th");
+}
+
+export function andList(xs: string[]): string {
+  return xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs.join("");
 }

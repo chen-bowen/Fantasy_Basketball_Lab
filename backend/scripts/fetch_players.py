@@ -2,9 +2,12 @@
 """fetch_players — regenerate app/data/players.json from stats.nba.com.
 
 Pulls per-game regular-season stats (leaguedashplayerstats) for the last
-completed NBA season and player positions from ESPN team rosters. Players
-who missed most of the season fall back to the prior season's stats — the
-"last available season" rule — and are tagged via ``as_of_season``.
+completed NBA season, plus current team and positions from ESPN team rosters.
+Stats rows only know the team a player finished last season with, so the
+roster is the source of truth for ``team``; players on no current roster get
+``signed: false`` and keep their last team in ``lastTeam``. Players who missed
+most of the season fall back to the prior season's stats — the "last
+available season" rule — and are tagged via ``as_of_season``.
 
 Usage:
     python backend/scripts/fetch_players.py [--season 2025-26] [--prev 2024-25] [--no-cache]
@@ -57,6 +60,11 @@ POSITION_MAP = {
 }
 
 ESPN_TEAM_IDS = list(range(1, 31))
+
+# ESPN team abbreviations that differ from stats.nba.com's.
+ESPN_TO_NBA_TEAM = {
+    "GS": "GSW", "NO": "NOP", "NY": "NYK", "SA": "SAS", "UTAH": "UTA", "WSH": "WAS",
+}
 
 
 def default_seasons() -> tuple[str, str]:
@@ -130,9 +138,9 @@ def infer_position(row: dict) -> list[str]:
     return ["F"]
 
 
-def espn_positions(client: httpx.Client, no_cache: bool) -> dict[str, list[str]]:
-    """normName -> positions[] for every player on a current roster."""
-    out: dict[str, list[str]] = {}
+def espn_rosters(client: httpx.Client, no_cache: bool) -> dict[str, dict]:
+    """normName -> {team, positions} for every player on a current roster."""
+    out: dict[str, dict] = {}
     for tid in ESPN_TEAM_IDS:
         def fetch(tid=tid):
             res = client.get(
@@ -143,11 +151,16 @@ def espn_positions(client: httpx.Client, no_cache: bool) -> dict[str, list[str]]
             return res.json()
 
         data = cached(f"espn-roster-{tid}", fetch, no_cache)
+        abbr = (data.get("team") or {}).get("abbreviation", "")
+        team = ESPN_TO_NBA_TEAM.get(abbr, abbr)
         for a in data.get("athletes") or []:
-            pos = (a.get("position") or {}).get("abbreviation")
-            if not pos or not a.get("displayName"):
+            if not a.get("displayName"):
                 continue
-            out[norm_name(a["displayName"])] = POSITION_MAP.get(pos, ["F"])
+            pos = (a.get("position") or {}).get("abbreviation")
+            out[norm_name(a["displayName"])] = {
+                "team": team,
+                "positions": POSITION_MAP.get(pos, ["F"]) if pos else None,
+            }
     return out
 
 
@@ -155,15 +168,18 @@ def r1(x) -> float:
     return round(float(x or 0), 1)
 
 
-def to_player(row: dict, pos_by_name: dict[str, list[str]], season: str) -> dict:
+def to_player(row: dict, roster_by_name: dict[str, dict], season: str) -> dict:
     nba_id = row["PLAYER_ID"]
+    last_team = row.get("TEAM_ABBREVIATION") or ""
+    on_roster = roster_by_name.get(norm_name(row["PLAYER_NAME"]))
     return {
         "id": f"nba-{nba_id}",
         "nbaId": nba_id,
         "name": row["PLAYER_NAME"],
-        "team": row.get("TEAM_ABBREVIATION") or "",
-        "positions": pos_by_name.get(norm_name(row["PLAYER_NAME"]))
-        or infer_position(row),
+        "team": on_roster["team"] if on_roster else "",
+        "lastTeam": last_team,
+        "signed": on_roster is not None,
+        "positions": (on_roster and on_roster["positions"]) or infer_position(row),
         "asOfSeason": season,
         "gp": row.get("GP") or 0,
         "min": r1(row.get("MIN")),
@@ -202,12 +218,12 @@ def main() -> None:
         prev_stats = cached(f"stats-{prev}",
                             lambda: nba_get(client, "leaguedashplayerstats", stats_params(prev)),
                             no_cache)
-        pos_by_name = cached("espn-positions",
-                             lambda: espn_positions(client, no_cache),
-                             no_cache)
+        roster_by_name = cached("espn-rosters",
+                                lambda: espn_rosters(client, no_cache),
+                                no_cache)
 
     print(f"{season}: {len(stats)} rows | {prev}: {len(prev_stats)} rows | "
-          f"espn positions: {len(pos_by_name)}")
+          f"espn roster players: {len(roster_by_name)}")
 
     primary = [r for r in stats if meaningful(r)]
     primary_ids = {r["PLAYER_ID"] for r in primary}
@@ -218,15 +234,20 @@ def main() -> None:
         and (r.get("MIN") or 0) >= MIN_MINUTES
     ]
 
-    players = [to_player(r, pos_by_name, season) for r in primary]
-    players += [to_player(r, pos_by_name, prev) for r in fallback]
+    players = [to_player(r, roster_by_name, season) for r in primary]
+    players += [to_player(r, roster_by_name, prev) for r in fallback]
 
     players.sort(key=lambda p: (-p["min"], -p["pts"]))
     players = players[:MAX_PLAYERS]
     players.sort(key=lambda p: (-p["pts"], p["name"]))
 
     OUT_PATH.write_text(json.dumps(players, indent=1) + "\n")
+    moved = sum(1 for p in players if p["signed"] and p["team"] != p["lastTeam"])
+    unsigned = [p["name"] for p in players if not p["signed"]]
     print(f"wrote {len(players)} players ({len(fallback)} from {prev}) → {OUT_PATH}")
+    print(f"  {moved} changed teams since last season; {len(unsigned)} on no current roster")
+    if unsigned:
+        print("  unsigned: " + ", ".join(unsigned))
 
 
 if __name__ == "__main__":

@@ -39,6 +39,7 @@ class Player:
     as_of_season: str | None = None
     gp: int = 0
     min: float = 0.0
+    signed: bool = True  # False: on no current NBA roster (free agent / retired)
 
 
 @dataclass(frozen=True)

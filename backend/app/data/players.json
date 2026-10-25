@@ -2,8 +2,10 @@
  {
   "id": "nba-1629029",
   "nbaId": 1629029,
-  "name": "Luka Dončić",
+  "name": "Luka Don\u010di\u0107",
   "team": "LAL",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -15,18 +17,20 @@
   "ast": 8.3,
   "stl": 1.6,
   "blk": 0.5,
-  "tpm": 4,
+  "tpm": 4.0,
   "fgm": 10.8,
   "fga": 22.8,
   "ftm": 7.9,
   "fta": 10.1,
-  "tov": 4
+  "tov": 4.0
  },
  {
   "id": "nba-1628983",
   "nbaId": 1628983,
   "name": "Shai Gilgeous-Alexander",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -42,7 +46,7 @@
   "fgm": 10.8,
   "fga": 19.4,
   "ftm": 7.9,
-  "fta": 9,
+  "fta": 9.0,
   "tov": 2.2
  },
  {
@@ -50,14 +54,16 @@
   "nbaId": 1630162,
   "name": "Anthony Edwards",
   "team": "MIN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 61,
-  "min": 35,
+  "min": 35.0,
   "pts": 28.8,
-  "reb": 5,
+  "reb": 5.0,
   "ast": 3.7,
   "stl": 1.4,
   "blk": 0.8,
@@ -72,7 +78,9 @@
   "id": "nba-1627759",
   "nbaId": 1627759,
   "name": "Jaylen Brown",
-  "team": "BOS",
+  "team": "PHI",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -82,12 +90,12 @@
   "pts": 28.7,
   "reb": 6.9,
   "ast": 5.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.4,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 10.4,
   "fga": 21.7,
-  "ftm": 6,
+  "ftm": 6.0,
   "fta": 7.5,
   "tov": 3.6
  },
@@ -96,12 +104,14 @@
   "nbaId": 1630178,
   "name": "Tyrese Maxey",
   "team": "PHI",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 70,
-  "min": 38,
+  "min": 38.0,
   "pts": 28.3,
   "reb": 4.1,
   "ast": 6.6,
@@ -111,7 +121,7 @@
   "fgm": 9.9,
   "fga": 21.4,
   "ftm": 5.3,
-  "fta": 6,
+  "fta": 6.0,
   "tov": 2.4
  },
  {
@@ -119,6 +129,8 @@
   "nbaId": 1628378,
   "name": "Donovan Mitchell",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -132,7 +144,7 @@
   "blk": 0.3,
   "tpm": 3.2,
   "fgm": 9.7,
-  "fga": 20,
+  "fga": 20.0,
   "ftm": 5.3,
   "fta": 6.1,
   "tov": 2.8
@@ -141,7 +153,9 @@
   "id": "nba-202695",
   "nbaId": 202695,
   "name": "Kawhi Leonard",
-  "team": "LAC",
+  "team": "TOR",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -158,13 +172,15 @@
   "fga": 19.4,
   "ftm": 5.7,
   "fta": 6.4,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-203999",
   "nbaId": 203999,
-  "name": "Nikola Jokić",
+  "name": "Nikola Joki\u0107",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -187,7 +203,9 @@
   "id": "nba-203507",
   "nbaId": 203507,
   "name": "Giannis Antetokounmpo",
-  "team": "MIL",
+  "team": "MIA",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -211,6 +229,8 @@
   "nbaId": 203954,
   "name": "Joel Embiid",
   "team": "PHI",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -223,7 +243,7 @@
   "stl": 0.6,
   "blk": 1.2,
   "tpm": 1.4,
-  "fgm": 9,
+  "fgm": 9.0,
   "fga": 18.3,
   "ftm": 7.5,
   "fta": 8.8,
@@ -234,6 +254,8 @@
   "nbaId": 1628369,
   "name": "Jayson Tatum",
   "team": "BOS",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -242,13 +264,13 @@
   "min": 36.4,
   "pts": 26.8,
   "reb": 8.7,
-  "ast": 6,
+  "ast": 6.0,
   "stl": 1.1,
   "blk": 0.5,
   "tpm": 3.5,
   "fgm": 9.2,
   "fga": 20.3,
-  "ftm": 5,
+  "ftm": 5.0,
   "fta": 6.1,
   "tov": 2.9
  },
@@ -257,6 +279,8 @@
   "nbaId": 1628374,
   "name": "Lauri Markkanen",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -266,7 +290,7 @@
   "pts": 26.7,
   "reb": 6.9,
   "ast": 2.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.5,
   "tpm": 2.7,
   "fgm": 9.1,
@@ -280,6 +304,8 @@
   "nbaId": 201939,
   "name": "Stephen Curry",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -303,6 +329,8 @@
   "nbaId": 1626164,
   "name": "Devin Booker",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -311,7 +339,7 @@
   "min": 33.5,
   "pts": 26.1,
   "reb": 3.9,
-  "ast": 6,
+  "ast": 6.0,
   "stl": 0.8,
   "blk": 0.3,
   "tpm": 1.9,
@@ -326,13 +354,15 @@
   "nbaId": 1628973,
   "name": "Jalen Brunson",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 74,
-  "min": 35,
-  "pts": 26,
+  "min": 35.0,
+  "pts": 26.0,
   "reb": 3.3,
   "ast": 6.8,
   "stl": 0.8,
@@ -349,13 +379,15 @@
   "nbaId": 201142,
   "name": "Kevin Durant",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 78,
   "min": 36.4,
-  "pts": 26,
+  "pts": 26.0,
   "reb": 5.5,
   "ast": 4.8,
   "stl": 0.8,
@@ -364,7 +396,7 @@
   "fgm": 9.2,
   "fga": 17.6,
   "ftm": 5.2,
-  "fta": 6,
+  "fta": 6.0,
   "tov": 3.2
  },
  {
@@ -372,6 +404,8 @@
   "nbaId": 1627750,
   "name": "Jamal Murray",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -395,29 +429,33 @@
   "nbaId": 1641705,
   "name": "Victor Wembanyama",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 64,
   "min": 29.2,
-  "pts": 25,
+  "pts": 25.0,
   "reb": 11.5,
   "ast": 3.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 3.1,
   "tpm": 1.9,
   "fgm": 8.6,
   "fga": 16.9,
   "ftm": 5.8,
-  "fta": 7,
+  "fta": 7.0,
   "tov": 2.4
  },
  {
   "id": "nba-203081",
   "nbaId": 203081,
   "name": "Damian Lillard",
-  "team": "MIL",
+  "team": "POR",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -440,7 +478,9 @@
   "id": "nba-203076",
   "nbaId": 203076,
   "name": "Anthony Davis",
-  "team": "DAL",
+  "team": "WAS",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -464,6 +504,8 @@
   "nbaId": 202681,
   "name": "Kyrie Irving",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -487,6 +529,8 @@
   "nbaId": 1630166,
   "name": "Deni Avdija",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -510,6 +554,8 @@
   "nbaId": 1629008,
   "name": "Michael Porter Jr.",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -518,7 +564,7 @@
   "min": 32.5,
   "pts": 24.2,
   "reb": 7.1,
-  "ast": 3,
+  "ast": 3.0,
   "stl": 1.1,
   "blk": 0.3,
   "tpm": 3.4,
@@ -532,13 +578,15 @@
   "id": "nba-1629027",
   "nbaId": 1629027,
   "name": "Trae Young",
-  "team": "ATL",
+  "team": "WAS",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 76,
-  "min": 36,
+  "min": 36.0,
   "pts": 24.2,
   "reb": 3.1,
   "ast": 11.6,
@@ -556,19 +604,21 @@
   "nbaId": 1627783,
   "name": "Pascal Siakam",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 62,
   "min": 33.2,
-  "pts": 24,
+  "pts": 24.0,
   "reb": 6.6,
   "ast": 3.8,
   "stl": 1.1,
   "blk": 0.4,
   "tpm": 1.7,
-  "fgm": 9,
+  "fgm": 9.0,
   "fga": 18.6,
   "ftm": 4.2,
   "fta": 6.1,
@@ -579,6 +629,8 @@
   "nbaId": 1630595,
   "name": "Cade Cunningham",
   "team": "DET",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -590,11 +642,11 @@
   "ast": 9.9,
   "stl": 1.4,
   "blk": 0.8,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 8.6,
   "fga": 18.6,
   "ftm": 4.8,
-  "fta": 6,
+  "fta": 6.0,
   "tov": 3.7
  },
  {
@@ -602,6 +654,8 @@
   "nbaId": 201935,
   "name": "James Harden",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -610,12 +664,12 @@
   "min": 34.8,
   "pts": 23.6,
   "reb": 4.8,
-  "ast": 8,
+  "ast": 8.0,
   "stl": 1.1,
   "blk": 0.4,
   "tpm": 3.1,
-  "fgm": 7,
-  "fga": 16,
+  "fgm": 7.0,
+  "fga": 16.0,
   "ftm": 6.6,
   "fta": 7.5,
   "tov": 3.5
@@ -625,6 +679,8 @@
   "nbaId": 1641718,
   "name": "Keyonte George",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -640,7 +696,7 @@
   "fgm": 7.4,
   "fga": 16.3,
   "ftm": 6.2,
-  "fta": 7,
+  "fta": 7.0,
   "tov": 3.1
  },
  {
@@ -648,6 +704,8 @@
   "nbaId": 1630559,
   "name": "Austin Reaves",
   "team": "LAL",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -664,13 +722,15 @@
   "fga": 14.9,
   "ftm": 6.3,
   "fta": 7.3,
-  "tov": 3
+  "tov": 3.0
  },
  {
   "id": "nba-1629630",
   "nbaId": 1629630,
   "name": "Ja Morant",
-  "team": "MEM",
+  "team": "POR",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -694,6 +754,8 @@
   "nbaId": 1630552,
   "name": "Jalen Johnson",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -717,6 +779,8 @@
   "nbaId": 1631094,
   "name": "Paolo Banchero",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -730,7 +794,7 @@
   "blk": 0.6,
   "tpm": 1.2,
   "fgm": 7.3,
-  "fga": 16,
+  "fga": 16.0,
   "ftm": 6.3,
   "fta": 8.2,
   "tov": 3.1
@@ -739,7 +803,9 @@
   "id": "nba-1626181",
   "nbaId": 1626181,
   "name": "Norman Powell",
-  "team": "MIA",
+  "team": "CHI",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -762,7 +828,9 @@
   "id": "nba-1627742",
   "nbaId": 1627742,
   "name": "Brandon Ingram",
-  "team": "TOR",
+  "team": "LAC",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -775,7 +843,7 @@
   "stl": 0.8,
   "blk": 0.7,
   "tpm": 1.8,
-  "fgm": 8,
+  "fgm": 8.0,
   "fga": 16.7,
   "ftm": 3.8,
   "fta": 4.6,
@@ -786,6 +854,8 @@
   "nbaId": 1630530,
   "name": "Trey Murphy III",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -808,22 +878,24 @@
   "id": "nba-203944",
   "nbaId": 203944,
   "name": "Julius Randle",
-  "team": "MIN",
+  "team": "BKN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 79,
-  "min": 33,
+  "min": 33.0,
   "pts": 21.1,
   "reb": 6.7,
-  "ast": 5,
+  "ast": 5.0,
   "stl": 1.1,
   "blk": 0.2,
   "tpm": 1.4,
   "fgm": 7.3,
   "fga": 15.3,
-  "ftm": 5,
+  "ftm": 5.0,
   "fta": 6.3,
   "tov": 2.7
  },
@@ -832,21 +904,23 @@
   "nbaId": 1642843,
   "name": "Cooper Flagg",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 70,
   "min": 33.5,
-  "pts": 21,
+  "pts": 21.0,
   "reb": 6.7,
   "ast": 4.5,
   "stl": 1.2,
   "blk": 0.9,
-  "tpm": 1,
-  "fgm": 8,
+  "tpm": 1.0,
+  "fgm": 8.0,
   "fga": 17.1,
-  "ftm": 4,
+  "ftm": 4.0,
   "fta": 4.9,
   "tov": 2.3
  },
@@ -855,29 +929,33 @@
   "nbaId": 1629627,
   "name": "Zion Williamson",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 62,
   "min": 29.7,
-  "pts": 21,
+  "pts": 21.0,
   "reb": 5.7,
   "ast": 3.2,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.5,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 7.8,
-  "fga": 13,
+  "fga": 13.0,
   "ftm": 5.4,
   "fta": 7.5,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-2544",
   "nbaId": 2544,
   "name": "LeBron James",
-  "team": "LAL",
+  "team": "PHI",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -894,13 +972,15 @@
   "fga": 15.3,
   "ftm": 3.9,
   "fta": 5.3,
-  "tov": 3
+  "tov": 3.0
  },
  {
   "id": "nba-1629638",
   "nbaId": 1629638,
   "name": "Nickeil Alexander-Walker",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -913,7 +993,7 @@
   "stl": 1.3,
   "blk": 0.5,
   "tpm": 3.2,
-  "fgm": 7,
+  "fgm": 7.0,
   "fga": 15.3,
   "ftm": 3.6,
   "fta": 3.9,
@@ -924,6 +1004,8 @@
   "nbaId": 1631101,
   "name": "Shaedon Sharpe",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -947,12 +1029,14 @@
   "nbaId": 1630532,
   "name": "Franz Wagner",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 34,
-  "min": 30,
+  "min": 30.0,
   "pts": 20.6,
   "reb": 5.2,
   "ast": 3.3,
@@ -969,7 +1053,9 @@
   "id": "nba-1629639",
   "nbaId": 1629639,
   "name": "Tyler Herro",
-  "team": "MIA",
+  "team": "MIL",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -984,7 +1070,7 @@
   "tpm": 2.5,
   "fgm": 7.5,
   "fga": 15.6,
-  "ftm": 3,
+  "ftm": 3.0,
   "fta": 3.3,
   "tov": 1.9
  },
@@ -993,6 +1079,8 @@
   "nbaId": 1630578,
   "name": "Alperen Sengun",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -1016,6 +1104,8 @@
   "nbaId": 1641706,
   "name": "Brandon Miller",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1025,10 +1115,10 @@
   "pts": 20.2,
   "reb": 4.9,
   "ast": 3.3,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.7,
   "tpm": 3.1,
-  "fgm": 7,
+  "fgm": 7.0,
   "fga": 16.1,
   "ftm": 3.1,
   "fta": 3.4,
@@ -1039,6 +1129,8 @@
   "nbaId": 1628415,
   "name": "Dillon Brooks",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1048,12 +1140,12 @@
   "pts": 20.2,
   "reb": 3.6,
   "ast": 1.8,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.2,
   "tpm": 2.3,
   "fgm": 7.4,
   "fga": 17.1,
-  "ftm": 3,
+  "ftm": 3.0,
   "fta": 3.6,
   "tov": 1.8
  },
@@ -1062,6 +1154,8 @@
   "nbaId": 1628389,
   "name": "Bam Adebayo",
   "team": "MIA",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -1069,7 +1163,7 @@
   "gp": 73,
   "min": 32.4,
   "pts": 20.1,
-  "reb": 10,
+  "reb": 10.0,
   "ast": 3.2,
   "stl": 1.2,
   "blk": 0.7,
@@ -1085,6 +1179,8 @@
   "nbaId": 1630217,
   "name": "Desmond Bane",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1094,29 +1190,31 @@
   "pts": 20.1,
   "reb": 4.1,
   "ast": 4.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.5,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 7.1,
   "fga": 14.7,
   "ftm": 3.8,
   "fta": 4.2,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-1626157",
   "nbaId": 1626157,
   "name": "Karl-Anthony Towns",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 75,
-  "min": 31,
+  "min": 31.0,
   "pts": 20.1,
   "reb": 11.9,
-  "ast": 3,
+  "ast": 3.0,
   "stl": 0.9,
   "blk": 0.5,
   "tpm": 1.5,
@@ -1130,20 +1228,22 @@
   "id": "nba-1630163",
   "nbaId": 1630163,
   "name": "LaMelo Ball",
-  "team": "CHA",
+  "team": "MIN",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 72,
-  "min": 28,
+  "min": 28.0,
   "pts": 20.1,
   "reb": 4.8,
   "ast": 7.1,
   "stl": 1.2,
   "blk": 0.3,
   "tpm": 3.8,
-  "fgm": 7,
+  "fgm": 7.0,
   "fga": 17.3,
   "ftm": 2.2,
   "fta": 2.5,
@@ -1154,13 +1254,15 @@
   "nbaId": 202710,
   "name": "Jimmy Butler III",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 38,
   "min": 31.1,
-  "pts": 20,
+  "pts": 20.0,
   "reb": 5.6,
   "ast": 4.9,
   "stl": 1.4,
@@ -1177,6 +1279,8 @@
   "nbaId": 1631105,
   "name": "Jalen Duren",
   "team": "DET",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -1185,10 +1289,10 @@
   "min": 28.2,
   "pts": 19.5,
   "reb": 10.5,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.8,
   "blk": 0.8,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 7.5,
   "fga": 11.5,
   "ftm": 4.6,
@@ -1200,6 +1304,8 @@
   "nbaId": 1628991,
   "name": "Jaren Jackson Jr.",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1208,12 +1314,12 @@
   "min": 30.3,
   "pts": 19.4,
   "reb": 5.7,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 1.1,
   "blk": 1.4,
   "tpm": 1.8,
   "fgm": 7.1,
-  "fga": 15,
+  "fga": 15.0,
   "ftm": 3.4,
   "fta": 4.2,
   "tov": 2.2
@@ -1223,6 +1329,8 @@
   "nbaId": 1629628,
   "name": "RJ Barrett",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1235,7 +1343,7 @@
   "stl": 0.7,
   "blk": 0.3,
   "tpm": 1.7,
-  "fgm": 7,
+  "fgm": 7.0,
   "fga": 14.3,
   "ftm": 3.5,
   "fta": 4.9,
@@ -1246,6 +1354,8 @@
   "nbaId": 203897,
   "name": "Zach LaVine",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1259,7 +1369,7 @@
   "blk": 0.3,
   "tpm": 2.5,
   "fgm": 6.7,
-  "fga": 14,
+  "fga": 14.0,
   "ftm": 3.2,
   "fta": 3.6,
   "tov": 1.9
@@ -1269,6 +1379,8 @@
   "nbaId": 1627734,
   "name": "Domantas Sabonis",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1277,7 +1389,7 @@
   "min": 34.7,
   "pts": 19.1,
   "reb": 13.9,
-  "ast": 6,
+  "ast": 6.0,
   "stl": 0.7,
   "blk": 0.4,
   "tpm": 0.9,
@@ -1292,6 +1404,8 @@
   "nbaId": 1629636,
   "name": "Darius Garland",
   "team": "LAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1301,7 +1415,7 @@
   "pts": 18.8,
   "reb": 2.4,
   "ast": 6.7,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.2,
   "tpm": 2.7,
   "fgm": 6.9,
@@ -1315,6 +1429,8 @@
   "nbaId": 203468,
   "name": "CJ McCollum",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1338,12 +1454,14 @@
   "nbaId": 1628368,
   "name": "De'Aaron Fox",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 72,
-  "min": 31,
+  "min": 31.0,
   "pts": 18.6,
   "reb": 3.8,
   "ast": 6.2,
@@ -1360,7 +1478,9 @@
   "id": "nba-203924",
   "nbaId": 203924,
   "name": "Jerami Grant",
-  "team": "POR",
+  "team": "MEM",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1384,6 +1504,8 @@
   "nbaId": 1630169,
   "name": "Tyrese Haliburton",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1395,11 +1517,11 @@
   "ast": 9.2,
   "stl": 1.4,
   "blk": 0.7,
-  "tpm": 3,
+  "tpm": 3.0,
   "fgm": 6.5,
   "fga": 13.8,
   "ftm": 2.6,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 1.6
  },
  {
@@ -1407,6 +1529,8 @@
   "nbaId": 1642851,
   "name": "Kon Knueppel",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1423,13 +1547,15 @@
   "fga": 13.4,
   "ftm": 2.4,
   "fta": 2.8,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-201942",
   "nbaId": 201942,
   "name": "DeMar DeRozan",
-  "team": "SAC",
+  "team": "DEN",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1439,7 +1565,7 @@
   "pts": 18.4,
   "reb": 2.9,
   "ast": 4.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.3,
   "tpm": 0.6,
   "fgm": 6.5,
@@ -1453,6 +1579,8 @@
   "nbaId": 1641708,
   "name": "Amen Thompson",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1476,6 +1604,8 @@
   "nbaId": 1630596,
   "name": "Evan Mobley",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -1483,11 +1613,11 @@
   "gp": 65,
   "min": 31.9,
   "pts": 18.2,
-  "reb": 9,
+  "reb": 9.0,
   "ast": 3.6,
   "stl": 0.7,
   "blk": 1.7,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 7.2,
   "fga": 13.2,
   "ftm": 2.8,
@@ -1499,6 +1629,8 @@
   "nbaId": 1630567,
   "name": "Scottie Barnes",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1512,8 +1644,8 @@
   "blk": 1.5,
   "tpm": 0.9,
   "fgm": 7.1,
-  "fga": 14,
-  "ftm": 3,
+  "fga": 14.0,
+  "ftm": 3.0,
   "fta": 3.7,
   "tov": 2.6
  },
@@ -1522,6 +1654,8 @@
   "nbaId": 1630224,
   "name": "Jalen Green",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1535,8 +1669,8 @@
   "blk": 0.3,
   "tpm": 2.2,
   "fgm": 6.8,
-  "fga": 16,
-  "ftm": 2,
+  "fga": 16.0,
+  "ftm": 2.0,
   "fta": 2.7,
   "tov": 2.3
  },
@@ -1545,6 +1679,8 @@
   "nbaId": 1630180,
   "name": "Saddiq Bey",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1567,13 +1703,15 @@
   "id": "nba-1631097",
   "nbaId": 1631097,
   "name": "Bennedict Mathurin",
-  "team": "LAC",
+  "team": "NOP",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 54,
-  "min": 30,
+  "min": 30.0,
   "pts": 17.6,
   "reb": 5.4,
   "ast": 2.4,
@@ -1591,6 +1729,8 @@
   "nbaId": 1627749,
   "name": "Dejounte Murray",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1600,13 +1740,13 @@
   "pts": 17.5,
   "reb": 6.5,
   "ast": 7.4,
-  "stl": 2,
+  "stl": 2.0,
   "blk": 0.4,
   "tpm": 1.7,
   "fgm": 6.3,
   "fga": 15.9,
   "ftm": 3.3,
-  "fta": 4,
+  "fta": 4.0,
   "tov": 3.4
  },
  {
@@ -1614,15 +1754,17 @@
   "nbaId": 1629632,
   "name": "Coby White",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 50,
-  "min": 25,
+  "min": 25.0,
   "pts": 17.4,
   "reb": 3.4,
-  "ast": 4,
+  "ast": 4.0,
   "stl": 0.5,
   "blk": 0.1,
   "tpm": 2.3,
@@ -1636,7 +1778,9 @@
   "id": "nba-1629645",
   "nbaId": 1629645,
   "name": "Kevin Porter Jr.",
-  "team": "MIL",
+  "team": "",
+  "lastTeam": "MIL",
+  "signed": false,
   "positions": [
    "G"
   ],
@@ -1659,7 +1803,9 @@
   "id": "nba-202331",
   "nbaId": 202331,
   "name": "Paul George",
-  "team": "PHI",
+  "team": "BOS",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1675,7 +1821,7 @@
   "fgm": 6.1,
   "fga": 13.9,
   "ftm": 2.5,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 1.7
  },
  {
@@ -1683,6 +1829,8 @@
   "nbaId": 1631157,
   "name": "Ryan Rollins",
   "team": "MIL",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1706,6 +1854,8 @@
   "nbaId": 1631096,
   "name": "Chet Holmgren",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -1729,6 +1879,8 @@
   "nbaId": 1631114,
   "name": "Jalen Williams",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1751,13 +1903,15 @@
   "id": "nba-1628970",
   "nbaId": 1628970,
   "name": "Miles Bridges",
-  "team": "CHA",
+  "team": "PHX",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 77,
-  "min": 31,
+  "min": 31.0,
   "pts": 17.1,
   "reb": 5.8,
   "ast": 3.2,
@@ -1774,14 +1928,16 @@
   "id": "nba-203078",
   "nbaId": 203078,
   "name": "Bradley Beal",
-  "team": "PHX",
+  "team": "LAC",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 53,
   "min": 32.1,
-  "pts": 17,
+  "pts": 17.0,
   "reb": 3.3,
   "ast": 3.7,
   "stl": 1.1,
@@ -1798,16 +1954,18 @@
   "nbaId": 1630581,
   "name": "Josh Giddey",
   "team": "CHI",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 54,
   "min": 32.1,
-  "pts": 17,
+  "pts": 17.0,
   "reb": 8.3,
   "ast": 9.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.5,
   "tpm": 1.9,
   "fgm": 5.9,
@@ -1821,13 +1979,15 @@
   "nbaId": 1630202,
   "name": "Payton Pritchard",
   "team": "BOS",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 79,
   "min": 32.3,
-  "pts": 17,
+  "pts": 17.0,
   "reb": 3.9,
   "ast": 5.2,
   "stl": 0.7,
@@ -1844,6 +2004,8 @@
   "nbaId": 1629614,
   "name": "Andrew Nembhard",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1865,14 +2027,16 @@
  {
   "id": "nba-204001",
   "nbaId": 204001,
-  "name": "Kristaps Porziņģis",
+  "name": "Kristaps Porzi\u0146\u0123is",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 32,
-  "min": 24,
+  "min": 24.0,
   "pts": 16.7,
   "reb": 5.2,
   "ast": 2.5,
@@ -1890,6 +2054,8 @@
   "nbaId": 1628384,
   "name": "OG Anunoby",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -1903,7 +2069,7 @@
   "blk": 0.7,
   "tpm": 2.3,
   "fgm": 5.8,
-  "fga": 12,
+  "fga": 12.0,
   "ftm": 2.7,
   "fta": 3.3,
   "tov": 1.8
@@ -1913,12 +2079,14 @@
   "nbaId": 1642264,
   "name": "Stephon Castle",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 68,
-  "min": 30,
+  "min": 30.0,
   "pts": 16.7,
   "reb": 5.3,
   "ast": 7.4,
@@ -1926,7 +2094,7 @@
   "blk": 0.3,
   "tpm": 1.2,
   "fgm": 5.7,
-  "fga": 12,
+  "fga": 12.0,
   "ftm": 4.1,
   "fta": 5.6,
   "tov": 3.2
@@ -1936,6 +2104,8 @@
   "nbaId": 1628401,
   "name": "Derrick White",
   "team": "BOS",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1958,7 +2128,9 @@
   "id": "nba-1628960",
   "nbaId": 1628960,
   "name": "Grayson Allen",
-  "team": "PHX",
+  "team": "CHA",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1966,7 +2138,7 @@
   "gp": 51,
   "min": 28.8,
   "pts": 16.5,
-  "reb": 3,
+  "reb": 3.0,
   "ast": 3.8,
   "stl": 1.4,
   "blk": 0.3,
@@ -1982,6 +2154,8 @@
   "nbaId": 1630193,
   "name": "Immanuel Quickley",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -1989,7 +2163,7 @@
   "gp": 70,
   "min": 31.9,
   "pts": 16.4,
-  "reb": 4,
+  "reb": 4.0,
   "ast": 5.9,
   "stl": 1.3,
   "blk": 0.1,
@@ -1997,7 +2171,7 @@
   "fgm": 5.7,
   "fga": 12.9,
   "ftm": 2.4,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 1.5
  },
  {
@@ -2005,6 +2179,8 @@
   "nbaId": 1642259,
   "name": "Alex Sarr",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -2015,12 +2191,12 @@
   "reb": 7.4,
   "ast": 2.7,
   "stl": 0.8,
-  "blk": 2,
-  "tpm": 1,
+  "blk": 2.0,
+  "tpm": 1.0,
   "fgm": 6.6,
   "fga": 13.7,
   "ftm": 2.1,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 1.7
  },
  {
@@ -2028,6 +2204,8 @@
   "nbaId": 201950,
   "name": "Jrue Holiday",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2037,20 +2215,22 @@
   "pts": 16.3,
   "reb": 4.6,
   "ast": 6.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.1,
   "tpm": 2.6,
-  "fgm": 6,
+  "fgm": 6.0,
   "fga": 13.4,
   "ftm": 1.7,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 2.8
  },
  {
   "id": "nba-1627736",
   "nbaId": 1627736,
   "name": "Malik Beasley",
-  "team": "DET",
+  "team": "",
+  "lastTeam": "DET",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -2067,13 +2247,15 @@
   "fga": 13.1,
   "ftm": 1.2,
   "fta": 1.7,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1641824",
   "nbaId": 1641824,
   "name": "Matas Buzelis",
   "team": "CHI",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2097,6 +2279,8 @@
   "nbaId": 203932,
   "name": "Aaron Gordon",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2120,21 +2304,23 @@
   "nbaId": 1642845,
   "name": "VJ Edgecombe",
   "team": "PHI",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 75,
-  "min": 35,
-  "pts": 16,
+  "min": 35.0,
+  "pts": 16.0,
   "reb": 5.6,
   "ast": 4.2,
   "stl": 1.4,
   "blk": 0.5,
-  "tpm": 2,
-  "fgm": 6,
+  "tpm": 2.0,
+  "fgm": 6.0,
   "fga": 13.7,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.4,
   "tov": 1.8
  },
@@ -2143,6 +2329,8 @@
   "nbaId": 1631095,
   "name": "Jabari Smith Jr.",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2166,6 +2354,8 @@
   "nbaId": 203952,
   "name": "Andrew Wiggins",
   "team": "MIA",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2176,8 +2366,8 @@
   "reb": 4.8,
   "ast": 2.7,
   "stl": 1.1,
-  "blk": 1,
-  "tpm": 2,
+  "blk": 1.0,
+  "tpm": 2.0,
   "fgm": 5.7,
   "fga": 12.1,
   "ftm": 1.9,
@@ -2188,7 +2378,9 @@
   "id": "nba-1629012",
   "nbaId": 1629012,
   "name": "Collin Sexton",
-  "team": "CHI",
+  "team": "LAL",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2211,7 +2403,9 @@
   "id": "nba-1631170",
   "nbaId": 1631170,
   "name": "Jaime Jaquez Jr.",
-  "team": "MIA",
+  "team": "MIL",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2219,7 +2413,7 @@
   "gp": 75,
   "min": 28.3,
   "pts": 15.4,
-  "reb": 5,
+  "reb": 5.0,
   "ast": 4.7,
   "stl": 0.7,
   "blk": 0.3,
@@ -2228,13 +2422,15 @@
   "fga": 12.2,
   "ftm": 2.2,
   "fta": 2.9,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-1628386",
   "nbaId": 1628386,
   "name": "Jarrett Allen",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -2244,10 +2440,10 @@
   "pts": 15.4,
   "reb": 8.5,
   "ast": 1.8,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.8,
-  "tpm": 0,
-  "fgm": 6,
+  "tpm": 0.0,
+  "fgm": 6.0,
   "fga": 9.4,
   "ftm": 3.3,
   "fta": 4.7,
@@ -2258,6 +2454,8 @@
   "nbaId": 1630230,
   "name": "Naji Marshall",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2281,12 +2479,14 @@
   "nbaId": 1630168,
   "name": "Onyeka Okongwu",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 74,
-  "min": 31,
+  "min": 31.0,
   "pts": 15.2,
   "reb": 7.6,
   "ast": 3.1,
@@ -2303,7 +2503,9 @@
   "id": "nba-201566",
   "nbaId": 201566,
   "name": "Russell Westbrook",
-  "team": "SAC",
+  "team": "",
+  "lastTeam": "SAC",
+  "signed": false,
   "positions": [
    "G"
   ],
@@ -2315,18 +2517,20 @@
   "ast": 6.7,
   "stl": 1.3,
   "blk": 0.2,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 5.6,
   "fga": 13.1,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.9,
   "tov": 3.3
  },
  {
   "id": "nba-202696",
   "nbaId": 202696,
-  "name": "Nikola Vučević",
-  "team": "BOS",
+  "name": "Nikola Vu\u010devi\u0107",
+  "team": "ORL",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -2350,13 +2554,15 @@
   "nbaId": 1641710,
   "name": "Anthony Black",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 64,
   "min": 29.8,
-  "pts": 15,
+  "pts": 15.0,
   "reb": 3.8,
   "ast": 3.7,
   "stl": 1.4,
@@ -2373,6 +2579,8 @@
   "nbaId": 1641729,
   "name": "Brice Sensabaugh",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2396,6 +2604,8 @@
   "nbaId": 1630245,
   "name": "Ayo Dosunmu",
   "team": "MIN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2419,6 +2629,8 @@
   "nbaId": 1630183,
   "name": "Jaden McDaniels",
   "team": "MIN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2429,11 +2641,11 @@
   "reb": 4.2,
   "ast": 2.7,
   "stl": 1.1,
-  "blk": 1,
+  "blk": 1.0,
   "tpm": 1.4,
   "fgm": 5.7,
   "fga": 11.1,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.4,
   "tov": 1.8
  },
@@ -2442,20 +2654,22 @@
   "nbaId": 1642273,
   "name": "Kyshawn George",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 48,
-  "min": 29,
+  "min": 29.0,
   "pts": 14.8,
   "reb": 5.1,
   "ast": 4.5,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.9,
   "tpm": 2.1,
   "fgm": 5.3,
-  "fga": 12,
+  "fga": 12.0,
   "ftm": 2.2,
   "fta": 2.7,
   "tov": 2.6
@@ -2464,7 +2678,9 @@
   "id": "nba-1631212",
   "nbaId": 1631212,
   "name": "Peyton Watson",
-  "team": "DEN",
+  "team": "CLE",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2488,6 +2704,8 @@
   "nbaId": 1628969,
   "name": "Mikal Bridges",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2502,15 +2720,17 @@
   "tpm": 1.9,
   "fgm": 5.8,
   "fga": 11.7,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.2,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1629014",
   "nbaId": 1629014,
   "name": "Anfernee Simons",
-  "team": "CHI",
+  "team": "PHI",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2534,6 +2754,8 @@
   "nbaId": 1642847,
   "name": "Jeremiah Fears",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2549,7 +2771,7 @@
   "fgm": 5.3,
   "fga": 12.3,
   "ftm": 2.4,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 2.2
  },
  {
@@ -2557,16 +2779,18 @@
   "nbaId": 1629023,
   "name": "P.J. Washington",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 56,
-  "min": 31,
+  "min": 31.0,
   "pts": 14.2,
-  "reb": 7,
+  "reb": 7.0,
   "ast": 1.8,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 1.1,
   "tpm": 1.4,
   "fgm": 5.3,
@@ -2580,6 +2804,8 @@
   "nbaId": 1630703,
   "name": "Scoot Henderson",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2603,6 +2829,8 @@
   "nbaId": 1627832,
   "name": "Fred VanVleet",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2626,6 +2854,8 @@
   "nbaId": 1627826,
   "name": "Ivica Zubac",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -2637,18 +2867,20 @@
   "ast": 2.2,
   "stl": 0.4,
   "blk": 0.8,
-  "tpm": 0,
-  "fgm": 6,
-  "fga": 10,
+  "tpm": 0.0,
+  "fgm": 6.0,
+  "fga": 10.0,
   "ftm": 2.1,
-  "fta": 3,
+  "fta": 3.0,
   "tov": 1.8
  },
  {
   "id": "nba-1626162",
   "nbaId": 1626162,
   "name": "Kelly Oubre Jr.",
-  "team": "PHI",
+  "team": "IND",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2656,7 +2888,7 @@
   "gp": 50,
   "min": 31.5,
   "pts": 14.1,
-  "reb": 5,
+  "reb": 5.0,
   "ast": 1.6,
   "stl": 1.4,
   "blk": 0.5,
@@ -2672,12 +2904,14 @@
   "nbaId": 1630200,
   "name": "Tre Jones",
   "team": "CHI",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 65,
-  "min": 27,
+  "min": 27.0,
   "pts": 14.1,
   "reb": 3.1,
   "ast": 5.4,
@@ -2694,14 +2928,16 @@
   "id": "nba-1630583",
   "nbaId": 1630583,
   "name": "Santi Aldama",
-  "team": "MEM",
+  "team": "DAL",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 43,
   "min": 27.9,
-  "pts": 14,
+  "pts": 14.0,
   "reb": 6.7,
   "ast": 2.9,
   "stl": 0.9,
@@ -2718,6 +2954,8 @@
   "nbaId": 1630170,
   "name": "Devin Vassell",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2725,7 +2963,7 @@
   "gp": 67,
   "min": 30.5,
   "pts": 13.9,
-  "reb": 4,
+  "reb": 4.0,
   "ast": 2.5,
   "stl": 0.9,
   "blk": 0.4,
@@ -2741,6 +2979,8 @@
   "nbaId": 1630174,
   "name": "Aaron Nesmith",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2755,7 +2995,7 @@
   "tpm": 2.3,
   "fgm": 4.7,
   "fga": 11.4,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.5,
   "tov": 1.4
  },
@@ -2764,6 +3004,8 @@
   "nbaId": 1642846,
   "name": "Ace Bailey",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2787,6 +3029,8 @@
   "nbaId": 1641764,
   "name": "Brandin Podziemski",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2810,6 +3054,8 @@
   "nbaId": 1630591,
   "name": "Jalen Suggs",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2832,7 +3078,9 @@
   "id": "nba-1626171",
   "nbaId": 1626171,
   "name": "Bobby Portis Jr.",
-  "team": "MIL",
+  "team": "MIA",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2844,18 +3092,20 @@
   "ast": 1.6,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 5.5,
   "fga": 11.2,
   "ftm": 0.7,
-  "fta": 1,
-  "tov": 1
+  "fta": 1.0,
+  "tov": 1.0
  },
  {
   "id": "nba-1629631",
   "nbaId": 1629631,
   "name": "De'Andre Hunter",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2864,7 +3114,7 @@
   "min": 26.1,
   "pts": 13.7,
   "reb": 4.1,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.7,
   "blk": 0.1,
   "tpm": 1.7,
@@ -2879,6 +3129,8 @@
   "nbaId": 1642349,
   "name": "Ajay Mitchell",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -2891,7 +3143,7 @@
   "stl": 1.2,
   "blk": 0.3,
   "tpm": 1.1,
-  "fgm": 5,
+  "fgm": 5.0,
   "fga": 10.4,
   "ftm": 2.5,
   "fta": 2.8,
@@ -2902,6 +3154,8 @@
   "nbaId": 1642907,
   "name": "Cedric Coward",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2924,7 +3178,9 @@
   "id": "nba-1628381",
   "nbaId": 1628381,
   "name": "John Collins",
-  "team": "LAC",
+  "team": "DET",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -2933,7 +3189,7 @@
   "min": 27.1,
   "pts": 13.6,
   "reb": 5.3,
-  "ast": 1,
+  "ast": 1.0,
   "stl": 0.9,
   "blk": 0.7,
   "tpm": 1.3,
@@ -2947,7 +3203,9 @@
   "id": "nba-1629675",
   "nbaId": 1629675,
   "name": "Naz Reid",
-  "team": "MIN",
+  "team": "CHA",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -2957,8 +3215,8 @@
   "pts": 13.6,
   "reb": 6.2,
   "ast": 2.2,
-  "stl": 1,
-  "blk": 1,
+  "stl": 1.0,
+  "blk": 1.0,
   "tpm": 2.1,
   "fgm": 5.2,
   "fga": 11.3,
@@ -2970,13 +3228,15 @@
   "id": "nba-1630560",
   "nbaId": 1630560,
   "name": "Cam Thomas",
-  "team": "MIL",
+  "team": "",
+  "lastTeam": "MIL",
+  "signed": false,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 42,
-  "min": 21,
+  "min": 21.0,
   "pts": 13.5,
   "reb": 1.7,
   "ast": 2.6,
@@ -2984,9 +3244,9 @@
   "blk": 0.1,
   "tpm": 1.2,
   "fgm": 4.5,
-  "fga": 11,
+  "fga": 11.0,
   "ftm": 3.3,
-  "fta": 4,
+  "fta": 4.0,
   "tov": 1.8
  },
  {
@@ -2994,6 +3254,8 @@
   "nbaId": 1642263,
   "name": "Reed Sheppard",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3006,17 +3268,19 @@
   "stl": 1.5,
   "blk": 0.7,
   "tpm": 2.8,
-  "fgm": 5,
+  "fgm": 5.0,
   "fga": 11.5,
   "ftm": 0.8,
-  "fta": 1,
+  "fta": 1.0,
   "tov": 1.5
  },
  {
   "id": "nba-203501",
   "nbaId": 203501,
   "name": "Tim Hardaway Jr.",
-  "team": "DEN",
+  "team": "MIA",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3031,7 +3295,7 @@
   "tpm": 2.8,
   "fgm": 4.4,
   "fga": 9.7,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.5,
   "tov": 0.5
  },
@@ -3040,6 +3304,8 @@
   "nbaId": 1629673,
   "name": "Jordan Poole",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3047,7 +3313,7 @@
   "gp": 39,
   "min": 23.9,
   "pts": 13.4,
-  "reb": 2,
+  "reb": 2.0,
   "ast": 3.1,
   "stl": 0.6,
   "blk": 0.4,
@@ -3062,7 +3328,9 @@
   "id": "nba-1629656",
   "nbaId": 1629656,
   "name": "Quentin Grimes",
-  "team": "PHI",
+  "team": "LAL",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3086,6 +3354,8 @@
   "nbaId": 1641739,
   "name": "Toumani Camara",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3108,7 +3378,9 @@
   "id": "nba-202699",
   "nbaId": 202699,
   "name": "Tobias Harris",
-  "team": "DET",
+  "team": "SAS",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3125,13 +3397,15 @@
   "fga": 10.5,
   "ftm": 2.2,
   "fta": 2.5,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1642281",
   "nbaId": 1642281,
   "name": "Jaylon Tyson",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3143,8 +3417,8 @@
   "ast": 2.2,
   "stl": 0.8,
   "blk": 0.4,
-  "tpm": 2,
-  "fgm": 5,
+  "tpm": 2.0,
+  "fgm": 5.0,
   "fga": 10.2,
   "ftm": 1.2,
   "fta": 1.6,
@@ -3155,6 +3429,8 @@
   "nbaId": 1629640,
   "name": "Keldon Johnson",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3167,7 +3443,7 @@
   "stl": 0.6,
   "blk": 0.1,
   "tpm": 1.2,
-  "fgm": 5,
+  "fgm": 5.0,
   "fga": 9.7,
   "ftm": 1.9,
   "fta": 2.4,
@@ -3177,14 +3453,16 @@
   "id": "nba-1630314",
   "nbaId": 1630314,
   "name": "Brandon Williams",
-  "team": "DAL",
+  "team": "GSW",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 66,
   "min": 22.2,
-  "pts": 13,
+  "pts": 13.0,
   "reb": 2.9,
   "ast": 3.9,
   "stl": 0.9,
@@ -3201,21 +3479,23 @@
   "nbaId": 1628398,
   "name": "Kyle Kuzma",
   "team": "MIL",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 69,
   "min": 26.2,
-  "pts": 13,
+  "pts": 13.0,
   "reb": 4.5,
   "ast": 2.7,
   "stl": 0.7,
   "blk": 0.4,
   "tpm": 1.2,
   "fgm": 4.9,
-  "fga": 10,
-  "ftm": 2,
+  "fga": 10.0,
+  "ftm": 2.0,
   "fta": 2.7,
   "tov": 1.7
  },
@@ -3224,6 +3504,8 @@
   "nbaId": 1630241,
   "name": "Sam Merrill",
   "team": "CLE",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3235,7 +3517,7 @@
   "ast": 2.4,
   "stl": 0.6,
   "blk": 0.1,
-  "tpm": 3,
+  "tpm": 3.0,
   "fgm": 4.3,
   "fga": 9.3,
   "ftm": 1.1,
@@ -3247,6 +3529,8 @@
   "nbaId": 1631221,
   "name": "Collin Gillespie",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3261,7 +3545,7 @@
   "tpm": 2.9,
   "fgm": 4.4,
   "fga": 10.5,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.1,
   "tov": 1.6
  },
@@ -3269,7 +3553,9 @@
   "id": "nba-1627763",
   "nbaId": 1627763,
   "name": "Malcolm Brogdon",
-  "team": "WAS",
+  "team": "",
+  "lastTeam": "WAS",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -3283,7 +3569,7 @@
   "blk": 0.2,
   "tpm": 0.7,
   "fgm": 4.3,
-  "fga": 10,
+  "fga": 10.0,
   "ftm": 3.4,
   "fta": 3.8,
   "tov": 1.6
@@ -3292,7 +3578,9 @@
   "id": "nba-1626156",
   "nbaId": 1626156,
   "name": "D'Angelo Russell",
-  "team": "BKN",
+  "team": "",
+  "lastTeam": "BKN",
+  "signed": false,
   "positions": [
    "G"
   ],
@@ -3302,11 +3590,11 @@
   "pts": 12.6,
   "reb": 2.8,
   "ast": 5.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.4,
   "tpm": 1.9,
   "fgm": 4.3,
-  "fga": 11,
+  "fga": 11.0,
   "ftm": 2.1,
   "fta": 2.5,
   "tov": 1.9
@@ -3315,7 +3603,9 @@
   "id": "nba-1629028",
   "nbaId": 1629028,
   "name": "Deandre Ayton",
-  "team": "LAL",
+  "team": "WAS",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3323,15 +3613,15 @@
   "gp": 72,
   "min": 27.2,
   "pts": 12.5,
-  "reb": 8,
+  "reb": 8.0,
   "ast": 0.8,
   "stl": 0.6,
-  "blk": 1,
-  "tpm": 0,
+  "blk": 1.0,
+  "tpm": 0.0,
   "fgm": 5.6,
   "fga": 8.3,
   "ftm": 1.3,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 1.2
  },
  {
@@ -3339,6 +3629,8 @@
   "nbaId": 1641713,
   "name": "GG Jackson",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3353,7 +3645,7 @@
   "tpm": 1.2,
   "fgm": 4.6,
   "fga": 9.3,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.7,
   "tov": 1.5
  },
@@ -3362,6 +3654,8 @@
   "nbaId": 1642377,
   "name": "Jaylen Wells",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3385,18 +3679,20 @@
   "nbaId": 1628370,
   "name": "Malik Monk",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 62,
-  "min": 22,
+  "min": 22.0,
   "pts": 12.5,
   "reb": 1.9,
-  "ast": 3,
+  "ast": 3.0,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 4.5,
   "fga": 10.2,
   "ftm": 1.5,
@@ -3408,6 +3704,8 @@
   "nbaId": 1642875,
   "name": "Maxime Raynaud",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3431,6 +3729,8 @@
   "nbaId": 1631099,
   "name": "Keegan Murray",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3442,7 +3742,7 @@
   "ast": 1.4,
   "stl": 0.8,
   "blk": 0.9,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 4.8,
   "fga": 10.8,
   "ftm": 0.8,
@@ -3453,7 +3753,9 @@
   "id": "nba-1629022",
   "nbaId": 1629022,
   "name": "Lonnie Walker IV",
-  "team": "PHI",
+  "team": "",
+  "lastTeam": "PHI",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -3477,12 +3779,14 @@
   "nbaId": 1629001,
   "name": "De'Anthony Melton",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 49,
-  "min": 23,
+  "min": 23.0,
   "pts": 12.3,
   "reb": 3.2,
   "ast": 2.6,
@@ -3491,7 +3795,7 @@
   "tpm": 1.5,
   "fgm": 4.4,
   "fga": 10.8,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.5,
   "tov": 1.9
  },
@@ -3500,6 +3804,8 @@
   "nbaId": 1631108,
   "name": "Max Christie",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3508,7 +3814,7 @@
   "min": 29.1,
   "pts": 12.3,
   "reb": 3.2,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.6,
   "blk": 0.4,
   "tpm": 2.3,
@@ -3523,18 +3829,20 @@
   "nbaId": 1641730,
   "name": "Noah Clowney",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 66,
-  "min": 27,
+  "min": 27.0,
   "pts": 12.3,
   "reb": 4.1,
   "ast": 1.6,
   "stl": 0.8,
   "blk": 0.7,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 3.8,
   "fga": 9.6,
   "ftm": 2.7,
@@ -3546,6 +3854,8 @@
   "nbaId": 1629661,
   "name": "Cameron Johnson",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3557,7 +3867,7 @@
   "ast": 2.4,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 4.2,
   "fga": 8.8,
   "ftm": 1.7,
@@ -3569,6 +3879,8 @@
   "nbaId": 1628978,
   "name": "Donte DiVincenzo",
   "team": "MIN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3580,10 +3892,10 @@
   "ast": 3.8,
   "stl": 1.3,
   "blk": 0.4,
-  "tpm": 3,
+  "tpm": 3.0,
   "fgm": 4.1,
   "fga": 10.2,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.3,
   "tov": 1.4
  },
@@ -3592,6 +3904,8 @@
   "nbaId": 1629130,
   "name": "Duncan Robinson",
   "team": "DET",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3614,7 +3928,9 @@
   "id": "nba-1630228",
   "nbaId": 1630228,
   "name": "Jonathan Kuminga",
-  "team": "ATL",
+  "team": "MIN",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -3626,7 +3942,7 @@
   "ast": 2.3,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 4.4,
   "fga": 9.4,
   "ftm": 2.5,
@@ -3638,15 +3954,17 @@
   "nbaId": 1642848,
   "name": "Tre Johnson",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 60,
-  "min": 24,
+  "min": 24.0,
   "pts": 12.2,
   "reb": 2.8,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.6,
   "blk": 0.3,
   "tpm": 1.9,
@@ -3661,6 +3979,8 @@
   "nbaId": 1642270,
   "name": "Donovan Clingan",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3684,6 +4004,8 @@
   "nbaId": 1630541,
   "name": "Moses Moody",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3693,57 +4015,61 @@
   "pts": 12.1,
   "reb": 3.3,
   "ast": 1.6,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.6,
   "tpm": 2.5,
   "fgm": 4.1,
   "fga": 9.3,
   "ftm": 1.5,
   "fta": 1.9,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1631128",
   "nbaId": 1631128,
   "name": "Christian Braun",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 44,
   "min": 31.8,
-  "pts": 12,
+  "pts": 12.0,
   "reb": 4.8,
   "ast": 2.7,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 4.6,
   "fga": 8.8,
   "ftm": 1.8,
   "fta": 2.3,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1628404",
   "nbaId": 1628404,
   "name": "Josh Hart",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 66,
   "min": 30.2,
-  "pts": 12,
+  "pts": 12.0,
   "reb": 7.4,
   "ast": 4.8,
   "stl": 1.1,
   "blk": 0.3,
   "tpm": 1.5,
   "fgm": 4.6,
-  "fga": 9,
+  "fga": 9.0,
   "ftm": 1.4,
   "fta": 1.9,
   "tov": 1.9
@@ -3753,13 +4079,15 @@
   "nbaId": 1630540,
   "name": "Miles McBride",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 41,
   "min": 26.3,
-  "pts": 12,
+  "pts": 12.0,
   "reb": 2.4,
   "ast": 2.6,
   "stl": 0.9,
@@ -3776,6 +4104,8 @@
   "nbaId": 1630700,
   "name": "Dyson Daniels",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3785,12 +4115,12 @@
   "pts": 11.9,
   "reb": 6.8,
   "ast": 5.9,
-  "stl": 2,
+  "stl": 2.0,
   "blk": 0.4,
   "tpm": 0.3,
   "fgm": 5.3,
   "fga": 10.2,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.6,
   "tov": 1.8
  },
@@ -3799,6 +4129,8 @@
   "nbaId": 1626167,
   "name": "Myles Turner",
   "team": "MIL",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3811,7 +4143,7 @@
   "stl": 0.7,
   "blk": 1.6,
   "tpm": 2.1,
-  "fgm": 4,
+  "fgm": 4.0,
   "fga": 9.1,
   "ftm": 1.8,
   "fta": 2.5,
@@ -3822,6 +4154,8 @@
   "nbaId": 1642844,
   "name": "Dylan Harper",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3845,6 +4179,8 @@
   "nbaId": 1628976,
   "name": "Wendell Carter Jr.",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3853,7 +4189,7 @@
   "min": 29.3,
   "pts": 11.8,
   "reb": 7.4,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.8,
   "blk": 0.6,
   "tpm": 0.9,
@@ -3868,6 +4204,8 @@
   "nbaId": 1641731,
   "name": "Bilal Coulibaly",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3878,7 +4216,7 @@
   "reb": 4.3,
   "ast": 2.6,
   "stl": 1.3,
-  "blk": 1,
+  "blk": 1.0,
   "tpm": 1.2,
   "fgm": 4.1,
   "fga": 9.7,
@@ -3891,16 +4229,18 @@
   "nbaId": 1642852,
   "name": "Derik Queen",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 81,
-  "min": 25,
+  "min": 25.0,
   "pts": 11.7,
   "reb": 7.1,
   "ast": 3.7,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.9,
   "tpm": 0.3,
   "fgm": 4.4,
@@ -3914,6 +4254,8 @@
   "nbaId": 1642268,
   "name": "Isaiah Collier",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3936,7 +4278,9 @@
   "id": "nba-202691",
   "nbaId": 202691,
   "name": "Klay Thompson",
-  "team": "DAL",
+  "team": "MIA",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -3960,6 +4304,8 @@
   "nbaId": 1631109,
   "name": "Mark Williams",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3967,11 +4313,11 @@
   "gp": 60,
   "min": 23.6,
   "pts": 11.7,
-  "reb": 8,
-  "ast": 1,
+  "reb": 8.0,
+  "ast": 1.0,
   "stl": 0.9,
   "blk": 0.9,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 4.7,
   "fga": 7.3,
   "ftm": 2.3,
@@ -3982,7 +4328,9 @@
   "id": "nba-1629651",
   "nbaId": 1629651,
   "name": "Nic Claxton",
-  "team": "BKN",
+  "team": "CHI",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -3994,10 +4342,10 @@
   "ast": 3.7,
   "stl": 0.7,
   "blk": 1.1,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 4.8,
   "fga": 8.4,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 3.3,
   "tov": 1.4
  },
@@ -4006,6 +4354,8 @@
   "nbaId": 1641716,
   "name": "Jarace Walker",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4018,7 +4368,7 @@
   "stl": 0.8,
   "blk": 0.3,
   "tpm": 1.8,
-  "fgm": 4,
+  "fgm": 4.0,
   "fga": 9.6,
   "ftm": 1.8,
   "fta": 2.4,
@@ -4028,7 +4378,9 @@
   "id": "nba-1629060",
   "nbaId": 1629060,
   "name": "Rui Hachimura",
-  "team": "LAL",
+  "team": "LAC",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4051,7 +4403,9 @@
   "id": "nba-1631110",
   "nbaId": 1631110,
   "name": "Jeremy Sochan",
-  "team": "SAS",
+  "team": "",
+  "lastTeam": "SAS",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -4075,6 +4429,8 @@
   "nbaId": 1642271,
   "name": "Kyle Filipowski",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4086,7 +4442,7 @@
   "ast": 2.6,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 4.2,
   "fga": 8.5,
   "ftm": 2.1,
@@ -4098,6 +4454,8 @@
   "nbaId": 1641796,
   "name": "Pelle Larsson",
   "team": "MIA",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4110,8 +4468,8 @@
   "stl": 0.7,
   "blk": 0.2,
   "tpm": 0.9,
-  "fgm": 4,
-  "fga": 8,
+  "fgm": 4.0,
+  "fga": 8.0,
   "ftm": 2.6,
   "fta": 3.3,
   "tov": 1.4
@@ -4120,7 +4478,9 @@
   "id": "nba-1630572",
   "nbaId": 1630572,
   "name": "Sandro Mamukelashvili",
-  "team": "TOR",
+  "team": "LAL",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4136,7 +4496,7 @@
   "fgm": 4.1,
   "fga": 7.9,
   "ftm": 1.5,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 0.8
  },
  {
@@ -4144,6 +4504,8 @@
   "nbaId": 1642285,
   "name": "Cam Spencer",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4155,7 +4517,7 @@
   "ast": 5.6,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 3.7,
   "fga": 7.7,
   "ftm": 1.8,
@@ -4166,7 +4528,9 @@
   "id": "nba-1630198",
   "nbaId": 1630198,
   "name": "Isaiah Joe",
-  "team": "OKC",
+  "team": "DET",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4190,6 +4554,8 @@
   "nbaId": 1630577,
   "name": "Julian Champagnie",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4212,7 +4578,9 @@
   "id": "nba-1642276",
   "nbaId": 1642276,
   "name": "Kel'el Ware",
-  "team": "MIA",
+  "team": "MIL",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -4220,7 +4588,7 @@
   "gp": 77,
   "min": 22.1,
   "pts": 11.1,
-  "reb": 9,
+  "reb": 9.0,
   "ast": 0.7,
   "stl": 0.8,
   "blk": 1.1,
@@ -4235,13 +4603,15 @@
   "id": "nba-1631117",
   "nbaId": 1631117,
   "name": "Walker Kessler",
-  "team": "UTA",
+  "team": "LAL",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2024-25",
   "gp": 58,
-  "min": 30,
+  "min": 30.0,
   "pts": 11.1,
   "reb": 12.2,
   "ast": 1.7,
@@ -4258,14 +4628,16 @@
   "id": "nba-203915",
   "nbaId": 203915,
   "name": "Spencer Dinwiddie",
-  "team": "DAL",
+  "team": "",
+  "lastTeam": "DAL",
+  "signed": false,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 79,
-  "min": 27,
-  "pts": 11,
+  "min": 27.0,
+  "pts": 11.0,
   "reb": 2.7,
   "ast": 4.4,
   "stl": 0.9,
@@ -4280,8 +4652,10 @@
  {
   "id": "nba-203994",
   "nbaId": 203994,
-  "name": "Jusuf Nurkić",
+  "name": "Jusuf Nurki\u0107",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -4305,6 +4679,8 @@
   "nbaId": 203497,
   "name": "Rudy Gobert",
   "team": "MIN",
+  "lastTeam": "MIN",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -4316,24 +4692,26 @@
   "ast": 1.7,
   "stl": 0.8,
   "blk": 1.6,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 4.4,
   "fga": 6.5,
   "ftm": 2.1,
-  "fta": 4,
+  "fta": 4.0,
   "tov": 1.4
  },
  {
   "id": "nba-203992",
   "nbaId": 203992,
-  "name": "Bogdan Bogdanović",
-  "team": "LAC",
+  "name": "Bogdan Bogdanovi\u0107",
+  "team": "HOU",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 54,
-  "min": 25,
+  "min": 25.0,
   "pts": 10.8,
   "reb": 2.9,
   "ast": 2.7,
@@ -4351,6 +4729,8 @@
   "nbaId": 1631342,
   "name": "Daeqwon Plowden",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4358,7 +4738,7 @@
   "gp": 32,
   "min": 26.4,
   "pts": 10.8,
-  "reb": 3,
+  "reb": 3.0,
   "ast": 1.3,
   "stl": 0.7,
   "blk": 0.2,
@@ -4372,8 +4752,10 @@
  {
   "id": "nba-203471",
   "nbaId": 203471,
-  "name": "Dennis Schröder",
-  "team": "CLE",
+  "name": "Dennis Schr\u00f6der",
+  "team": "CHA",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4387,7 +4769,7 @@
   "blk": 0.2,
   "tpm": 1.1,
   "fgm": 3.6,
-  "fga": 9,
+  "fga": 9.0,
   "ftm": 2.4,
   "fta": 2.9,
   "tov": 1.8
@@ -4396,7 +4778,9 @@
   "id": "nba-1641722",
   "nbaId": 1641722,
   "name": "Jordan Hawkins",
-  "team": "NOP",
+  "team": "CHI",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4408,18 +4792,20 @@
   "ast": 1.2,
   "stl": 0.5,
   "blk": 0.4,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 3.7,
   "fga": 9.9,
   "ftm": 1.4,
   "fta": 1.8,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1630527",
   "nbaId": 1630527,
   "name": "Brandon Boston",
-  "team": "NOP",
+  "team": "",
+  "lastTeam": "NOP",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -4432,10 +4818,10 @@
   "stl": 1.3,
   "blk": 0.2,
   "tpm": 1.2,
-  "fgm": 4,
+  "fgm": 4.0,
   "fga": 9.1,
   "ftm": 1.6,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 1.2
  },
  {
@@ -4443,6 +4829,8 @@
   "nbaId": 1642267,
   "name": "Bub Carrington",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4456,8 +4844,8 @@
   "blk": 0.2,
   "tpm": 2.1,
   "fgm": 3.8,
-  "fga": 9,
-  "ftm": 1,
+  "fga": 9.0,
+  "ftm": 1.0,
   "fta": 1.4,
   "tov": 2.3
  },
@@ -4466,18 +4854,20 @@
   "nbaId": 1627751,
   "name": "Jakob Poeltl",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 46,
-  "min": 25,
+  "min": 25.0,
   "pts": 10.7,
-  "reb": 7,
-  "ast": 2,
+  "reb": 7.0,
+  "ast": 2.0,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 4.7,
   "fga": 6.7,
   "ftm": 1.3,
@@ -4489,6 +4879,8 @@
   "nbaId": 1629111,
   "name": "Jock Landale",
   "team": "ATL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -4511,7 +4903,9 @@
   "id": "nba-1630553",
   "nbaId": 1630553,
   "name": "Keon Johnson",
-  "team": "BKN",
+  "team": "",
+  "lastTeam": "BKN",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -4521,7 +4915,7 @@
   "pts": 10.6,
   "reb": 3.8,
   "ast": 2.2,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.4,
   "tpm": 1.6,
   "fgm": 3.8,
@@ -4534,7 +4928,9 @@
   "id": "nba-1626179",
   "nbaId": 1626179,
   "name": "Terry Rozier",
-  "team": "MIA",
+  "team": "",
+  "lastTeam": "MIA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -4558,6 +4954,8 @@
   "nbaId": 1631106,
   "name": "Tari Eason",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4570,7 +4968,7 @@
   "stl": 1.2,
   "blk": 0.5,
   "tpm": 1.6,
-  "fgm": 4,
+  "fgm": 4.0,
   "fga": 9.7,
   "ftm": 0.9,
   "fta": 1.1,
@@ -4581,6 +4979,8 @@
   "nbaId": 1631260,
   "name": "AJ Green",
   "team": "MIL",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4592,18 +4992,20 @@
   "ast": 1.9,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 3,
+  "tpm": 3.0,
   "fgm": 3.4,
   "fga": 7.9,
   "ftm": 0.7,
   "fta": 0.8,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1642856",
   "nbaId": 1642856,
-  "name": "Egor Dëmin",
+  "name": "Egor D\u00ebmin",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4618,7 +5020,7 @@
   "tpm": 2.4,
   "fgm": 3.4,
   "fga": 8.6,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.3,
   "tov": 1.7
  },
@@ -4627,6 +5029,8 @@
   "nbaId": 1642860,
   "name": "Will Riley",
   "team": "WAS",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4635,7 +5039,7 @@
   "min": 22.1,
   "pts": 10.3,
   "reb": 2.9,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.7,
   "blk": 0.1,
   "tpm": 1.1,
@@ -4649,7 +5053,9 @@
   "id": "nba-203114",
   "nbaId": 203114,
   "name": "Khris Middleton",
-  "team": "DAL",
+  "team": "WAS",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4673,6 +5079,8 @@
   "nbaId": 1629674,
   "name": "Neemias Queta",
   "team": "BOS",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -4684,18 +5092,20 @@
   "ast": 1.7,
   "stl": 0.8,
   "blk": 1.3,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 4.3,
   "fga": 6.6,
   "ftm": 1.6,
   "fta": 2.3,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1630533",
   "nbaId": 1630533,
   "name": "Ziaire Williams",
-  "team": "BKN",
+  "team": "LAL",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4719,17 +5129,19 @@
   "nbaId": 1627884,
   "name": "Derrick Jones Jr.",
   "team": "LAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 50,
-  "min": 27,
+  "min": 27.0,
   "pts": 10.1,
   "reb": 3.5,
   "ast": 1.4,
   "stl": 0.9,
-  "blk": 1,
+  "blk": 1.0,
   "tpm": 1.1,
   "fgm": 3.8,
   "fga": 7.6,
@@ -4742,6 +5154,8 @@
   "nbaId": 1630173,
   "name": "Precious Achiuwa",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4764,15 +5178,17 @@
   "id": "nba-1630191",
   "nbaId": 1630191,
   "name": "Isaiah Stewart",
-  "team": "DET",
+  "team": "MEM",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 58,
   "min": 22.7,
-  "pts": 10,
-  "reb": 5,
+  "pts": 10.0,
+  "reb": 5.0,
   "ast": 1.1,
   "stl": 0.3,
   "blk": 1.6,
@@ -4788,14 +5204,16 @@
   "nbaId": 1641757,
   "name": "Jordan Miller",
   "team": "LAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 60,
   "min": 22.1,
-  "pts": 10,
-  "reb": 3,
+  "pts": 10.0,
+  "reb": 3.0,
   "ast": 2.3,
   "stl": 0.8,
   "blk": 0.2,
@@ -4811,13 +5229,15 @@
   "nbaId": 1628989,
   "name": "Kevin Huerter",
   "team": "DET",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 69,
   "min": 22.5,
-  "pts": 10,
+  "pts": 10.0,
   "reb": 3.5,
   "ast": 2.6,
   "stl": 0.9,
@@ -4826,24 +5246,26 @@
   "fgm": 3.9,
   "fga": 8.6,
   "ftm": 0.8,
-  "fta": 1,
-  "tov": 1
+  "fta": 1.0,
+  "tov": 1.0
  },
  {
   "id": "nba-1641709",
   "nbaId": 1641709,
   "name": "Ausar Thompson",
   "team": "DET",
+  "lastTeam": "DET",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 73,
-  "min": 26,
+  "min": 26.0,
   "pts": 9.9,
   "reb": 5.7,
   "ast": 3.1,
-  "stl": 2,
+  "stl": 2.0,
   "blk": 0.9,
   "tpm": 0.1,
   "fgm": 4.2,
@@ -4856,7 +5278,9 @@
   "id": "nba-1627777",
   "nbaId": 1627777,
   "name": "Georges Niang",
-  "team": "ATL",
+  "team": "GSW",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4873,13 +5297,15 @@
   "fga": 7.8,
   "ftm": 0.6,
   "fta": 0.7,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-203084",
   "nbaId": 203084,
   "name": "Harrison Barnes",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4902,7 +5328,9 @@
   "id": "nba-1641733",
   "nbaId": 1641733,
   "name": "Nick Smith Jr.",
-  "team": "CHA",
+  "team": "",
+  "lastTeam": "CHA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -4926,6 +5354,8 @@
   "nbaId": 1630590,
   "name": "Scotty Pippen Jr.",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -4949,6 +5379,8 @@
   "nbaId": 1641783,
   "name": "Tristan da Silva",
   "team": "ORL",
+  "lastTeam": "ORL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4971,7 +5403,9 @@
   "id": "nba-1626220",
   "nbaId": 1626220,
   "name": "Royce O'Neale",
-  "team": "PHX",
+  "team": "CHA",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -4985,7 +5419,7 @@
   "blk": 0.4,
   "tpm": 2.7,
   "fgm": 3.4,
-  "fga": 8,
+  "fga": 8.0,
   "ftm": 0.3,
   "fta": 0.5,
   "tov": 1.3
@@ -4994,7 +5428,9 @@
   "id": "nba-1629599",
   "nbaId": 1629599,
   "name": "Amir Coffey",
-  "team": "LAC",
+  "team": "",
+  "lastTeam": "LAC",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -5017,7 +5453,9 @@
   "id": "nba-1642258",
   "nbaId": 1642258,
   "name": "Zaccharie Risacher",
-  "team": "ATL",
+  "team": "DAL",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5031,7 +5469,7 @@
   "blk": 0.5,
   "tpm": 1.4,
   "fgm": 3.6,
-  "fga": 8,
+  "fga": 8.0,
   "ftm": 0.9,
   "fta": 1.3,
   "tov": 0.9
@@ -5041,6 +5479,8 @@
   "nbaId": 1629655,
   "name": "Daniel Gafford",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5052,10 +5492,10 @@
   "ast": 1.1,
   "stl": 0.8,
   "blk": 1.3,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 3.8,
   "fga": 5.7,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.9,
   "tov": 1.1
  },
@@ -5064,21 +5504,23 @@
   "nbaId": 1630643,
   "name": "Jay Huff",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 82,
-  "min": 21,
+  "min": 21.0,
   "pts": 9.5,
-  "reb": 4,
+  "reb": 4.0,
   "ast": 1.5,
   "stl": 0.5,
   "blk": 1.9,
   "tpm": 1.5,
   "fgm": 3.5,
   "fga": 7.5,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.2,
   "tov": 0.9
  },
@@ -5086,7 +5528,9 @@
   "id": "nba-1641787",
   "nbaId": 1641787,
   "name": "Tosan Evbuomwan",
-  "team": "BKN",
+  "team": "",
+  "lastTeam": "BKN",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -5095,13 +5539,13 @@
   "min": 23.7,
   "pts": 9.5,
   "reb": 4.3,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.9,
   "blk": 0.4,
   "tpm": 0.9,
   "fgm": 3.4,
   "fga": 7.9,
-  "ftm": 2,
+  "ftm": 2.0,
   "fta": 2.6,
   "tov": 1.4
  },
@@ -5109,7 +5553,9 @@
   "id": "nba-1630598",
   "nbaId": 1630598,
   "name": "Aaron Wiggins",
-  "team": "OKC",
+  "team": "ATL",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5132,7 +5578,9 @@
   "id": "nba-1629622",
   "nbaId": 1629622,
   "name": "Max Strus",
-  "team": "CLE",
+  "team": "LAC",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5156,6 +5604,8 @@
   "nbaId": 1629004,
   "name": "Svi Mykhailiuk",
   "team": "UTA",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5167,7 +5617,7 @@
   "ast": 1.9,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 3.5,
   "fga": 7.2,
   "ftm": 0.5,
@@ -5179,6 +5629,8 @@
   "nbaId": 1630558,
   "name": "Davion Mitchell",
   "team": "MIA",
+  "lastTeam": "MIA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5188,7 +5640,7 @@
   "pts": 9.3,
   "reb": 2.7,
   "ast": 6.5,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.2,
   "tpm": 1.3,
   "fgm": 3.7,
@@ -5202,6 +5654,8 @@
   "nbaId": 1630171,
   "name": "Isaac Okoro",
   "team": "CHI",
+  "lastTeam": "CHI",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5225,18 +5679,20 @@
   "nbaId": 1629013,
   "name": "Landry Shamet",
   "team": "NYK",
+  "lastTeam": "NYK",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 51,
-  "min": 23,
+  "min": 23.0,
   "pts": 9.3,
   "reb": 1.8,
   "ast": 1.4,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 2,
+  "tpm": 2.0,
   "fgm": 3.1,
   "fga": 7.1,
   "ftm": 1.1,
@@ -5247,7 +5703,9 @@
   "id": "nba-203935",
   "nbaId": 203935,
   "name": "Marcus Smart",
-  "team": "LAL",
+  "team": "HOU",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5256,11 +5714,11 @@
   "min": 28.5,
   "pts": 9.3,
   "reb": 2.8,
-  "ast": 3,
+  "ast": 3.0,
   "stl": 1.4,
   "blk": 0.4,
   "tpm": 1.6,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 7.7,
   "ftm": 1.7,
   "fta": 2.1,
@@ -5271,6 +5729,8 @@
   "nbaId": 1628392,
   "name": "Isaiah Hartenstein",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5280,9 +5740,9 @@
   "pts": 9.2,
   "reb": 9.4,
   "ast": 3.5,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.8,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 3.9,
   "fga": 6.3,
   "ftm": 1.4,
@@ -5294,6 +5754,8 @@
   "nbaId": 1630573,
   "name": "Sam Hauser",
   "team": "BOS",
+  "lastTeam": "BOS",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5317,6 +5779,8 @@
   "nbaId": 1641744,
   "name": "Zach Edey",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5325,7 +5789,7 @@
   "min": 21.5,
   "pts": 9.2,
   "reb": 8.3,
-  "ast": 1,
+  "ast": 1.0,
   "stl": 0.5,
   "blk": 1.3,
   "tpm": 0.3,
@@ -5339,7 +5803,9 @@
   "id": "nba-203991",
   "nbaId": 203991,
   "name": "Clint Capela",
-  "team": "ATL",
+  "team": "HOU",
+  "lastTeam": "ATL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5350,9 +5816,9 @@
   "reb": 8.5,
   "ast": 1.1,
   "stl": 0.6,
-  "blk": 1,
-  "tpm": 0,
-  "fgm": 4,
+  "blk": 1.0,
+  "tpm": 0.0,
+  "fgm": 4.0,
   "fga": 7.1,
   "ftm": 0.9,
   "fta": 1.8,
@@ -5363,6 +5829,8 @@
   "nbaId": 1642874,
   "name": "Danny Wolf",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5386,6 +5854,8 @@
   "nbaId": 1630529,
   "name": "Herbert Jones",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5409,6 +5879,8 @@
   "nbaId": 1642849,
   "name": "Nolan Traore",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5431,22 +5903,24 @@
   "id": "nba-101108",
   "nbaId": 101108,
   "name": "Chris Paul",
-  "team": "SAS",
+  "team": "",
+  "lastTeam": "SAS",
+  "signed": false,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 82,
-  "min": 28,
+  "min": 28.0,
   "pts": 8.8,
   "reb": 3.6,
   "ast": 7.4,
   "stl": 1.3,
   "blk": 0.3,
   "tpm": 1.7,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 7.1,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.1,
   "tov": 1.6
  },
@@ -5454,7 +5928,9 @@
   "id": "nba-1642262",
   "nbaId": 1642262,
   "name": "Cody Williams",
-  "team": "UTA",
+  "team": "MIN",
+  "lastTeam": "UTA",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5462,8 +5938,8 @@
   "gp": 67,
   "min": 24.3,
   "pts": 8.8,
-  "reb": 3,
-  "ast": 2,
+  "reb": 3.0,
+  "ast": 2.0,
   "stl": 0.8,
   "blk": 0.4,
   "tpm": 0.4,
@@ -5478,6 +5954,8 @@
   "nbaId": 1641726,
   "name": "Dereck Lively II",
   "team": "DAL",
+  "lastTeam": "DAL",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5489,11 +5967,11 @@
   "ast": 2.4,
   "stl": 0.6,
   "blk": 1.6,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 3.7,
   "fga": 5.3,
   "ftm": 1.3,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 1.1
  },
  {
@@ -5501,6 +5979,8 @@
   "nbaId": 1630692,
   "name": "Jordan Goodwin",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5517,13 +5997,15 @@
   "fga": 7.9,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1641717",
   "nbaId": 1641717,
   "name": "Cason Wallace",
   "team": "OKC",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5547,6 +6029,8 @@
   "nbaId": 1642363,
   "name": "Nique Clifford",
   "team": "SAC",
+  "lastTeam": "SAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5558,7 +6042,7 @@
   "ast": 2.4,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 3.3,
   "fga": 7.9,
   "ftm": 0.9,
@@ -5570,6 +6054,8 @@
   "nbaId": 201572,
   "name": "Brook Lopez",
   "team": "LAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5585,7 +6071,7 @@
   "fgm": 3.1,
   "fga": 7.2,
   "ftm": 0.7,
-  "fta": 1,
+  "fta": 1.0,
   "tov": 0.8
  },
  {
@@ -5593,6 +6079,8 @@
   "nbaId": 1642867,
   "name": "Collin Murray-Boyles",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5600,22 +6088,24 @@
   "gp": 57,
   "min": 21.9,
   "pts": 8.5,
-  "reb": 5,
+  "reb": 5.0,
   "ast": 1.9,
   "stl": 0.9,
   "blk": 0.9,
   "tpm": 0.3,
   "fgm": 3.5,
-  "fga": 6,
+  "fga": 6.0,
   "ftm": 1.2,
   "fta": 1.9,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1630249",
   "nbaId": 1630249,
-  "name": "Vít Krejčí",
+  "name": "V\u00edt Krej\u010d\u00ed",
   "team": "POR",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5627,8 +6117,8 @@
   "ast": 1.5,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 2,
-  "fgm": 3,
+  "tpm": 2.0,
+  "fgm": 3.0,
   "fga": 6.6,
   "ftm": 0.6,
   "fta": 0.8,
@@ -5639,6 +6129,8 @@
   "nbaId": 203110,
   "name": "Draymond Green",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5651,7 +6143,7 @@
   "stl": 0.9,
   "blk": 0.6,
   "tpm": 1.5,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 7.2,
   "ftm": 0.9,
   "fta": 1.2,
@@ -5661,7 +6153,9 @@
   "id": "nba-203484",
   "nbaId": 203484,
   "name": "Kentavious Caldwell-Pope",
-  "team": "MEM",
+  "team": "PHI",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5684,7 +6178,9 @@
   "id": "nba-1628379",
   "nbaId": 1628379,
   "name": "Luke Kennard",
-  "team": "LAL",
+  "team": "PHX",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5697,7 +6193,7 @@
   "stl": 0.7,
   "blk": 0.1,
   "tpm": 1.5,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 5.7,
   "ftm": 0.8,
   "fta": 0.9,
@@ -5708,6 +6204,8 @@
   "nbaId": 201143,
   "name": "Al Horford",
   "team": "GSW",
+  "lastTeam": "GSW",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5730,7 +6228,9 @@
   "id": "nba-1629652",
   "nbaId": 1629652,
   "name": "Luguentz Dort",
-  "team": "OKC",
+  "team": "ATL",
+  "lastTeam": "OKC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5754,6 +6254,8 @@
   "nbaId": 1631222,
   "name": "Jake LaRavia",
   "team": "LAL",
+  "lastTeam": "LAL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5761,11 +6263,11 @@
   "gp": 82,
   "min": 25.1,
   "pts": 8.2,
-  "reb": 4,
+  "reb": 4.0,
   "ast": 1.8,
   "stl": 1.3,
   "blk": 0.5,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 2.9,
   "fga": 6.4,
   "ftm": 1.4,
@@ -5776,7 +6278,9 @@
   "id": "nba-1627752",
   "nbaId": 1627752,
   "name": "Taurean Prince",
-  "team": "MIL",
+  "team": "DET",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5786,26 +6290,28 @@
   "pts": 8.2,
   "reb": 3.6,
   "ast": 1.9,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.2,
   "tpm": 1.8,
   "fgm": 2.9,
   "fga": 6.4,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1631121",
   "nbaId": 1631121,
   "name": "Bryce McGowens",
   "team": "NOP",
+  "lastTeam": "NOP",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2025-26",
   "gp": 42,
-  "min": 21,
+  "min": 21.0,
   "pts": 8.1,
   "reb": 2.1,
   "ast": 1.5,
@@ -5823,6 +6329,8 @@
   "nbaId": 1629018,
   "name": "Gary Trent Jr.",
   "team": "MIL",
+  "lastTeam": "MIL",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5830,10 +6338,10 @@
   "gp": 65,
   "min": 21.2,
   "pts": 8.1,
-  "reb": 1,
+  "reb": 1.0,
   "ast": 1.2,
   "stl": 0.5,
-  "blk": 0,
+  "blk": 0.0,
   "tpm": 1.9,
   "fgm": 2.8,
   "fga": 7.3,
@@ -5845,7 +6353,9 @@
   "id": "nba-1628971",
   "nbaId": 1628971,
   "name": "Bruce Brown",
-  "team": "DEN",
+  "team": "",
+  "lastTeam": "DEN",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -5855,10 +6365,10 @@
   "pts": 7.9,
   "reb": 3.9,
   "ast": 2.1,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.2,
   "tpm": 0.7,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 6.4,
   "ftm": 1.2,
   "fta": 1.5,
@@ -5867,31 +6377,35 @@
  {
   "id": "nba-1631217",
   "nbaId": 1631217,
-  "name": "Moussa Diabaté",
+  "name": "Moussa Diabat\u00e9",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "F"
   ],
   "asOfSeason": "2025-26",
   "gp": 73,
-  "min": 26,
+  "min": 26.0,
   "pts": 7.9,
   "reb": 8.7,
   "ast": 1.9,
   "stl": 0.8,
-  "blk": 1,
-  "tpm": 0,
+  "blk": 1.0,
+  "tpm": 0.0,
   "fgm": 3.1,
-  "fga": 5,
+  "fga": 5.0,
   "ftm": 1.6,
   "fta": 2.4,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1642354",
   "nbaId": 1642354,
   "name": "KJ Simpson",
-  "team": "CHA",
+  "team": "",
+  "lastTeam": "CHA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -5899,7 +6413,7 @@
   "gp": 36,
   "min": 23.4,
   "pts": 7.8,
-  "reb": 3,
+  "reb": 3.0,
   "ast": 3.1,
   "stl": 0.9,
   "blk": 0.2,
@@ -5915,6 +6429,8 @@
   "nbaId": 1631230,
   "name": "Dominick Barlow",
   "team": "PHI",
+  "lastTeam": "PHI",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -5927,7 +6443,7 @@
   "stl": 0.9,
   "blk": 0.7,
   "tpm": 0.3,
-  "fgm": 3,
+  "fgm": 3.0,
   "fga": 5.6,
   "ftm": 1.3,
   "fta": 1.8,
@@ -5937,15 +6453,17 @@
   "id": "nba-1642358",
   "nbaId": 1642358,
   "name": "AJ Johnson",
-  "team": "WAS",
+  "team": "NOP",
+  "lastTeam": "WAS",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 29,
-  "min": 22,
+  "min": 22.0,
   "pts": 7.6,
-  "reb": 2,
+  "reb": 2.0,
   "ast": 2.6,
   "stl": 0.4,
   "blk": 0.1,
@@ -5961,6 +6479,8 @@
   "nbaId": 1641750,
   "name": "Ryan Kalkbrenner",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -5972,7 +6492,7 @@
   "ast": 0.8,
   "stl": 0.5,
   "blk": 1.5,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 3.2,
   "fga": 4.2,
   "ftm": 1.2,
@@ -5984,6 +6504,8 @@
   "nbaId": 1642879,
   "name": "Ben Saraf",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -5999,7 +6521,7 @@
   "fgm": 2.7,
   "fga": 6.9,
   "ftm": 1.7,
-  "fta": 2,
+  "fta": 2.0,
   "tov": 2.3
  },
  {
@@ -6007,6 +6529,8 @@
   "nbaId": 1627739,
   "name": "Kris Dunn",
   "team": "LAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6018,11 +6542,11 @@
   "ast": 3.6,
   "stl": 1.6,
   "blk": 0.2,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 2.8,
   "fga": 5.8,
   "ftm": 0.8,
-  "fta": 1,
+  "fta": 1.0,
   "tov": 1.4
  },
  {
@@ -6030,6 +6554,8 @@
   "nbaId": 1629611,
   "name": "Terance Mann",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6038,13 +6564,13 @@
   "min": 24.3,
   "pts": 7.2,
   "reb": 3.2,
-  "ast": 3,
+  "ast": 3.0,
   "stl": 0.7,
   "blk": 0.2,
   "tpm": 0.9,
   "fgm": 2.7,
   "fga": 5.8,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.3,
   "tov": 1.1
  },
@@ -6053,6 +6579,8 @@
   "nbaId": 1641767,
   "name": "Ben Sheppard",
   "team": "IND",
+  "lastTeam": "IND",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6060,13 +6588,13 @@
   "gp": 65,
   "min": 21.4,
   "pts": 7.1,
-  "reb": 3,
+  "reb": 3.0,
   "ast": 1.8,
   "stl": 0.6,
   "blk": 0.1,
   "tpm": 1.3,
   "fgm": 2.6,
-  "fga": 6,
+  "fga": 6.0,
   "ftm": 0.6,
   "fta": 0.8,
   "tov": 0.6
@@ -6075,7 +6603,9 @@
   "id": "nba-1628998",
   "nbaId": 1628998,
   "name": "Cody Martin",
-  "team": "PHX",
+  "team": "",
+  "lastTeam": "PHX",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -6084,7 +6614,7 @@
   "min": 22.1,
   "pts": 6.8,
   "reb": 4.2,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 1.1,
   "blk": 0.6,
   "tpm": 0.8,
@@ -6092,13 +6622,15 @@
   "fga": 6.1,
   "ftm": 0.8,
   "fta": 1.2,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1629610",
   "nbaId": 1629610,
   "name": "DaQuan Jeffries",
-  "team": "CHA",
+  "team": "",
+  "lastTeam": "CHA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -6122,6 +6654,8 @@
   "nbaId": 1642347,
   "name": "Jamal Shead",
   "team": "TOR",
+  "lastTeam": "TOR",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6133,7 +6667,7 @@
   "ast": 5.4,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 2.3,
   "fga": 6.1,
   "ftm": 1.1,
@@ -6145,6 +6679,8 @@
   "nbaId": 1642962,
   "name": "Drake Powell",
   "team": "BKN",
+  "lastTeam": "BKN",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6161,13 +6697,15 @@
   "fga": 5.7,
   "ftm": 1.1,
   "fta": 1.2,
-  "tov": 1
+  "tov": 1.0
  },
  {
   "id": "nba-1629312",
   "nbaId": 1629312,
   "name": "Haywood Highsmith",
-  "team": "MIA",
+  "team": "",
+  "lastTeam": "MIA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -6191,20 +6729,22 @@
   "nbaId": 1628436,
   "name": "Luke Kornet",
   "team": "SAS",
+  "lastTeam": "SAS",
+  "signed": true,
   "positions": [
    "C"
   ],
   "asOfSeason": "2025-26",
   "gp": 68,
-  "min": 21,
+  "min": 21.0,
   "pts": 6.5,
   "reb": 6.1,
   "ast": 1.9,
   "stl": 0.5,
-  "blk": 1,
-  "tpm": 0,
+  "blk": 1.0,
+  "tpm": 0.0,
   "fgm": 2.6,
-  "fga": 4,
+  "fga": 4.0,
   "ftm": 1.4,
   "fta": 1.7,
   "tov": 0.4
@@ -6214,6 +6754,8 @@
   "nbaId": 1642345,
   "name": "Oso Ighodaro",
   "team": "PHX",
+  "lastTeam": "PHX",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -6225,7 +6767,7 @@
   "ast": 2.3,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 2.9,
   "fga": 4.5,
   "ftm": 0.6,
@@ -6236,7 +6778,9 @@
   "id": "nba-1630231",
   "nbaId": 1630231,
   "name": "KJ Martin",
-  "team": "UTA",
+  "team": "",
+  "lastTeam": "UTA",
+  "signed": false,
   "positions": [
    "F"
   ],
@@ -6260,6 +6804,8 @@
   "nbaId": 1642942,
   "name": "Jahmai Mashack",
   "team": "MEM",
+  "lastTeam": "MEM",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6282,7 +6828,9 @@
   "id": "nba-1629731",
   "nbaId": 1629731,
   "name": "Dean Wade",
-  "team": "CLE",
+  "team": "PHI",
+  "lastTeam": "CLE",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -6305,7 +6853,9 @@
   "id": "nba-1631200",
   "nbaId": 1631200,
   "name": "Kris Murray",
-  "team": "POR",
+  "team": "MEM",
+  "lastTeam": "POR",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -6321,7 +6871,7 @@
   "fgm": 2.3,
   "fga": 4.8,
   "ftm": 0.7,
-  "fta": 1,
+  "fta": 1.0,
   "tov": 0.8
  },
  {
@@ -6329,6 +6879,8 @@
   "nbaId": 203500,
   "name": "Steven Adams",
   "team": "HOU",
+  "lastTeam": "HOU",
+  "signed": true,
   "positions": [
    "C"
   ],
@@ -6340,7 +6892,7 @@
   "ast": 1.5,
   "stl": 0.7,
   "blk": 0.6,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 2.2,
   "fga": 4.3,
   "ftm": 1.5,
@@ -6352,6 +6904,8 @@
   "nbaId": 1642461,
   "name": "Spencer Jones",
   "team": "DEN",
+  "lastTeam": "DEN",
+  "signed": true,
   "positions": [
    "F"
   ],
@@ -6375,6 +6929,8 @@
   "nbaId": 1642883,
   "name": "Sion James",
   "team": "CHA",
+  "lastTeam": "CHA",
+  "signed": true,
   "positions": [
    "G"
   ],
@@ -6383,13 +6939,13 @@
   "min": 22.5,
   "pts": 5.4,
   "reb": 3.5,
-  "ast": 2,
+  "ast": 2.0,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 1,
+  "tpm": 1.0,
   "fgm": 1.7,
   "fga": 4.5,
-  "ftm": 1,
+  "ftm": 1.0,
   "fta": 1.2,
   "tov": 0.8
  },
@@ -6397,30 +6953,34 @@
   "id": "nba-1627732",
   "nbaId": 1627732,
   "name": "Ben Simmons",
-  "team": "LAC",
+  "team": "SAC",
+  "lastTeam": "LAC",
+  "signed": true,
   "positions": [
    "G"
   ],
   "asOfSeason": "2024-25",
   "gp": 51,
-  "min": 22,
-  "pts": 5,
+  "min": 22.0,
+  "pts": 5.0,
   "reb": 4.7,
   "ast": 5.6,
   "stl": 0.7,
   "blk": 0.5,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 2.3,
   "fga": 4.4,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 2
+  "tov": 2.0
  },
  {
   "id": "nba-203901",
   "nbaId": 203901,
   "name": "Elfrid Payton",
-  "team": "NOP",
+  "team": "",
+  "lastTeam": "NOP",
+  "signed": false,
   "positions": [
    "G"
   ],
@@ -6430,9 +6990,9 @@
   "pts": 3.5,
   "reb": 3.3,
   "ast": 6.9,
-  "stl": 1,
+  "stl": 1.0,
   "blk": 0.5,
-  "tpm": 0,
+  "tpm": 0.0,
   "fgm": 1.7,
   "fga": 5.1,
   "ftm": 0.2,

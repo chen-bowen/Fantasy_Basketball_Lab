@@ -1,11 +1,12 @@
 import {
   CATEGORIES,
-  LOWER_IS_BETTER,
   type ApiPlayer,
+  type Category,
   type DraftView,
   type RunSummary,
 } from "../api/client";
-import { teamBadge, teamName } from "../state/teams";
+import { andList, ordinal, teamBadge, teamName, teamPunts } from "../state/teams";
+import { Headshot, RankLegend, RankStrip } from "./common";
 
 interface Props {
   view: DraftView; // the draft or saved run being viewed
@@ -18,6 +19,15 @@ interface Props {
   onRewind: (pickIndex: number) => void;
 }
 
+/** "1", "T2"… by wins, ties sharing a place. */
+function places(wins: number[]): string[] {
+  return wins.map((w) => {
+    const place = wins.filter((x) => x > w).length + 1;
+    const tied = wins.filter((x) => x === w).length > 1;
+    return `${tied ? "T" : ""}${place}`;
+  });
+}
+
 export function DraftReport({
   view,
   isLive,
@@ -28,131 +38,189 @@ export function DraftReport({
   onNewDraft,
   onRewind,
 }: Props) {
-  const ranks = view.ranks;
-  const userId = view.userSlot;
-  const userRanks = CATEGORIES.map((c) => ({ c, r: ranks[c][userId] })).sort(
-    (a, b) => a.r - b.r,
-  );
-  const strongest = userRanks.slice(0, 2);
-  const weakest = userRanks.slice(-2).reverse();
-  const userPicks = view.picks.filter((p) => p.teamId === userId);
+  const slot = view.userSlot;
+  const n = view.numTeams;
+  const punts = new Set<Category>(view.userPunts);
+  const ranks = CATEGORIES.map((c) => view.ranks[c][slot]);
+  const rec = view.records[slot];
+  const place = places(view.records.map((r) => r.wins));
 
-  const heat = (rank: number) => {
-    const n = view.numTeams;
-    if (rank <= n / 3) return "strong";
-    if (rank >= (2 * n) / 3) return "weak";
-    return "mid";
-  };
+  const scored = CATEGORIES.map((c, j) => ({ c, r: ranks[j] })).filter(({ c }) => !punts.has(c));
+  const best = [...scored].sort((a, b) => a.r - b.r);
+  const strong = best.filter(({ r }) => r <= 3);
+  const weak = [...scored].sort((a, b) => b.r - a.r).filter(({ r }) => r >= 9).slice(0, 3);
+  const headline = strong.length
+    ? `Built on ${andList(strong.slice(0, 3).map(({ c }) => c))}.`
+    : `A balanced team, best in ${andList(best.slice(0, 2).map(({ c }) => c))}.`;
+
+  const userPicks = view.picks.filter((p) => p.teamId === slot);
+  const centers = userPicks.filter((p) => playerMap.get(p.playerId)?.positions.includes("C")).length;
+
+  // Rewind hint: the weakest category, and the pick from round 3 on that helped it least.
+  const soft = weak[0];
+  const culprit = soft
+    ? userPicks
+        .filter((p) => p.round >= 3)
+        .map((p) => ({ p, z: playerMap.get(p.playerId)?.z?.[soft.c] ?? 0 }))
+        .sort((a, b) => a.z - b.z)[0]?.p
+    : undefined;
+
+  const order = Array.from({ length: n }, (_, t) => t).sort(
+    (a, b) => view.records[b].wins - view.records[a].wins || a - b,
+  );
 
   return (
-    <div className="report">
-      <div className="panel-head report-head">
-        <h2>Draft report</h2>
-        <div className="report-actions">
-          {runs.length > 0 && (
-            <select
-              value={selectedRun ?? "live"}
-              onChange={(e) =>
-                onSelectRun(e.target.value === "live" ? null : e.target.value)
-              }
-            >
-              <option value="live">This draft</option>
-              {runs.map((r) => (
-                <option key={r.id} value={r.id}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-          )}
-          <button onClick={onNewDraft}>New draft</button>
-        </div>
+    <main className="report">
+      <div className="report-tools">
+        {runs.length > 0 && (
+          <select
+            aria-label="Draft to view"
+            value={selectedRun ?? "live"}
+            onChange={(e) => onSelectRun(e.target.value === "live" ? null : e.target.value)}
+          >
+            <option value="live">This draft</option>
+            {runs.map((r) => (
+              <option key={r.id} value={r.id}>{r.label}</option>
+            ))}
+          </select>
+        )}
+        <button className="btn primary" onClick={onNewDraft}>New draft</button>
       </div>
 
-      <div className="report-grid">
-        <section className="panel">
-          <h3>Category standings — per-slot z, equal games</h3>
-          <table className="mini-table matrix">
-            <thead>
-              <tr>
-                <th>Team</th>
-                {CATEGORIES.map((c) => (
-                  <th key={c} className={LOWER_IS_BETTER.has(c) ? "lower" : ""}>
-                    {c}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {view.profiles.map((_, t) => (
-                <tr key={t} className={t === userId ? "you-row" : ""}>
-                  <td className="team-cell">
-                    {teamName(view, t)}
-                    <span className="muted"> {teamBadge(view, t)}</span>
-                  </td>
-                  {CATEGORIES.map((c) => (
-                    <td key={c} className={`num ${heat(ranks[c][t])}`}>
-                      {ranks[c][t]}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <p className="muted small">
-            1 = strongest in that category. TO is lower-is-better in raw terms;
-            the ranking already accounts for it. Comparison assumes equal games
-            played — it does not model schedules, injuries, or weekly variance.
+      <section className="hero">
+        <div className="hero-text">
+          <span className="eyebrow">Draft complete</span>
+          <h1 className="display-lg">{headline}</h1>
+          <p>
+            {punts.size > 0 && <>You punted {andList([...punts])}. </>}
+            {centers >= 4 && <>You drafted {centers} centers. </>}
+            {strong.length > 0 && <>You finished top 3 in {andList(strong.map(({ c }) => c))}.</>}
           </p>
+        </div>
+        <div className="record-box">
+          <span className="record">{rec.wins}–{rec.losses}{rec.ties ? `–${rec.ties}` : ""}</span>
+          <span>vs. the other {n - 1} teams</span>
+          <span>
+            {place[slot].startsWith("T") ? "Tied " : ""}
+            {ordinal(Number(place[slot].replace("T", "")))} of {n}
+          </span>
+        </div>
+      </section>
+
+      <section className="win-lose">
+        <div className="card pad stack-sm">
+          <strong>Where you win</strong>
+          <div className="chips">
+            {best.slice(0, 4).map(({ c, r }) => (
+              <span key={c} className={r <= 3 ? "chip blue" : "chip blue-soft"}>{c} · {ordinal(r)}</span>
+            ))}
+          </div>
+        </div>
+        <div className="card pad stack-sm">
+          <strong>Where you lose</strong>
+          <div className="chips">
+            {weak.length ? (
+              weak.map(({ c, r }) => (
+                <span key={c} className="chip orange-soft">{c} · {ordinal(r)}</span>
+              ))
+            ) : (
+              <span className="muted">Nowhere in the bottom 4.</span>
+            )}
+            {[...punts].map((c) => (
+              <span key={c} className="chip">{c} · punted</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {isLive && soft && culprit && (
+        <section className="hint">
+          <div className="grow stack-xs">
+            <strong>{soft.c} is your soft spot</strong>
+            <span>
+              You're {ordinal(soft.r)} in {soft.c}. Rewind to round {culprit.round}, where you took{" "}
+              {playerMap.get(culprit.playerId)?.name}, and try a player who helps {soft.c}.
+            </span>
+          </div>
+          <button className="btn outline-accent" onClick={() => onRewind(culprit.index)}>
+            Rewind to pick #{culprit.index + 1}
+          </button>
+        </section>
+      )}
+
+      <div className="report-grid">
+        <section className="card table-card">
+          <div className="pad-x stack-xs head-pad">
+            <h2 className="title">League table</h2>
+            <span className="muted small">
+              Each team vs. every other team across 9 categories, equal games played
+            </span>
+          </div>
+          <div className="table-scroll">
+            <table className="league">
+              <thead>
+                <tr>
+                  <th scope="col" className="left" />
+                  <th scope="col" className="left">Team</th>
+                  <th scope="col">Record</th>
+                  <th scope="col" className="left">Category ranks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.map((t) => {
+                  const r = view.records[t];
+                  return (
+                    <tr key={t} className={t === slot ? "focused" : ""}>
+                      <td className="left muted">{place[t]}</td>
+                      <td className="left">
+                        <span className="team-cell">
+                          <strong>{teamName(view, t)}</strong>
+                          <span className="chip">
+                            {t === slot
+                              ? punts.size ? `Punt ${[...punts].join(", ")}` : "No punt"
+                              : teamBadge(view, t)}
+                          </span>
+                        </span>
+                      </td>
+                      <td><strong>{r.wins}–{r.losses}{r.ties ? `–${r.ties}` : ""}</strong></td>
+                      <td className="left">
+                        <RankStrip
+                          ranks={CATEGORIES.map((c) => view.ranks[c][t])}
+                          punts={teamPunts(view, t)}
+                          size="sm"
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="pad-x foot-pad"><RankLegend /></div>
         </section>
 
-        <section className="panel">
-          <h3>Your team</h3>
-          <div className="callouts">
-            <div>
-              <span className="muted">Strongest</span>
-              {strongest.map(({ c, r }) => (
-                <span key={c} className="tag strong">
-                  {c} #{r}
-                </span>
-              ))}
-            </div>
-            <div>
-              <span className="muted">Weakest</span>
-              {weakest.map(({ c, r }) => (
-                <span key={c} className="tag weak">
-                  {c} #{r}
-                </span>
-              ))}
-            </div>
-            {view.userPunts.length > 0 && (
-              <div>
-                <span className="muted">Your punts</span>
-                {view.userPunts.map((c) => (
-                  <span key={c} className="tag">
-                    {c}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <h4>Pick history</h4>
-          <ol className="pick-history">
-            {userPicks.map((pk) => {
-              const p = playerMap.get(pk.playerId);
+        <section className="card pad stack-sm picks-card">
+          <h2 className="title">Your picks</h2>
+          <ol className="roster">
+            {userPicks.map((p) => {
+              const pl = playerMap.get(p.playerId)!;
               return (
-                <li key={pk.index}>
-                  <span className="muted">
-                    Rd {pk.round} · #{pk.index + 1}
-                  </span>{" "}
-                  {p?.name ?? pk.playerId}
+                <li key={p.index}>
+                  <span className="muted small rd">Rd {p.round}</span>
+                  <Headshot player={pl} variant="avatar" />
+                  <span className="grow stack-0">
+                    <strong>{pl.name}</strong>
+                    <span className="muted small">
+                      {pl.positions.join("/")} · {pl.signed ? pl.team : "Free agent"}
+                    </span>
+                  </span>
                   {isLive && (
                     <button
-                      className="ghost tiny"
+                      className="link-btn small"
                       title="Rewind to this pick and try someone else"
-                      onClick={() => onRewind(pk.index)}
+                      onClick={() => onRewind(p.index)}
                     >
-                      rewind
+                      Rewind
                     </button>
                   )}
                 </li>
@@ -160,12 +228,10 @@ export function DraftReport({
             })}
           </ol>
           {!isLive && (
-            <p className="muted small">
-              Viewing a saved run — switch back to "This draft" to rewind.
-            </p>
+            <p className="muted small">Viewing a saved run. Switch back to “This draft” to rewind.</p>
           )}
         </section>
       </div>
-    </div>
+    </main>
   );
 }

@@ -5,11 +5,12 @@ import {
   type Category,
   type DraftSummary,
   type DraftView,
-  type PreviewView,
   type RunSummary,
+  type Suggestions,
 } from "../api/client";
 
 export type Speed = "instant" | "fast" | "slow";
+export type Screen = "draft" | "teams";
 export const SPEED_MS: Record<Speed, number> = {
   instant: 25,
   fast: 200,
@@ -25,12 +26,19 @@ export interface SessionState {
   playerMap: Map<string, ApiPlayer> | null;
   speed: Speed;
   inspectedId: string | null;
-  preview: PreviewView | null;
+  suggestions: Suggestions | null;
+  suggestionsKey: string | null;
+  browseAll: boolean; // skip the first/second-pick screens for this turn
+  screen: Screen; // draft room vs. all-teams view
   savedDrafts: DraftSummary[];
   runs: RunSummary[];
   viewingRun: DraftView | null;
   viewingRunId: string | null;
   error: string | null;
+}
+
+export function userPickCount(view: DraftView): number {
+  return view.rosters[view.userSlot].length;
 }
 
 /**
@@ -46,7 +54,10 @@ export function useSession() {
     playerMap: null,
     speed: "fast",
     inspectedId: null,
-    preview: null,
+    suggestions: null,
+    suggestionsKey: null,
+    browseAll: false,
+    screen: "draft",
     savedDrafts: [],
     runs: [],
     viewingRun: null,
@@ -103,44 +114,59 @@ export function useSession() {
     }
   }, [view, state.speed, set, fail]);
 
-  // Inspection preview: fetch before/after profile when a player is opened.
+  // Build suggestions: simulated server-side for the user's first two turns.
+  const suggestionsKey =
+    view?.id && view.isUserTurn && userPickCount(view) < 2
+      ? `${view.id}:${view.pickIndex}:${view.userPunts.join(",")}`
+      : null;
+  useEffect(() => {
+    if (!suggestionsKey || !view?.id) return;
+    let cancelled = false;
+    set({ suggestions: null, suggestionsKey });
+    api
+      .suggestions(view.id)
+      .then((s) => {
+        if (!cancelled) set({ suggestions: s });
+      })
+      .catch(fail);
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [suggestionsKey]);
+
   const inspect = useCallback(
-    (playerId: string | null) => {
-      set({ inspectedId: playerId, preview: null });
-      if (playerId && state.view?.id) {
-        api
-          .preview(state.view.id, playerId)
-          .then((p) => set({ preview: p }))
-          .catch(fail);
-      }
+    (playerId: string | null) => set({ inspectedId: playerId }),
+    [set],
+  );
+
+  const enterDraft = useCallback(
+    (v: DraftView) => {
+      localStorage.setItem(LAST_DRAFT_KEY, v.id ?? "");
+      set({
+        view: v,
+        phase: "draft",
+        inspectedId: null,
+        viewingRun: null,
+        browseAll: false,
+        screen: "draft",
+      });
     },
-    [state.view?.id, set, fail],
+    [set],
   );
 
   const startDraft = useCallback(
     (seed: string, userSlot: number) => {
-      api
-        .createDraft(seed, userSlot)
-        .then((v) => {
-          localStorage.setItem(LAST_DRAFT_KEY, v.id ?? "");
-          set({ view: v, phase: "draft", inspectedId: null, viewingRun: null });
-        })
-        .catch(fail);
+      api.createDraft(seed, userSlot).then(enterDraft).catch(fail);
     },
-    [set, fail],
+    [enterDraft, fail],
   );
 
   const resumeDraft = useCallback(
     (id: string) => {
-      api
-        .getDraft(id)
-        .then((v) => {
-          localStorage.setItem(LAST_DRAFT_KEY, id);
-          set({ view: v, phase: "draft", inspectedId: null, viewingRun: null });
-        })
-        .catch(fail);
+      api.getDraft(id).then(enterDraft).catch(fail);
     },
-    [set, fail],
+    [enterDraft, fail],
   );
 
   const userPick = useCallback(
@@ -149,7 +175,22 @@ export function useSession() {
       if (!v?.id) return;
       api
         .pick(v.id, playerId)
-        .then((nv) => set({ view: nv, inspectedId: null, preview: null }))
+        .then((nv) => set({ view: nv, inspectedId: null, browseAll: false }))
+        .catch(fail);
+    },
+    [state.view, set, fail],
+  );
+
+  /** Draft a player and commit to the punt his build is built around. */
+  const draftWithPunt = useCallback(
+    (playerId: string, punt: Category) => {
+      const v = state.view;
+      if (!v?.id) return;
+      const id = v.id;
+      api
+        .setPunts(id, [punt])
+        .then(() => api.pick(id, playerId))
+        .then((nv) => set({ view: nv, inspectedId: null, browseAll: false }))
         .catch(fail);
     },
     [state.view, set, fail],
@@ -179,6 +220,16 @@ export function useSession() {
     [state.view, set, fail],
   );
 
+  const setBrowseAll = useCallback(
+    (browseAll: boolean) => set({ browseAll }),
+    [set],
+  );
+
+  const setScreen = useCallback(
+    (screen: Screen) => set({ screen }),
+    [set],
+  );
+
   const rewind = useCallback(
     (pickIndex: number) => {
       const v = state.view;
@@ -186,7 +237,7 @@ export function useSession() {
       api
         .rewind(v.id, pickIndex)
         .then((nv) => {
-          set({ view: nv, inspectedId: null, preview: null });
+          set({ view: nv, inspectedId: null, viewingRun: null, viewingRunId: null });
           api.listRuns().then((r) => set({ runs: r })).catch(() => {});
         })
         .catch(fail);
@@ -209,7 +260,7 @@ export function useSession() {
   );
 
   const reset = useCallback(() => {
-    set({ phase: "setup", view: null, inspectedId: null, viewingRun: null });
+    set({ phase: "setup", view: null, inspectedId: null, viewingRun: null, screen: "draft" });
     api.listDrafts().then((d) => set({ savedDrafts: d })).catch(() => {});
     api.listRuns().then((r) => set({ runs: r })).catch(() => {});
   }, [set]);
@@ -223,10 +274,13 @@ export function useSession() {
         startDraft,
         resumeDraft,
         userPick,
+        draftWithPunt,
         pause,
         resume,
         setSpeed,
         togglePunt,
+        setBrowseAll,
+        setScreen,
         inspect,
         rewind,
         viewRun,
@@ -239,10 +293,13 @@ export function useSession() {
       startDraft,
       resumeDraft,
       userPick,
+      draftWithPunt,
       pause,
       resume,
       setSpeed,
       togglePunt,
+      setBrowseAll,
+      setScreen,
       inspect,
       rewind,
       viewRun,

@@ -1,0 +1,184 @@
+import { useState } from "react";
+import {
+  CATEGORIES,
+  type ApiPlayer,
+  type Category,
+  type DraftView,
+  type SecondPickOption,
+} from "../api/client";
+import { andList, slotPicks, teamName } from "../state/teams";
+import { Headshot, PlayerMeta, RankLegend, RankStrip } from "./common";
+
+interface Props {
+  view: DraftView;
+  playerMap: Map<string, ApiPlayer>;
+  options: SecondPickOption[] | null; // null while simulations run
+  onDraft: (playerId: string, punt: Category) => void;
+  onBrowse: () => void;
+}
+
+const PHOTO_BG = ["#E3F0EE", "#EAF1E4", "#F5EBE3", "#ECEDF1"];
+const FEW_RUNS = 4;
+
+export function SecondPickScreen({ view, playerMap, options, onDraft, onBrowse }: Props) {
+  const [sel, setSel] = useState(0);
+  const slot = view.userSlot;
+  const firstPick = view.picks.find((p) => p.teamId === slot)!;
+  const first = playerMap.get(firstPick.playerId)!;
+  const punt = view.userPunts[0] ?? null;
+  const punts = new Set<Category>(view.userPunts);
+  const ranksNow = CATEGORIES.map((c) => view.ranks[c][slot]);
+  const covered = CATEGORIES.filter((c, j) => !punts.has(c) && ranksNow[j] <= 3);
+  const since = view.picks.filter((p) => p.index > firstPick.index);
+  const nextPick = slotPicks(slot, view.numTeams, 3)[2];
+  const chosen = options?.[sel];
+  const chosenPlayer = chosen ? playerMap.get(chosen.playerId) : null;
+
+  return (
+    <main className="screen">
+      {since.length > 0 && (
+        <div className="since" aria-label="Picks since your last turn">
+          <span className="muted small">Since your last pick</span>
+          {since.map((p) => {
+            const pl = playerMap.get(p.playerId)!;
+            return (
+              <span key={p.index} className="gone-chip">
+                <Headshot player={pl} variant="mini" />
+                <span className="muted small">{teamName(view, p.teamId)}</span>
+                <strong>{pl.name}</strong>
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="two-col">
+        <aside className="card team-so-far">
+          <span className="photo tile-photo">
+            <Headshot player={first} variant="tile" />
+            <span className="photo-tag">Rd 1 · #{firstPick.index + 1}</span>
+          </span>
+          <div className="pad stack">
+            <div className="stack-xs">
+              <span className="muted small">Your team so far</span>
+              <strong className="title">{first.name}</strong>
+              {punt && <span className="chip dark fit-content">Punt {punt}</span>}
+            </div>
+            <div className="stack-sm">
+              <span className="muted small">Where you rank now</span>
+              <RankStrip ranks={ranksNow} punts={punts} />
+            </div>
+            <p className="body-text">
+              {covered.length > 0 && <>{first.name.split(" ").slice(-1)[0]} already covers {andList(covered)}. </>}
+              {view.neededCategories.length > 0 && (
+                <>
+                  This pick should bring <strong>{andList(view.neededCategories)}</strong>.
+                </>
+              )}
+            </p>
+          </div>
+        </aside>
+
+        <section className="stack grow">
+          <div className="stack-xs">
+            <h1 className="display-md">Finish your build</h1>
+            <p className="lede">
+              Some options keep your punt, others switch it. After this pick your punt is
+              set, and Fit plans the rest of your draft around it.
+            </p>
+          </div>
+
+          {!options ? (
+            <div className="card loading-card" role="status">
+              <span className="spinner" aria-hidden="true" />
+              Simulating drafts for each option…
+            </div>
+          ) : (
+            <>
+              <div className="option-grid" role="radiogroup" aria-label="Second pick options">
+                {options.map((o, i) => {
+                  const p = playerMap.get(o.playerId)!;
+                  return (
+                    <button
+                      key={o.playerId}
+                      role="radio"
+                      aria-checked={i === sel}
+                      className={i === sel ? "option-card selected" : "option-card"}
+                      onClick={() => setSel(i)}
+                    >
+                      <span className="option-photo" style={{ background: PHOTO_BG[i % PHOTO_BG.length] }}>
+                        <Headshot player={p} variant="tile" />
+                      </span>
+                      <span className="option-body">
+                        <span className="pick-card-name">
+                          <strong>{p.name}</strong>
+                          <PlayerMeta player={p} />
+                        </span>
+                        <span className="wins-row">
+                          <span className={o.keepsPunt ? "chip dark" : "chip accent-soft"}>
+                            {o.keepsPunt ? `Keeps punt ${o.punt}` : `Switch to punt ${o.punt}`}
+                          </span>
+                          <span className="meter">
+                            <span style={{ width: `${(o.wins / 11) * 100}%` }} />
+                          </span>
+                          <strong>
+                            {o.wins.toFixed(1)}
+                            <span className="muted small"> / 11 wins</span>
+                          </strong>
+                        </span>
+                        <span className={o.runs < FEW_RUNS ? "small warn-text" : "muted small"}>
+                          {o.runs < FEW_RUNS
+                            ? `Only ${o.runs} test draft${o.runs === 1 ? "" : "s"}: he usually doesn't last this long.`
+                            : `Based on ${o.runs} test drafts`}
+                        </span>
+                        {o.ranksAfter && (
+                          <span className="stack-sm">
+                            <span className="muted small">Your team after this pick</span>
+                            <RankStrip ranks={o.ranksAfter} punts={new Set([o.punt])} size="sm" />
+                          </span>
+                        )}
+                        {o.nextOptions.length > 0 && (
+                          <span className="muted small">
+                            Then likely at #{nextPick}:{" "}
+                            <strong className="ink">
+                              {o.nextOptions.map((id) => playerMap.get(id)!.name).join(" or ")}
+                            </strong>
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              <RankLegend />
+
+              {chosen && chosenPlayer && (
+                <section className="action-bar">
+                  <div className="action-text">
+                    <strong>
+                      {chosenPlayer.name} ·{" "}
+                      {chosen.keepsPunt ? `keeps punt ${chosen.punt}` : `switches to punt ${chosen.punt}`}
+                    </strong>
+                    <span>
+                      Averages {chosen.wins.toFixed(1)} wins of 11 across {chosen.runs} simulated
+                      drafts where he was still available here.
+                    </span>
+                  </div>
+                  <button className="link-btn" onClick={onBrowse}>
+                    Browse all players
+                  </button>
+                  <button
+                    className="btn primary lg"
+                    onClick={() => onDraft(chosen.playerId, chosen.punt)}
+                  >
+                    Draft {chosenPlayer.name.split(" ").slice(1).join(" ")}
+                  </button>
+                </section>
+              )}
+            </>
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
