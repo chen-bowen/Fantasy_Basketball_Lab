@@ -122,6 +122,34 @@ def stats_params(season: str) -> dict:
     return keys
 
 
+def espn_gp_by_player(client: httpx.Client, year: int) -> dict[str, int]:
+    """normName -> games played in the regular season ending in `year`
+    (e.g. 2024 = the 2023-24 season). Fallback for when stats.nba.com is
+    unreachable — ESPN stats have no nba.com ids, so we join by name.
+    """
+    out: dict[str, int] = {}
+    page = 1
+    while True:
+        res = client.get(
+            "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete",
+            params={
+                "region": "us", "lang": "en", "contentorigin": "espn",
+                "page": page, "limit": 100, "season": year, "seasontype": 2,
+            },
+            timeout=30.0,
+        )
+        res.raise_for_status()
+        data = res.json()
+        names = next(c for c in data["categories"] if c["name"] == "general")["names"]
+        gpi = names.index("gamesPlayed")
+        for a in data["athletes"]:
+            totals = next(c for c in a["categories"] if c["name"] == "general")["totals"]
+            out[norm_name(a["athlete"]["displayName"])] = int(float(totals[gpi]))
+        if page >= data["pagination"]["pages"]:
+            return out
+        page += 1
+
+
 def norm_name(name: str) -> str:
     """Normalize a name for cross-source joins: lowercase, strip accents/suffixes."""
     s = unicodedata.normalize("NFD", name)
@@ -220,45 +248,80 @@ def main() -> None:
     season, prev, prev2, no_cache = args.season, args.prev, args.prev2, args.no_cache
     print(f"Season: {season} (fallback {prev}, gp history thru {prev2})")
 
+    def get_stats(client: httpx.Client, s: str) -> list[dict] | None:
+        """stats.nba.com rows for a season, or None when the API is unreachable."""
+        try:
+            return cached(f"stats-{s}",
+                          lambda: nba_get(client, "leaguedashplayerstats", stats_params(s)),
+                          no_cache)
+        except Exception as e:  # noqa: BLE001 — report and try ESPN for the gap
+            print(f"  stats.nba.com failed for {s}: {e}")
+            return None
+
     with httpx.Client(headers=NBA_HEADERS, follow_redirects=True) as client:
-        stats = cached(f"stats-{season}",
-                       lambda: nba_get(client, "leaguedashplayerstats", stats_params(season)),
-                       no_cache)
-        prev_stats = cached(f"stats-{prev}",
-                            lambda: nba_get(client, "leaguedashplayerstats", stats_params(prev)),
-                            no_cache)
-        prev2_stats = cached(f"stats-{prev2}",
-                             lambda: nba_get(client, "leaguedashplayerstats", stats_params(prev2)),
-                             no_cache)
+        stats = get_stats(client, season)
+        prev_stats = get_stats(client, prev)
+        prev2_stats = get_stats(client, prev2)
+        if stats is None:
+            raise SystemExit(
+                f"no {season} stats (stats.nba.com unreachable, nothing cached) — aborting"
+            )
+
+        # Fill season gaps in the GP history from ESPN (joined by name).
+        espn_gp: dict[str, dict[str, int]] = {}
+        for s, rows in ((season, stats), (prev, prev_stats), (prev2, prev2_stats)):
+            if rows is not None:
+                continue
+            year = int(s.split("-")[0]) + 1
+            espn_gp[s] = cached(
+                f"espn-gp-{s}",
+                lambda y=year: espn_gp_by_player(client, y),
+                no_cache,
+            )
+            print(f"  {s} games played via ESPN: {len(espn_gp[s])} players")
+
         roster_by_name = cached("espn-rosters",
                                 lambda: espn_rosters(client, no_cache),
                                 no_cache)
 
-    print(f"{season}: {len(stats)} rows | {prev}: {len(prev_stats)} rows | "
-          f"{prev2}: {len(prev2_stats)} rows | "
+    print(f"{season}: {len(stats)} rows | {prev}: {len(prev_stats or [])} rows | "
+          f"{prev2}: {len(prev2_stats or [])} rows | "
           f"espn roster players: {len(roster_by_name)}")
 
     # nba_id -> games played in each of the last three seasons (newest first).
     gp_history: dict[int, dict[str, int]] = {}
-    for s, rows in ((season, stats), (prev, prev_stats), (prev2, prev2_stats)):
+    for s, rows in ((season, stats), (prev, prev_stats or []), (prev2, prev2_stats or [])):
         for r in rows:
             gp_history.setdefault(r["PLAYER_ID"], {})[s] = r.get("GP") or 0
 
+    def gp_lookup(nba_id: int, name: str) -> dict[str, int]:
+        """Season -> GP for one player, filling seasons ESPN covered by name."""
+        hist = dict(gp_history.get(nba_id, {}))
+        nn = norm_name(name)
+        for s, by_name in espn_gp.items():
+            if nn in by_name:
+                hist[s] = by_name[nn]
+        return hist
+
     primary = [r for r in stats if meaningful(r)]
     primary_ids = {r["PLAYER_ID"] for r in primary}
-    fallback = [
-        r for r in prev_stats
-        if r["PLAYER_ID"] not in primary_ids
-        and (r.get("GP") or 0) >= FALLBACK_MIN_GAMES
-        and (r.get("MIN") or 0) >= MIN_MINUTES
-    ]
+    if prev_stats is None:
+        print(f"  no {prev} stats — skipping last-available-season fallbacks")
+        fallback = []
+    else:
+        fallback = [
+            r for r in prev_stats
+            if r["PLAYER_ID"] not in primary_ids
+            and (r.get("GP") or 0) >= FALLBACK_MIN_GAMES
+            and (r.get("MIN") or 0) >= MIN_MINUTES
+        ]
 
     players = [
-        to_player(r, roster_by_name, season, gp_history.get(r["PLAYER_ID"], {}))
+        to_player(r, roster_by_name, season, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]))
         for r in primary
     ]
     players += [
-        to_player(r, roster_by_name, prev, gp_history.get(r["PLAYER_ID"], {}))
+        to_player(r, roster_by_name, prev, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]))
         for r in fallback
     ]
 

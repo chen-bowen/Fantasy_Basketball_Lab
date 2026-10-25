@@ -368,6 +368,14 @@ function PlayerPanel({
                 ? "Fit is lower because his strengths are already covered or punted."
                 : ""}
           </span>
+          {Object.keys(player.gpBySeason).length > 0 && (
+            <span className="muted small">
+              Games played:{" "}
+              {Object.entries(player.gpBySeason)
+                .map(([s, g]) => `'${s.slice(2)} ${g}`)
+                .join(" · ")}
+            </span>
+          )}
         </div>
         <button className="btn primary xl" disabled={!view.isUserTurn} onClick={onDraft}>
           {view.isUserTurn ? `Draft ${last}` : "Waiting for your pick…"}
