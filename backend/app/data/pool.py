@@ -40,6 +40,7 @@ def load_players() -> list[Player]:
                 gp=r.get("gp", 0),
                 min=r.get("min", 0.0),
                 signed=r.get("signed", True),
+                gp_by_season=r.get("gpBySeason") or {},
             )
         )
     return out

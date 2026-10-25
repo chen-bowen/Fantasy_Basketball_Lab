@@ -41,6 +41,7 @@ def player_to_json(
         "positions": list(p.positions),
         "asOfSeason": p.as_of_season,
         "gp": p.gp,
+        "gpBySeason": p.gp_by_season,
         "min": p.min,
         "pts": p.pts,
         "reb": p.reb,

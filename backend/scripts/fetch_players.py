@@ -7,10 +7,12 @@ Stats rows only know the team a player finished last season with, so the
 roster is the source of truth for ``team``; players on no current roster get
 ``signed: false`` and keep their last team in ``lastTeam``. Players who missed
 most of the season fall back to the prior season's stats — the "last
-available season" rule — and are tagged via ``as_of_season``.
+available season" rule — and are tagged via ``as_of_season``. Each player
+also carries ``gpBySeason``: games played in each of the last three
+completed seasons (newest first).
 
 Usage:
-    python backend/scripts/fetch_players.py [--season 2025-26] [--prev 2024-25] [--no-cache]
+    python backend/scripts/fetch_players.py [--season 2025-26] [--prev 2024-25] [--prev2 2023-24] [--no-cache]
 
 No API key needed. stats.nba.com requires browser-ish headers and rate-limits
 aggressively — raw responses cache under backend/.cache/ for 12h.
@@ -67,12 +69,12 @@ ESPN_TO_NBA_TEAM = {
 }
 
 
-def default_seasons() -> tuple[str, str]:
+def default_seasons() -> tuple[str, str, str]:
     """NBA seasons start in October; last completed season ended this year."""
     now = datetime.now()
     start_year = now.year if now.month >= 9 else now.year - 1
     fmt = lambda y: f"{y}-{str(y + 1)[2:]}"
-    return fmt(start_year - 1), fmt(start_year - 2)
+    return fmt(start_year - 1), fmt(start_year - 2), fmt(start_year - 3)
 
 
 def cached(key: str, fetcher, no_cache: bool):
@@ -168,7 +170,12 @@ def r1(x) -> float:
     return round(float(x or 0), 1)
 
 
-def to_player(row: dict, roster_by_name: dict[str, dict], season: str) -> dict:
+def to_player(
+    row: dict,
+    roster_by_name: dict[str, dict],
+    season: str,
+    gp_by_season: dict[str, int],
+) -> dict:
     nba_id = row["PLAYER_ID"]
     last_team = row.get("TEAM_ABBREVIATION") or ""
     on_roster = roster_by_name.get(norm_name(row["PLAYER_NAME"]))
@@ -182,6 +189,7 @@ def to_player(row: dict, roster_by_name: dict[str, dict], season: str) -> dict:
         "positions": (on_roster and on_roster["positions"]) or infer_position(row),
         "asOfSeason": season,
         "gp": row.get("GP") or 0,
+        "gpBySeason": gp_by_season,
         "min": r1(row.get("MIN")),
         "pts": r1(row.get("PTS")),
         "reb": r1(row.get("REB")),
@@ -203,13 +211,14 @@ def meaningful(row: dict) -> bool:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    d_season, d_prev = default_seasons()
+    d_season, d_prev, d_prev2 = default_seasons()
     ap.add_argument("--season", default=d_season)
     ap.add_argument("--prev", default=d_prev)
+    ap.add_argument("--prev2", default=d_prev2)
     ap.add_argument("--no-cache", action="store_true")
     args = ap.parse_args()
-    season, prev, no_cache = args.season, args.prev, args.no_cache
-    print(f"Season: {season} (fallback {prev})")
+    season, prev, prev2, no_cache = args.season, args.prev, args.prev2, args.no_cache
+    print(f"Season: {season} (fallback {prev}, gp history thru {prev2})")
 
     with httpx.Client(headers=NBA_HEADERS, follow_redirects=True) as client:
         stats = cached(f"stats-{season}",
@@ -218,12 +227,22 @@ def main() -> None:
         prev_stats = cached(f"stats-{prev}",
                             lambda: nba_get(client, "leaguedashplayerstats", stats_params(prev)),
                             no_cache)
+        prev2_stats = cached(f"stats-{prev2}",
+                             lambda: nba_get(client, "leaguedashplayerstats", stats_params(prev2)),
+                             no_cache)
         roster_by_name = cached("espn-rosters",
                                 lambda: espn_rosters(client, no_cache),
                                 no_cache)
 
     print(f"{season}: {len(stats)} rows | {prev}: {len(prev_stats)} rows | "
+          f"{prev2}: {len(prev2_stats)} rows | "
           f"espn roster players: {len(roster_by_name)}")
+
+    # nba_id -> games played in each of the last three seasons (newest first).
+    gp_history: dict[int, dict[str, int]] = {}
+    for s, rows in ((season, stats), (prev, prev_stats), (prev2, prev2_stats)):
+        for r in rows:
+            gp_history.setdefault(r["PLAYER_ID"], {})[s] = r.get("GP") or 0
 
     primary = [r for r in stats if meaningful(r)]
     primary_ids = {r["PLAYER_ID"] for r in primary}
@@ -234,8 +253,14 @@ def main() -> None:
         and (r.get("MIN") or 0) >= MIN_MINUTES
     ]
 
-    players = [to_player(r, roster_by_name, season) for r in primary]
-    players += [to_player(r, roster_by_name, prev) for r in fallback]
+    players = [
+        to_player(r, roster_by_name, season, gp_history.get(r["PLAYER_ID"], {}))
+        for r in primary
+    ]
+    players += [
+        to_player(r, roster_by_name, prev, gp_history.get(r["PLAYER_ID"], {}))
+        for r in fallback
+    ]
 
     players.sort(key=lambda p: (-p["min"], -p["pts"]))
     players = players[:MAX_PLAYERS]

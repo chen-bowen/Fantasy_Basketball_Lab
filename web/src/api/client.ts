@@ -21,6 +21,7 @@ export interface ApiPlayer {
   positions: string[];
   asOfSeason: string | null;
   gp: number;
+  gpBySeason: Record<string, number>; // season -> games played, newest first
   min: number;
   pts: number;
   reb: number;

@@ -40,6 +40,7 @@ class Player:
     gp: int = 0
     min: float = 0.0
     signed: bool = True  # False: on no current NBA roster (free agent / retired)
+    gp_by_season: dict[str, int] = field(default_factory=dict)  # season -> GP, newest first
 
 
 @dataclass(frozen=True)
