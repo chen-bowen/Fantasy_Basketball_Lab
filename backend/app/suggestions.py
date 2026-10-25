@@ -52,7 +52,7 @@ SECOND_PICK_OPTIONS = 4
 NEXT_OPTIONS = 3
 SHRINK_RUNS = 2  # pseudo-runs at the group mean when ordering second-pick options
 
-_VALUES, _ = compute_player_values(PLAYERS)
+_VALUES, _STATS = compute_player_values(PLAYERS)
 _EXECUTOR: Executor | None = None
 _CACHE: dict[tuple, dict[str, Any]] = {}
 
@@ -105,7 +105,7 @@ def simulate(
                 pid = best_fit(state, team, punts)[0]
             turn += 1
         else:
-            pid = choose_bot_pick(state, PLAYER_POOL, _VALUES, team)
+            pid = choose_bot_pick(state, PLAYER_POOL, _VALUES, team, _STATS.healthy_values)
         state = apply_pick(state, PLAYER_POOL, pid)
     return state
 
@@ -134,7 +134,7 @@ def continue_draft(
                 return state
             pid = best_fit(state, team, punts)[0]
         else:
-            pid = choose_bot_pick(state, PLAYER_POOL, _VALUES, team)
+            pid = choose_bot_pick(state, PLAYER_POOL, _VALUES, team, _STATS.healthy_values)
         state = apply_pick(state, PLAYER_POOL, pid)
     return state
 

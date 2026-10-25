@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, type BotSpecView, type DraftSummary } from "../api/client";
-import { slotPicks, teamBadge, teamName } from "../state/teams";
+import { slotPicks, teamBadge, teamName, teamRisk } from "../state/teams";
 import { Logo } from "./common";
 
 interface Props {
@@ -135,6 +135,18 @@ export function SetupScreen({
                       <span className={`kind ${bots[t].kind}`}>
                         {teamBadge({ userSlot: slot, botSpecs: bots }, t)}
                       </span>
+                      {teamRisk({ userSlot: slot, botSpecs: bots }, t) && (
+                        <span
+                          className={`kind risk ${bots[t].risk}`}
+                          title={
+                            bots[t].risk === "bold"
+                              ? "Shrugs off half of the injury-risk discount — gambles on hurt stars"
+                              : "Adds half again to the injury-risk discount — steers clear of hurt players"
+                          }
+                        >
+                          {teamRisk({ userSlot: slot, botSpecs: bots }, t)}
+                        </span>
+                      )}
                       {teamName({ userSlot: slot, botSpecs: bots }, t)}
                     </span>
                   ),
@@ -145,7 +157,8 @@ export function SetupScreen({
             )}
             <span className="muted small">
               Value bots take the best player, Needs bots fill their weakest categories,
-              and Punt bots ignore one category.
+              and Punt bots ignore one category. Bold bots gamble on injury-prone and
+              hurt players; cautious bots steer clear of them.
             </span>
           </div>
 

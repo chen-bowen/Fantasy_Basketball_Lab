@@ -11,6 +11,12 @@ const KIND_LABELS: Record<string, string> = {
   punt: "Punt",
 };
 
+const RISK_LABELS: Record<string, string> = {
+  cautious: "cautious",
+  neutral: "",
+  bold: "bold",
+};
+
 interface TeamLike {
   userSlot: number;
   botSpecs: DraftView["botSpecs"];
@@ -27,6 +33,18 @@ export function teamBadge(view: TeamLike, teamId: number): string {
   return spec.kind === "punt"
     ? `${KIND_LABELS.punt} ${spec.puntCategory}`
     : KIND_LABELS[spec.kind];
+}
+
+/** "bold" / "cautious" for bots with an appetite either way; "" for neutral. */
+export function teamRisk(view: TeamLike, teamId: number): string {
+  if (teamId === view.userSlot) return "";
+  return RISK_LABELS[view.botSpecs[teamId].risk ?? "neutral"] ?? "";
+}
+
+/** Badge plus risk appetite, for places that show one line per team. */
+export function teamBadgeWithRisk(view: TeamLike, teamId: number): string {
+  const risk = teamRisk(view, teamId);
+  return risk ? `${teamBadge(view, teamId)} · ${risk}` : teamBadge(view, teamId);
 }
 
 /** Categories a team has punted — the user's chosen punts, or a punt bot's category. */

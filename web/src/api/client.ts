@@ -37,14 +37,17 @@ export interface ApiPlayer {
   adp: number | null; // aggregated draft position (Yahoo/ESPN avg via FantasyPros)
   overall: number | null; // sum of the 9 category z's, no punts or needs applied
   overallRank: number | null; // 1 = highest overall value in the pool
-  availability: number | null; // expected share of games, 0–1 (scales value)
-  injury: string | null; // current ESPN status, e.g. "Out", "Day-To-Day"; display only
+  availability: number | null; // expected share of games, 0–1, from games-played history + injury status (scales value)
+  injury: string | null; // current ESPN status, e.g. "Out", "Day-To-Day"; lowers availability
   z: Record<Category, number> | null; // per-category z vs. the pool (TO flipped)
 }
+
+export type BotRisk = "cautious" | "neutral" | "bold";
 
 export interface BotSpecView {
   kind: "value" | "needs" | "punt";
   puntCategory: Category | null;
+  risk: BotRisk; // appetite for injury risk: bold bots gamble on hurt stars, cautious ones steer clear
 }
 
 export interface ApiPick {

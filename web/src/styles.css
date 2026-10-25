@@ -375,6 +375,9 @@ select, input {
 .kind.value { background: #e3eefb; color: var(--blue-ink); }
 .kind.needs { background: #e6f4ec; color: #1a5c3a; }
 .kind.punt { background: #ffebdd; color: var(--orange-ink); }
+.kind.risk { font-weight: 600; }
+.kind.risk.bold { background: #f3e8ff; color: #5b2d8e; }
+.kind.risk.cautious { background: #eef0f3; color: #4b5563; }
 
 /* ---------- pick screens ---------- */
 .screen { max-width: 1440px; margin: 0 auto; padding: 24px 24px 40px; display: flex; flex-direction: column; gap: 20px; }

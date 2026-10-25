@@ -93,6 +93,38 @@ up to 2× weight — with punted categories zeroed. **Build suggestions** fix
 the candidate pick(s), let every later user pick take the best Fit under
 that punt, and average the head-to-head record over 6 drafts (this seed
 plus 5 noise variants with the same bot personalities).
+
+## Availability and injury risk
+
+Nobody plays 82 games, so values are built on what a player is *expected*
+to produce, not his per-game line (`analysis/availability.py`,
+`analysis/player_values.py`):
+
+- **Availability** = durability × current status. Durability is his share
+  of games over the last three seasons (newest weighted most, shrunk toward
+  the pool average). A season he mostly missed counts in full while he is
+  still hurt, but at half weight once he is healthy again — one long
+  absence is a risk signal, two mark him injury-prone. His ESPN status
+  then costs him games: Day-To-Day a few; Out a share that shrinks the more
+  of the current season he has already played (a late knock vs. a
+  long-term injury). Unsigned players play nothing until signed.
+- **Missed games are played by a replacement-level pickup**, not by nobody:
+  expected line = `a × his line + (1 − a) × 0.85 × replacement line`, where
+  the replacement line is the average of the best players who go undrafted
+  in a 12×13 league and 0.85 is how much of it a streamed game really
+  recovers. A missed star game therefore costs a lot, a missed 12th-man
+  game little, and a player who never plays is worth less than a healthy
+  13th man. Turnovers stay per-game (absence must never look like a TO
+  edge).
+- **Bots have a risk appetite** on top of their strategy (`BotSpec.risk`,
+  seeded like everything else): a *bold* bot shrugs off half of a player's
+  availability discount, a *cautious* one adds half again, *neutral* takes
+  the model as is. That is what makes a hurt star fall to the one drafter
+  who always gambles, rather than to everyone at the same pick.
+
+The user's own values, Fit and suggestions are risk-neutral. Against real
+ADP on the frozen pool, this lifts the rank correlation of the model's
+draft order from 0.74 to 0.78.
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived

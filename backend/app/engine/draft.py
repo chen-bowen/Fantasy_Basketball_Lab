@@ -29,7 +29,7 @@ class DraftConfig:
             "userSlot": self.user_slot,
             "seed": self.seed,
             "botSpecs": [
-                {"kind": s.kind, "puntCategory": s.punt_category}
+                {"kind": s.kind, "puntCategory": s.punt_category, "risk": s.risk}
                 for s in self.bot_specs
             ],
         }
@@ -42,7 +42,11 @@ class DraftConfig:
             user_slot=d["userSlot"],
             seed=d["seed"],
             bot_specs=tuple(
-                BotSpec(kind=s["kind"], punt_category=s.get("puntCategory"))
+                BotSpec(
+                    kind=s["kind"],
+                    punt_category=s.get("puntCategory"),
+                    risk=s.get("risk", "neutral"),  # saves before risk existed
+                )
                 for s in d["botSpecs"]
             ),
         )

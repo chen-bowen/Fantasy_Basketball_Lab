@@ -33,7 +33,7 @@ from .engine.draft import (
     serialize_draft,
 )
 from .suggestions import suggestions
-from .views import draft_view, player_to_json, preview_view
+from .views import bot_spec_to_json, draft_view, player_to_json, preview_view
 
 app = FastAPI(title="Fantasy Draft Lab API")
 
@@ -153,9 +153,7 @@ def players() -> dict[str, Any]:
 def league_preview(seed: str, userSlot: int) -> dict[str, Any]:
     """Bot personalities a new draft with this seed and slot would get."""
     specs = assign_bot_specs(seed, NUM_TEAMS, userSlot)
-    return {
-        "botSpecs": [{"kind": s.kind, "puntCategory": s.punt_category} for s in specs]
-    }
+    return {"botSpecs": [bot_spec_to_json(s) for s in specs]}
 
 
 @app.get("/api/drafts")
@@ -209,7 +207,9 @@ def bot_pick(draft_id: str):
     team = current_team_id(state)
     if team is None or team == state.config.user_slot:
         return _view(draft_id, state, blob)  # user's turn — no-op
-    pid = choose_bot_pick(state, PLAYER_POOL, PLAYER_VALUES, team)
+    pid = choose_bot_pick(
+        state, PLAYER_POOL, PLAYER_VALUES, team, POOL_STATS.healthy_values
+    )
     state = apply_pick(state, PLAYER_POOL, pid)
     _save(draft_id, state, blob)
     _maybe_save_completed_run(draft_id, state, blob)

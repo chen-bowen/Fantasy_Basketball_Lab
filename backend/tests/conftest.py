@@ -37,6 +37,12 @@ def values():
     return vals
 
 
+@pytest.fixture(scope="session")
+def healthy_values():
+    _, stats = compute_player_values(PLAYERS)
+    return stats.healthy_values
+
+
 def make_config(user_slot=0, seed="test-seed", bot_specs=None) -> DraftConfig:
     return DraftConfig(
         num_teams=NUM_TEAMS,
@@ -47,7 +53,7 @@ def make_config(user_slot=0, seed="test-seed", bot_specs=None) -> DraftConfig:
     )
 
 
-def run_draft(config, pool, values, user_pick=None) -> DraftState:
+def run_draft(config, pool, values, user_pick=None, healthy_values=None) -> DraftState:
     """Run a full draft; the user slot picks via user_pick(state) or bots."""
     state = create_draft(config)
     while not is_complete(state):
@@ -55,6 +61,6 @@ def run_draft(config, pool, values, user_pick=None) -> DraftState:
         if t == config.user_slot and user_pick:
             pid = user_pick(state)
         else:
-            pid = choose_bot_pick(state, pool, values, t)
+            pid = choose_bot_pick(state, pool, values, t, healthy_values)
         state = apply_pick(state, pool, pid)
     return state

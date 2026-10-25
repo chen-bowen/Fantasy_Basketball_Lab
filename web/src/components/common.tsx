@@ -63,7 +63,7 @@ export function PlayerMeta({ player }: { player: ApiPlayer }) {
           {" "}
           <span
             className={player.injury === "Out" ? "injury-tag out" : "injury-tag"}
-            title="Current injury status from ESPN; doesn't change his value"
+            title="Current injury status from ESPN; lowers the share of games he's expected to play, and with it his value"
           >
             {player.injury}
           </span>

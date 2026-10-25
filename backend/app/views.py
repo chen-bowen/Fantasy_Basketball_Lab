@@ -26,7 +26,11 @@ from .engine.draft import (
     is_complete,
     is_user_turn,
 )
-from .engine.types import CATEGORIES, Player
+from .engine.types import CATEGORIES, BotSpec, Player
+
+
+def bot_spec_to_json(s: BotSpec) -> dict[str, Any]:
+    return {"kind": s.kind, "puntCategory": s.punt_category, "risk": s.risk}
 
 
 def player_to_json(
@@ -106,10 +110,7 @@ def draft_view(
         "numTeams": n,
         "rosterSize": state.config.roster_size,
         "userSlot": state.config.user_slot,
-        "botSpecs": [
-            {"kind": s.kind, "puntCategory": s.punt_category}
-            for s in state.config.bot_specs
-        ],
+        "botSpecs": [bot_spec_to_json(s) for s in state.config.bot_specs],
         "pickIndex": pick_index,
         "totalPicks": len(state.order),
         "round": current_round(state) if not is_complete(state) else state.config.roster_size,

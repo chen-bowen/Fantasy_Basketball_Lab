@@ -47,10 +47,12 @@ class Player:
 
 @dataclass(frozen=True)
 class BotSpec:
-    """Bot personality. punt_category is assigned at draft start."""
+    """Bot personality. punt_category and risk are assigned at draft start."""
 
     kind: str  # "value" | "needs" | "punt"
     punt_category: str | None = None
+    risk: str = "neutral"  # "cautious" | "neutral" | "bold" — appetite for injury risk
 
 
 BOT_KIND_LABELS = {"value": "Value", "needs": "Needs", "punt": "Punt"}
+BOT_RISKS = ["cautious", "neutral", "bold"]

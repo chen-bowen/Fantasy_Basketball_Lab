@@ -7,7 +7,7 @@ import {
   type DraftView,
   type PreviewView,
 } from "../api/client";
-import { andList, ordinal, teamBadge, teamName, teamPunts } from "../state/teams";
+import { andList, ordinal, teamBadgeWithRisk, teamName, teamPunts } from "../state/teams";
 import {
   Headshot,
   PlayerMeta,
@@ -475,8 +475,13 @@ function PlayerPanel({
               {player.availability != null && (
                 <>
                   {" "}
-                  — expected to play about {Math.round(player.availability * 100)}% of games
-                  {player.availability < 0.65 ? ", which lowers his value" : ""}
+                  — {player.injury ? `listed ${player.injury}, ` : ""}
+                  expected to play about {Math.round(player.availability * 100)}% of games
+                  {player.availability < 0.65
+                    ? ", which lowers his value a lot"
+                    : player.availability < 0.8
+                      ? ", which lowers his value"
+                      : ""}
                 </>
               )}
             </span>
@@ -603,7 +608,7 @@ function TeamPanel({ view, playerMap }: { view: DraftView; playerMap: Map<string
   const punts = teamPunts(view, team);
   const badge = isYou
     ? view.userPunts.length ? `Punt ${view.userPunts.join(", ")}` : "No punt yet"
-    : teamBadge(view, team);
+    : teamBadgeWithRisk(view, team);
   const roster = view.rosters[team].map((id) => playerMap.get(id)!);
   const rec = view.records[team];
   const go = (t: number) => setTeam((t + n) % n);
@@ -617,7 +622,7 @@ function TeamPanel({ view, playerMap }: { view: DraftView; playerMap: Map<string
         <select aria-label="Team to view" value={team} onChange={(e) => setTeam(Number(e.target.value))}>
           {Array.from({ length: n }, (_, t) => (
             <option key={t} value={t}>
-              {t === view.userSlot ? "You" : `${teamName(view, t)} · ${teamBadge(view, t)}`}
+              {t === view.userSlot ? "You" : `${teamName(view, t)} · ${teamBadgeWithRisk(view, t)}`}
             </option>
           ))}
         </select>

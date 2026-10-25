@@ -5,7 +5,7 @@ import {
   type DraftView,
   type RunSummary,
 } from "../api/client";
-import { andList, ordinal, teamBadge, teamName, teamPunts } from "../state/teams";
+import { andList, ordinal, teamBadgeWithRisk, teamName, teamPunts } from "../state/teams";
 import { Headshot, RankLegend, RankStrip } from "./common";
 
 interface Props {
@@ -178,7 +178,7 @@ export function DraftReport({
                           <span className="chip">
                             {t === slot
                               ? punts.size ? `Punt ${[...punts].join(", ")}` : "No punt"
-                              : teamBadge(view, t)}
+                              : teamBadgeWithRisk(view, t)}
                           </span>
                         </span>
                       </td>

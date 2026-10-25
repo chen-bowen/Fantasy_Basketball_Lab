@@ -1,23 +1,30 @@
 """Availability: the share of games a player can be expected to play.
 
-Built from games played over the last three seasons, newest weighted most:
+Two ingredients, multiplied:
 
-  - Seasons before a player's first appearance don't count (rookies).
-  - A season missed entirely counts as 0 games, unless the player is healthy
-    now (no current injury status): one long absence he has come back from
-    says little about the coming season (Haliburton's Achilles year).
-  - Short histories are pulled toward the pool average, so one healthy or
-    injured season doesn't decide everything.
-  - Unsigned players are on no roster, so they play nothing until signed.
+1. Durability — games played over the last three seasons, newest weighted
+   most, pulled toward the pool average when the history is short.
 
-Values use the square root of availability rather than availability itself:
-in head-to-head leagues a missed game is partly made up by streaming a
-replacement, so it costs less than a full game.
+   - Seasons before a player's first appearance don't count (rookies).
+   - A season he mostly missed (fewer than LONG_ABSENCE_GP games, or none)
+     counts in full while he is still hurt, but at RECOVERED_WEIGHT of its
+     weight once he is healthy again: one long absence he has come back
+     from (Haliburton's Achilles year) is a risk signal, not a forecast.
+     Two such seasons still mark him as injury-prone.
+
+2. Current status — ESPN's injury tag at the time the pool was frozen.
+   "Day-To-Day" costs a few games. "Out" costs a share of the season that
+   shrinks the more of the current season he has already played: most of
+   it if he has barely played (a long-term injury), a tenth of it if he
+   has played nearly all of it (a late knock).
+
+Unsigned players are on no roster, so they play nothing until signed.
+
+How missing games turn into value lives in player_values.py: a missed game
+is played by a replacement-level pickup, not by nobody.
 """
 
 from __future__ import annotations
-
-from math import sqrt
 
 from ..engine.types import Player
 
@@ -25,6 +32,21 @@ SEASON_WEIGHTS = (3, 2, 1)  # newest first
 SEASON_GAMES = 82
 PRIOR_WEIGHT = 2.0  # pseudo-weight of the pool average in the shrinkage
 UNSIGNED_FACTOR = 0.3
+
+LONG_ABSENCE_GP = 25  # fewer games than this = a season mostly missed
+RECOVERED_WEIGHT = 0.5  # weight of a mostly-missed season once he is healthy
+
+# Expected share of the coming games, given the current status tag.
+STATUS_FACTORS = {
+    "Day-To-Day": 0.95,
+    "Questionable": 0.95,
+    "Doubtful": 0.9,
+}
+# "Out" ranges from a long-term injury (on top of a mostly-missed current
+# season) to a late knock (after a nearly full one), interpolated between.
+LONG_TERM_OUT_FACTOR = 0.45
+SHORT_TERM_OUT_FACTOR = 0.9
+FULL_SEASON_GP = 60
 
 
 def recent_seasons(players: list[Player]) -> list[str]:
@@ -39,13 +61,27 @@ def _weighted_games(p: Player, seasons: list[str]) -> tuple[float, float]:
     if not played:
         return 0.0, 0.0
     counted = range(max(played) + 1)  # from his first season on
-    pairs = [(SEASON_WEIGHTS[i], p.gp_by_season.get(seasons[i], 0)) for i in counted]
-    if not p.injury:
-        healthy = [(w, g) for w, g in pairs if g > 0]
-        pairs = healthy or pairs
-    num = sum(w * g / SEASON_GAMES for w, g in pairs)
-    den = sum(w for w, _ in pairs)
+    num = den = 0.0
+    for i in counted:
+        w = SEASON_WEIGHTS[i]
+        g = p.gp_by_season.get(seasons[i], 0)
+        if g < LONG_ABSENCE_GP and not p.injury:
+            w *= RECOVERED_WEIGHT
+        num += w * g / SEASON_GAMES
+        den += w
     return num, den
+
+
+def status_factor(p: Player, seasons: list[str]) -> float:
+    """Share of the coming games his current injury tag leaves him."""
+    if not p.injury:
+        return 1.0
+    if p.injury == "Out":
+        current_gp = p.gp_by_season.get(seasons[0], 0) if seasons else 0
+        played = (current_gp - LONG_ABSENCE_GP) / (FULL_SEASON_GP - LONG_ABSENCE_GP)
+        t = min(1.0, max(0.0, played))
+        return LONG_TERM_OUT_FACTOR + t * (SHORT_TERM_OUT_FACTOR - LONG_TERM_OUT_FACTOR)
+    return STATUS_FACTORS.get(p.injury, STATUS_FACTORS["Day-To-Day"])
 
 
 def compute_availability(players: list[Player]) -> dict[str, float]:
@@ -57,12 +93,7 @@ def compute_availability(players: list[Player]) -> dict[str, float]:
     out: dict[str, float] = {}
     for p in players:
         num, den = sums[p.id]
-        rate = min(1.0, (num + PRIOR_WEIGHT * prior) / (den + PRIOR_WEIGHT))
+        durability = min(1.0, (num + PRIOR_WEIGHT * prior) / (den + PRIOR_WEIGHT))
+        rate = durability * status_factor(p, seasons)
         out[p.id] = rate if p.signed else rate * UNSIGNED_FACTOR
     return out
-
-
-def production_scale(p: Player, availability: float) -> float:
-    """Multiplier on a player's per-game production: softened for signed
-    players (replacements cover part of a missed game), full for unsigned."""
-    return sqrt(availability) if p.signed else availability
