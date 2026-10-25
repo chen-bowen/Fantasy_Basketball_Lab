@@ -52,6 +52,9 @@ PLAYER_VALUES, POOL_STATS = compute_player_values(PLAYERS)
 OVERALL = {
     pid: score_player(z, UNIFORM_WEIGHTS) for pid, z in PLAYER_VALUES.items()
 }
+OVERALL_RANK = {
+    pid: i + 1 for i, pid in enumerate(sorted(OVERALL, key=lambda pid: -OVERALL[pid]))
+}
 
 
 # ---------- persistence helpers ----------
@@ -133,7 +136,13 @@ def health() -> dict[str, str]:
 def players() -> dict[str, Any]:
     return {
         "players": [
-            player_to_json(p, OVERALL.get(p.id), PLAYER_VALUES.get(p.id))
+            player_to_json(
+                p,
+                OVERALL.get(p.id),
+                PLAYER_VALUES.get(p.id),
+                OVERALL_RANK.get(p.id),
+                POOL_STATS.availability.get(p.id),
+            )
             for p in PLAYERS
         ],
         "count": len(PLAYERS),

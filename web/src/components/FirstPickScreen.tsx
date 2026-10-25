@@ -66,6 +66,15 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
           <span className="spinner" aria-hidden="true" />
           Simulating drafts to test each build…
         </div>
+      ) : options.length === 0 ? (
+        <div className="card loading-card">
+          <span className="body-text">
+            Couldn't simulate builds for this spot — draft from the full board instead.
+          </span>
+          <button className="btn primary" onClick={onBrowse}>
+            Browse all players
+          </button>
+        </div>
       ) : (
         <>
           <div className="pick-cards" role="radiogroup" aria-label="First pick options">

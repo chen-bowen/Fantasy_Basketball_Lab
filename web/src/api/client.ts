@@ -34,7 +34,11 @@ export interface ApiPlayer {
   ftm: number;
   fta: number;
   tov: number;
-  overall: number | null;
+  adp: number | null; // aggregated draft position (Yahoo/ESPN avg via FantasyPros)
+  overall: number | null; // sum of the 9 category z's, no punts or needs applied
+  overallRank: number | null; // 1 = highest overall value in the pool
+  availability: number | null; // expected share of games, 0–1 (scales value)
+  injury: string | null; // current ESPN status, e.g. "Out", "Day-To-Day"; display only
   z: Record<Category, number> | null; // per-category z vs. the pool (TO flipped)
 }
 
@@ -131,9 +135,15 @@ export interface RunSummary {
   createdAt: number;
 }
 
+export interface CategoryRankMove {
+  before: number;
+  after: number;
+}
+
 export interface PreviewView {
   before: ProfileView;
   after: ProfileView;
+  ranks: Record<Category, CategoryRankMove>; // user's category ranks if drafted
 }
 
 const BASE = "/api";

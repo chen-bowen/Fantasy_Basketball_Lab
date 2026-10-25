@@ -93,6 +93,15 @@ export function SecondPickScreen({ view, playerMap, options, onDraft, onBrowse }
               <span className="spinner" aria-hidden="true" />
               Simulating drafts for each option…
             </div>
+          ) : options.length === 0 ? (
+            <div className="card loading-card">
+              <span className="body-text">
+                Couldn't simulate builds for this spot — draft from the full board instead.
+              </span>
+              <button className="btn primary" onClick={onBrowse}>
+                Browse all players
+              </button>
+            </div>
           ) : (
             <>
               <div className="option-grid" role="radiogroup" aria-label="Second pick options">

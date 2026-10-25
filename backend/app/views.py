@@ -26,11 +26,15 @@ from .engine.draft import (
     is_complete,
     is_user_turn,
 )
-from .engine.types import Player
+from .engine.types import CATEGORIES, Player
 
 
 def player_to_json(
-    p: Player, overall: float | None = None, z: dict[str, float] | None = None
+    p: Player,
+    overall: float | None = None,
+    z: dict[str, float] | None = None,
+    overall_rank: int | None = None,
+    availability: float | None = None,
 ) -> dict[str, Any]:
     return {
         "id": p.id,
@@ -38,6 +42,8 @@ def player_to_json(
         "name": p.name,
         "team": p.team,
         "signed": p.signed,
+        "injury": p.injury,
+        "availability": availability,  # expected share of games, 0–1
         "positions": list(p.positions),
         "asOfSeason": p.as_of_season,
         "gp": p.gp,
@@ -54,7 +60,9 @@ def player_to_json(
         "ftm": p.ftm,
         "fta": p.fta,
         "tov": p.tov,
+        "adp": p.adp,
         "overall": overall,
+        "overallRank": overall_rank,  # 1 = highest overall value in the pool
         "z": z,
     }
 
@@ -133,9 +141,26 @@ def preview_view(
     values: dict[str, dict[str, float]],
     player_id: str,
 ) -> dict[str, Any]:
-    """Before/after roster profile for the inspection panel."""
-    user_roster_ids = list(state.rosters[state.config.user_slot])
-    roster = [pool[i] for i in user_roster_ids]
+    """Before/after roster profile and category ranks for the inspection panel."""
+    slot = state.config.user_slot
+    roster = [pool[i] for i in state.rosters[slot]]
     before = build_roster_profile(roster, values)
     after = build_roster_profile(roster + [pool[player_id]], values)
-    return {"before": profile_to_json(before), "after": profile_to_json(after)}
+
+    # Only the user's profile changes; re-rank the league with the pick added.
+    profiles = [
+        build_roster_profile([pool[i] for i in r], values)
+        for r in state.rosters
+    ]
+    ranks_before = rank_teams(profiles)
+    profiles[slot] = after
+    ranks_after = rank_teams(profiles)
+
+    return {
+        "before": profile_to_json(before),
+        "after": profile_to_json(after),
+        "ranks": {
+            c: {"before": ranks_before[c][slot], "after": ranks_after[c][slot]}
+            for c in CATEGORIES
+        },
+    }

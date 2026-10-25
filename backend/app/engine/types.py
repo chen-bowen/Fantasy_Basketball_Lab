@@ -41,6 +41,8 @@ class Player:
     min: float = 0.0
     signed: bool = True  # False: on no current NBA roster (free agent / retired)
     gp_by_season: dict[str, int] = field(default_factory=dict)  # season -> GP, newest first
+    adp: float | None = None  # aggregated draft position (FantasyPros Yahoo/ESPN avg)
+    injury: str | None = None  # current ESPN status ("Out", "Day-To-Day", …); display only
 
 
 @dataclass(frozen=True)

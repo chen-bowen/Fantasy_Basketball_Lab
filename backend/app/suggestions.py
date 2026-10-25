@@ -1,12 +1,13 @@
 """Build suggestions for the user's first two picks, found by simulation.
 
 The first two picks decide which category a team can punt. For each
-candidate (player, punt) we play the rest of the draft out several times:
-the candidate picks are fixed, every later user pick takes the best Fit
-under that punt, and bots draft as usual. Each run is scored by the
-head-to-head record of the user's final roster. The extra runs reuse this
-league's bot personalities and only vary the seed (bot pick noise), so the
-estimate describes this league, not drafting in general.
+candidate (player, punt) we play the rest of the draft out several times
+from the actual current state: the candidate is taken on the spot, every
+later user pick takes the best Fit under that punt, and bots draft as
+usual. Each run is scored by the head-to-head record of the user's final
+roster. The extra runs reuse this league's bot personalities and only vary
+the seed (bot pick noise), so the estimate describes this league, not
+drafting in general.
 
 Simulations are CPU-bound and independent, so they fan out over a process
 pool; results are cached per draft position.
@@ -36,8 +37,10 @@ from .engine.draft import (
     available_player_ids,
     create_draft,
     current_team_id,
+    deserialize_draft,
     drafted_set,
     is_complete,
+    serialize_draft,
 )
 from .engine.types import CATEGORIES
 
@@ -107,25 +110,56 @@ def simulate(
     return state
 
 
-def _wins(job: tuple[dict, list[str], list[str]]) -> int | None:
-    config_dict, fixed, punts = job
-    config = DraftConfig.from_dict(config_dict)
-    final = simulate(config, fixed, set(punts))
-    if final is None:
-        return None
-    return records(rank_teams(_profiles(final)))[config.user_slot]["wins"]
+def continue_draft(
+    state: DraftState,
+    punts: set[str],
+    take: str | None = None,
+    stop_before_user_turn: bool = False,
+) -> DraftState:
+    """Play out the rest of an in-progress draft. `take` is the user's pick
+    on the clock; later user picks take the best Fit under `punts`, and bots
+    draft as usual. With stop_before_user_turn, returns the state when the
+    user's next turn comes up.
+
+    Unlike simulate(), this starts from the actual draft state, so it works
+    even when stored picks were made under different bot logic or player
+    values."""
+    if take is not None:
+        assert current_team_id(state) == state.config.user_slot
+        state = apply_pick(state, PLAYER_POOL, take)
+    while not is_complete(state):
+        team = current_team_id(state)
+        if team == state.config.user_slot:
+            if stop_before_user_turn:
+                return state
+            pid = best_fit(state, team, punts)[0]
+        else:
+            pid = choose_bot_pick(state, PLAYER_POOL, _VALUES, team)
+        state = apply_pick(state, PLAYER_POOL, pid)
+    return state
+
+
+def _wins(job: tuple[dict, str, list[str], str]) -> int | None:
+    state_dict, take, punts, seed = job
+    state = deserialize_draft(state_dict, PLAYER_POOL)
+    if seed != state.config.seed:
+        state = replace(state, config=replace(state.config, seed=seed))
+    final = continue_draft(state, set(punts), take=take)
+    return records(rank_teams(_profiles(final)))[state.config.user_slot]["wins"]
 
 
 def _average_wins(
-    config: DraftConfig,
-    combos: list[tuple[list[str], list[str]]],
+    state: DraftState,
+    combos: list[tuple[str, list[str]]],
     seeds: list[str],
     executor: Executor | None,
 ) -> list[tuple[float | None, int]]:
-    """(average wins, runs where the fixed picks were possible) per combo."""
+    """(average wins, completed runs) per (take-now, punts) combo, playing
+    the real draft forward from its current state under different seeds."""
+    blob = serialize_draft(state)
     jobs = [
-        (replace(config, seed=s).to_dict(), fixed, punts)
-        for fixed, punts in combos
+        (blob, take, punts, s)
+        for take, punts in combos
         for s in seeds
     ]
     mapper = executor.map if executor else map
@@ -159,11 +193,11 @@ def first_pick_options(
     candidates = sorted(available, key=lambda i: -overall(i))[:FIRST_PICK_CANDIDATES]
 
     combos = [
-        ([c], [p] if p else [])
+        (c, [p] if p else [])
         for c in candidates
         for p in (None, *PUNT_OPTIONS)
     ]
-    results = _average_wins(config, combos, seeds, executor)
+    results = _average_wins(state, combos, seeds, executor)
     per = len(PUNT_OPTIONS) + 1
 
     options = []
@@ -178,8 +212,8 @@ def first_pick_options(
         if not scored:
             continue
         (wins, runs), punt = max(scored, key=lambda x: x[0][0])
-        finish = simulate(config, [c], {punt})
-        at_next = simulate(config, [c], {punt}, stop_at_turn=1)
+        finish = continue_draft(state, {punt}, take=c)
+        at_next = continue_draft(state, {punt}, take=c, stop_before_user_turn=True)
         options.append(
             {
                 "playerId": c,
@@ -187,11 +221,8 @@ def first_pick_options(
                 "wins": round(wins, 1),
                 "runs": runs,
                 "noPlanWins": round(no_plan, 1) if no_plan is not None else None,
-                "finishRanks": _user_ranks(finish, config.user_slot) if finish else None,
-                "nextOptions": (
-                    best_fit(at_next, config.user_slot, {punt}, NEXT_OPTIONS)
-                    if at_next else []
-                ),
+                "finishRanks": _user_ranks(finish, config.user_slot),
+                "nextOptions": best_fit(at_next, config.user_slot, {punt}, NEXT_OPTIONS),
             }
         )
     return sorted(options, key=lambda o: -o["wins"])
@@ -206,7 +237,6 @@ def second_pick_options(
     config = state.config
     slot = config.user_slot
     seeds = seeds or sim_seeds(config.seed)
-    first = [p.player_id for p in state.picks if p.team_id == slot]
     current = next(iter(punts), None)
 
     combos: list[tuple[str, str]] = []
@@ -215,9 +245,7 @@ def second_pick_options(
             if (c, punt) not in combos:
                 combos.append((c, punt))
 
-    results = _average_wins(
-        config, [(first + [c], [p]) for c, p in combos], seeds, executor
-    )
+    results = _average_wins(state, [(c, [p]) for c, p in combos], seeds, executor)
     best_by_player: dict[str, tuple[float, int, str]] = {}
     for (c, punt), (wins, runs) in zip(combos, results):
         if wins is None:
@@ -230,7 +258,7 @@ def second_pick_options(
     )[:SECOND_PICK_OPTIONS]
     options = []
     for c, (wins, runs, punt) in ranked:
-        at_next = simulate(config, first + [c], {punt}, stop_at_turn=len(first) + 1)
+        at_next = continue_draft(state, {punt}, take=c, stop_before_user_turn=True)
         options.append(
             {
                 "playerId": c,
@@ -238,8 +266,8 @@ def second_pick_options(
                 "keepsPunt": punt == current,
                 "wins": round(wins, 1),
                 "runs": runs,
-                "ranksAfter": _user_ranks(at_next, slot) if at_next else None,
-                "nextOptions": best_fit(at_next, slot, {punt}, 2) if at_next else [],
+                "ranksAfter": _user_ranks(at_next, slot),
+                "nextOptions": best_fit(at_next, slot, {punt}, 2),
             }
         )
     return options

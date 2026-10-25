@@ -122,7 +122,7 @@ log("second-pick options load", await waitFor(() => count(".option-card").then((
 await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
 
 // ---- 4. Draft room ----
-log("draft room renders", await waitFor(() => bodyHas("Best fit for your team")));
+log("draft room renders", await waitFor(() => bodyHas("Available players")));
 log("build banner shows punt", await bodyHas("Your build"));
 await waitFor(() => bodyHas("Draft ") && evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
 log("roster has 2 players", (await myRoster()) === 2);
@@ -133,7 +133,7 @@ await send("Page.navigate", { url: URL });
 await sleep(1800);
 log("resume offered after reload", await bodyHas("Pick up where you left off"));
 await clickText("Resume draft");
-await waitFor(() => bodyHas("Best fit for your team"));
+await waitFor(() => bodyHas("Available players"));
 log("roster restored", (await myRoster()) === 2);
 
 // ---- 6. Pause/resume ----
@@ -168,7 +168,7 @@ const rewindClicked = await evalJs(
   `[...document.querySelectorAll('.picks-card .link-btn')].at(-1)?.click(); true`,
 );
 await sleep(800);
-log("rewind returns to draft room", rewindClicked === true && (await bodyHas("Best fit for your team")));
+log("rewind returns to draft room", rewindClicked === true && (await bodyHas("Available players")));
 
 console.log("\n--- console errors:", consoleErrors.length ? "" : "none");
 consoleErrors.slice(0, 6).forEach((e) => console.log("  " + e));

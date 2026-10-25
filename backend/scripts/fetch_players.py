@@ -11,6 +11,10 @@ available season" rule — and are tagged via ``as_of_season``. Each player
 also carries ``gpBySeason``: games played in each of the last three
 completed seasons (newest first).
 
+ADP comes from FantasyPros' public ADP table (Yahoo/ESPN average), scraped
+from the server-rendered overall page and joined by normalized name. ADP is
+enrichment only — a failure there never blocks the stats pipeline.
+
 Usage:
     python backend/scripts/fetch_players.py [--season 2025-26] [--prev 2024-25] [--prev2 2023-24] [--no-cache]
 
@@ -77,14 +81,23 @@ def default_seasons() -> tuple[str, str, str]:
     return fmt(start_year - 1), fmt(start_year - 2), fmt(start_year - 3)
 
 
-def cached(key: str, fetcher, no_cache: bool):
+def cached(key: str, fetcher, no_cache: bool, permanent: bool = False):
+    """Fetch through the cache. Entries expire after CACHE_MS unless
+    `permanent` (completed-season stats never change). If a refresh fails,
+    the last cached copy is used instead."""
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     path = CACHE_DIR / f"{key}.json"
-    if not no_cache and path.exists():
-        blob = json.loads(path.read_text())
-        if time.time() * 1000 - blob["at"] < CACHE_MS * 1000:
+    blob = json.loads(path.read_text()) if path.exists() else None
+    if blob and not no_cache:
+        if permanent or time.time() * 1000 - blob["at"] < CACHE_MS * 1000:
             return blob["data"]
-    data = fetcher()
+    try:
+        data = fetcher()
+    except Exception as e:  # noqa: BLE001 — any network failure falls back to cache
+        if blob is None:
+            raise
+        print(f"  {key}: refresh failed ({e.__class__.__name__}), using cached copy")
+        return blob["data"]
     path.write_text(json.dumps({"at": time.time() * 1000, "data": data}))
     return data
 
@@ -150,6 +163,39 @@ def espn_gp_by_player(client: httpx.Client, year: int) -> dict[str, int]:
         page += 1
 
 
+FP_ADP_URL = "https://www.fantasypros.com/nba/adp/overall.php"
+
+# <tr><td>rank</td><td class="player-label"><a ... fp-player-name="X">…
+# <td>Yahoo</td><td>ESPN</td><td>AVG</td> — a source shows &nbsp; when missing,
+# and hurt players carry an extra status <small> inside the label cell.
+ADP_ROW_RE = re.compile(
+    r'<tr><td>\d+</td>\s*'
+    r'<td class="player-label">(.*?)</td>\s*'
+    r"<td>([\d.]+|&nbsp;)</td>\s*"
+    r"<td>([\d.]+|&nbsp;)</td>\s*"
+    r"<td>([\d.]+)</td>",
+    re.S,
+)
+ADP_NAME_RE = re.compile(r'fp-player-name="([^"]+)"')
+
+
+def fantasypros_adp(client: httpx.Client, no_cache: bool) -> dict[str, float]:
+    """normName -> aggregated ADP (Yahoo+ESPN average) from FantasyPros."""
+
+    def fetch():
+        res = client.get(FP_ADP_URL, timeout=30.0)
+        res.raise_for_status()
+        return res.text
+
+    html = cached("fp-adp", fetch, no_cache)
+    out: dict[str, float] = {}
+    for cell, _yh, _espn, avg in ADP_ROW_RE.findall(html):
+        m = ADP_NAME_RE.search(cell)
+        if m:
+            out[norm_name(m.group(1))] = float(avg)
+    return out
+
+
 def norm_name(name: str) -> str:
     """Normalize a name for cross-source joins: lowercase, strip accents/suffixes."""
     s = unicodedata.normalize("NFD", name)
@@ -169,7 +215,8 @@ def infer_position(row: dict) -> list[str]:
 
 
 def espn_rosters(client: httpx.Client, no_cache: bool) -> dict[str, dict]:
-    """normName -> {team, positions} for every player on a current roster."""
+    """normName -> {team, positions, injury} for every player on a current roster.
+    `injury` is ESPN's current status ("Out", "Day-To-Day", …) or None."""
     out: dict[str, dict] = {}
     for tid in ESPN_TEAM_IDS:
         def fetch(tid=tid):
@@ -187,9 +234,11 @@ def espn_rosters(client: httpx.Client, no_cache: bool) -> dict[str, dict]:
             if not a.get("displayName"):
                 continue
             pos = (a.get("position") or {}).get("abbreviation")
+            injuries = a.get("injuries") or []
             out[norm_name(a["displayName"])] = {
                 "team": team,
                 "positions": POSITION_MAP.get(pos, ["F"]) if pos else None,
+                "injury": injuries[0].get("status") if injuries else None,
             }
     return out
 
@@ -203,17 +252,21 @@ def to_player(
     roster_by_name: dict[str, dict],
     season: str,
     gp_by_season: dict[str, int],
+    adp_by_name: dict[str, float],
 ) -> dict:
     nba_id = row["PLAYER_ID"]
     last_team = row.get("TEAM_ABBREVIATION") or ""
-    on_roster = roster_by_name.get(norm_name(row["PLAYER_NAME"]))
+    nn = norm_name(row["PLAYER_NAME"])
+    on_roster = roster_by_name.get(nn)
     return {
         "id": f"nba-{nba_id}",
+        "adp": adp_by_name.get(nn),
         "nbaId": nba_id,
         "name": row["PLAYER_NAME"],
         "team": on_roster["team"] if on_roster else "",
         "lastTeam": last_team,
         "signed": on_roster is not None,
+        "injury": on_roster.get("injury") if on_roster else None,
         "positions": (on_roster and on_roster["positions"]) or infer_position(row),
         "asOfSeason": season,
         "gp": row.get("GP") or 0,
@@ -250,10 +303,13 @@ def main() -> None:
 
     def get_stats(client: httpx.Client, s: str) -> list[dict] | None:
         """stats.nba.com rows for a season, or None when the API is unreachable."""
+        have_espn_fill = (CACHE_DIR / f"espn-gp-{s}.json").exists()
+        if not no_cache and have_espn_fill and not (CACHE_DIR / f"stats-{s}.json").exists():
+            return None  # an earlier run already fell back to ESPN for this season
         try:
             return cached(f"stats-{s}",
                           lambda: nba_get(client, "leaguedashplayerstats", stats_params(s)),
-                          no_cache)
+                          no_cache, permanent=True)
         except Exception as e:  # noqa: BLE001 — report and try ESPN for the gap
             print(f"  stats.nba.com failed for {s}: {e}")
             return None
@@ -277,16 +333,24 @@ def main() -> None:
                 f"espn-gp-{s}",
                 lambda y=year: espn_gp_by_player(client, y),
                 no_cache,
+                permanent=True,
             )
             print(f"  {s} games played via ESPN: {len(espn_gp[s])} players")
 
-        roster_by_name = cached("espn-rosters",
+        # v2: entries carry injury status (older cached entries don't).
+        roster_by_name = cached("espn-rosters-v2",
                                 lambda: espn_rosters(client, no_cache),
                                 no_cache)
+        try:
+            adp_by_name = fantasypros_adp(client, no_cache)
+        except Exception as e:  # noqa: BLE001 — ADP is enrichment, never fatal
+            print(f"  fantasypros ADP failed: {e}")
+            adp_by_name = {}
 
     print(f"{season}: {len(stats)} rows | {prev}: {len(prev_stats or [])} rows | "
           f"{prev2}: {len(prev2_stats or [])} rows | "
-          f"espn roster players: {len(roster_by_name)}")
+          f"espn roster players: {len(roster_by_name)} | "
+          f"fantasypros ADP rows: {len(adp_by_name)}")
 
     # nba_id -> games played in each of the last three seasons (newest first).
     gp_history: dict[int, dict[str, int]] = {}
@@ -317,11 +381,13 @@ def main() -> None:
         ]
 
     players = [
-        to_player(r, roster_by_name, season, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]))
+        to_player(r, roster_by_name, season, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]),
+                  adp_by_name)
         for r in primary
     ]
     players += [
-        to_player(r, roster_by_name, prev, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]))
+        to_player(r, roster_by_name, prev, gp_lookup(r["PLAYER_ID"], r["PLAYER_NAME"]),
+                  adp_by_name)
         for r in fallback
     ]
 
@@ -333,7 +399,9 @@ def main() -> None:
     moved = sum(1 for p in players if p["signed"] and p["team"] != p["lastTeam"])
     unsigned = [p["name"] for p in players if not p["signed"]]
     print(f"wrote {len(players)} players ({len(fallback)} from {prev}) → {OUT_PATH}")
-    print(f"  {moved} changed teams since last season; {len(unsigned)} on no current roster")
+    injured = sum(1 for p in players if p["injury"])
+    print(f"  {moved} changed teams since last season; {len(unsigned)} on no current roster; "
+          f"{injured} with an injury status")
     if unsigned:
         print("  unsigned: " + ", ".join(unsigned))
 

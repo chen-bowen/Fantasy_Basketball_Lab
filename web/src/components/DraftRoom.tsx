@@ -1,12 +1,24 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  api,
   CATEGORIES,
   type ApiPlayer,
   type Category,
   type DraftView,
+  type PreviewView,
 } from "../api/client";
 import { andList, ordinal, teamBadge, teamName, teamPunts } from "../state/teams";
-import { Headshot, PlayerMeta, ZStrip, rankTone } from "./common";
+import {
+  Headshot,
+  PlayerMeta,
+  Stars,
+  ZStrip,
+  fitScale,
+  fitScore,
+  rankTone,
+  valueTier,
+  type FitScale,
+} from "./common";
 
 interface Props {
   view: DraftView;
@@ -30,6 +42,7 @@ export function DraftRoom({ view, playerMap, inspectedId, onInspect, onDraft, on
         .sort((a, b) => view.fit[b.id] - view.fit[a.id]),
     [view.fit, playerMap],
   );
+  const scale = useMemo(() => fitScale(available.map((p) => view.fit[p.id])), [available, view.fit]);
   const focus =
     (inspectedId && view.fit[inspectedId] !== undefined && playerMap.get(inspectedId)) ||
     available[0];
@@ -41,6 +54,7 @@ export function DraftRoom({ view, playerMap, inspectedId, onInspect, onDraft, on
         <FitTable
           view={view}
           players={available}
+          scale={scale}
           punts={punts}
           focusId={focus?.id ?? null}
           onInspect={onInspect}
@@ -51,6 +65,7 @@ export function DraftRoom({ view, playerMap, inspectedId, onInspect, onDraft, on
               view={view}
               player={focus}
               isTop={focus.id === available[0]?.id}
+              scale={scale}
               punts={punts}
               onDraft={() => onDraft(focus.id)}
               onClose={inspectedId ? () => onInspect(null) : null}
@@ -122,30 +137,50 @@ const PAGE = 50;
 function FitTable({
   view,
   players,
+  scale,
   punts,
   focusId,
   onInspect,
 }: {
   view: DraftView;
   players: ApiPlayer[];
+  scale: FitScale;
   punts: ReadonlySet<Category>;
   focusId: string | null;
   onInspect: (id: string) => void;
 }) {
   const [mode, setMode] = useState<"fit" | "numbers">("fit");
+  const [sortBy, setSortBy] = useState<"fit" | "value">("fit");
   const [query, setQuery] = useState("");
   const [pos, setPos] = useState("All");
   const [limit, setLimit] = useState(PAGE);
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return players.filter(
+    const shown = players.filter(
       (p) =>
         (!q || p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)) &&
         (pos === "All" || p.positions.includes(pos)),
     );
-  }, [players, query, pos]);
-  const maxFit = Math.max(1, ...players.slice(0, 1).map((p) => view.fit[p.id]));
+    // `players` arrives sorted by Fit; re-sort only when sorting by value.
+    return sortBy === "fit"
+      ? shown
+      : [...shown].sort((a, b) => (b.overall ?? 0) - (a.overall ?? 0));
+  }, [players, query, pos, sortBy]);
+  const sortHeader = (key: "fit" | "value", label: string) => (
+    <button
+      className={sortBy === key ? "sort-btn on" : "sort-btn"}
+      aria-label={`Sort by ${label}`}
+      onClick={() => setSortBy(key)}
+    >
+      {label}
+      {sortBy === key && (
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+          <path d="M1 3h8L5 8z" />
+        </svg>
+      )}
+    </button>
+  );
   const needed = new Set(view.neededCategories);
   const colClass = (c: Category) =>
     punts.has(c) ? "cat-col punted" : needed.has(c) ? "cat-col needed" : "cat-col";
@@ -153,16 +188,18 @@ function FitTable({
   return (
     <section className="card table-card">
       <div className="table-head">
-        <h2 className="title">Best fit for your team</h2>
+        <h2 className="title">Available players</h2>
         <div className="seg" role="group" aria-label="Table view">
           <button aria-pressed={mode === "fit"} onClick={() => setMode("fit")}>Fit</button>
           <button aria-pressed={mode === "numbers"} onClick={() => setMode("numbers")}>Numbers</button>
         </div>
       </div>
       <p className="table-note">
-        Fit starts from a player's value and boosts the categories your team is behind in,
-        so it changes after every pick.
-        {punts.size > 0 && ` ${andList([...punts])} ${punts.size > 1 ? "are" : "is"} punted and doesn't count.`}
+        <strong>Fit</strong> (0–10) is how much a player helps your team at this pick: the best
+        option available scores 10, and it updates after every pick.{" "}
+        <strong>Value</strong> (stars) is how good he is overall, whatever your team needs:
+        five stars is first-round quality.
+        {punts.size > 0 && ` Fit leaves out ${andList([...punts])} because you punt ${punts.size > 1 ? "them" : "it"}.`}
       </p>
       <div className="filters">
         <label className="search">
@@ -189,7 +226,12 @@ function FitTable({
           <thead>
             <tr>
               <th scope="col" className="left">Player</th>
-              <th scope="col" className="left fit-col">Fit</th>
+              <th scope="col" className="left fit-col" aria-sort={sortBy === "fit" ? "descending" : "none"}>
+                {sortHeader("fit", "Fit")}
+              </th>
+              <th scope="col" className="left value-col" aria-sort={sortBy === "value" ? "descending" : "none"}>
+                {sortHeader("value", "Value")}
+              </th>
               {mode === "fit" ? (
                 <th scope="col" className="left">
                   <span className="zhead">
@@ -200,7 +242,7 @@ function FitTable({
                 </th>
               ) : (
                 <>
-                  <th scope="col">Value</th>
+                  <th scope="col">ADP</th>
                   <th scope="col">MIN</th>
                   {CATEGORIES.map((c) => (
                     <th key={c} scope="col" className={colClass(c)}>{c}</th>
@@ -211,7 +253,8 @@ function FitTable({
           </thead>
           <tbody>
             {rows.slice(0, limit).map((p) => {
-              const fit = view.fit[p.id];
+              const score = fitScore(view.fit[p.id], scale);
+              const tier = valueTier(p.overallRank);
               return (
                 <tr
                   key={p.id}
@@ -229,19 +272,28 @@ function FitTable({
                   </td>
                   <td className="left">
                     <span className="fit-cell">
-                      <strong>{fit.toFixed(1)}</strong>
+                      <strong>{score.toFixed(1)}</strong>
                       {mode === "fit" && (
                         <span className="meter dark">
-                          <span style={{ width: `${Math.max(0, (fit / maxFit) * 100)}%` }} />
+                          <span style={{ width: `${score * 10}%` }} />
                         </span>
                       )}
+                    </span>
+                  </td>
+                  <td className="left">
+                    <span
+                      className="value-cell"
+                      title={`${tier.label} · value ${(p.overall ?? 0).toFixed(1)}`}
+                    >
+                      <Stars count={tier.stars} />
+                      {p.overallRank != null && <span className="muted small">#{p.overallRank}</span>}
                     </span>
                   </td>
                   {mode === "fit" ? (
                     <td className="left">{p.z && <ZStrip z={p.z} punts={punts} />}</td>
                   ) : (
                     <>
-                      <td>{(view.scores[p.id] ?? 0).toFixed(1)}</td>
+                      <td className="muted">{p.adp != null ? p.adp.toFixed(1) : "—"}</td>
                       <td className="muted">{p.min.toFixed(1)}</td>
                       {CATEGORIES.map((c) => (
                         <td key={c} className={punts.has(c) ? "muted" : ""}>
@@ -295,6 +347,7 @@ function PlayerPanel({
   view,
   player,
   isTop,
+  scale,
   punts,
   onDraft,
   onClose,
@@ -302,23 +355,47 @@ function PlayerPanel({
   view: DraftView;
   player: ApiPlayer;
   isTop: boolean;
+  scale: FitScale;
   punts: ReadonlySet<Category>;
   onDraft: () => void;
   onClose: (() => void) | null;
 }) {
   const z = player.z ?? ({} as Record<Category, number>);
+  const tier = valueTier(player.overallRank);
+  const [preview, setPreview] = useState<{
+    playerId: string;
+    pickIndex: number;
+    data: PreviewView;
+  } | null>(null);
+  useEffect(() => {
+    if (!view.id) return;
+    let cancelled = false;
+    api
+      .preview(view.id, player.id)
+      .then((data) => {
+        if (!cancelled)
+          setPreview({ playerId: player.id, pickIndex: view.pickIndex, data });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [view.id, view.pickIndex, player.id]);
+
   const helps = view.neededCategories.filter((c) => z[c] > HELPS_Z);
   const otherHelps = CATEGORIES.filter(
     (c) => !punts.has(c) && !helps.includes(c) && z[c] >= 1.5,
   );
   const hurts = CATEGORIES.filter((c) => !punts.has(c) && z[c] <= HURTS_Z);
   const fit = view.fit[player.id];
-  const value = view.scores[player.id] ?? 0;
+  const value = player.overall ?? 0;
   const last = player.name.split(" ").slice(1).join(" ") || player.name;
 
   let why: string;
   if (helps.length) {
     why = `${isTop ? "The best fit left for your team. " : ""}He adds ${andList(helps)}, which your team needs most right now.`;
+  } else if (otherHelps.length && view.rosters[view.userSlot].length === 0) {
+    why = `${isTop ? "The best player available. " : ""}Strong in ${andList(otherHelps)}.`;
   } else if (otherHelps.length) {
     why = `Strong in ${andList(otherHelps)}, but those aren't what your team is missing.`;
   } else {
@@ -345,9 +422,18 @@ function PlayerPanel({
               <PlayerMeta player={player} /> · {player.gp} games in {player.asOfSeason}
             </span>
           </div>
-          <span className="fit-badge">
-            <strong>{fit.toFixed(1)}</strong>
-            <span>fit</span>
+          <span className="badge-pair">
+            <span className="fit-badge" title="Best option available at this pick = 10">
+              <strong>{fitScore(fit, scale).toFixed(1)}</strong>
+              <span>fit / 10</span>
+            </span>
+            <span className="value-badge" title={`Value ${value.toFixed(1)}`}>
+              <Stars count={tier.stars} />
+              <span>
+                {tier.label}
+                {player.overallRank != null ? ` · #${player.overallRank}` : ""}
+              </span>
+            </span>
           </span>
         </div>
         <p className="body-text lg">{why}</p>
@@ -360,28 +446,153 @@ function PlayerPanel({
             <span className="chip-row-label">Costs you</span>
             {hurts.length ? hurts.map((c) => <span key={c} className="chip orange-soft">{c}</span>) : <span className="muted small">Nothing major</span>}
           </div>
-          <span className="muted small">
-            Base value {value.toFixed(1)}.{" "}
-            {fit > value + 0.05
-              ? "Fit is higher because he covers what you lack."
-              : fit < value - 0.05
-                ? "Fit is lower because his strengths are already covered or punted."
-                : ""}
-          </span>
-          {Object.keys(player.gpBySeason).length > 0 && (
+          {Math.abs(fit - value) > 0.05 && (
+            <span className="muted small">
+              {fit > value
+                ? "Fit is above his value because he covers what your team lacks."
+                : "Fit is below his value because his strengths are already covered or punted."}
+            </span>
+          )}
+          {player.adp != null && (
+            <span className="muted small">
+              ADP {player.adp.toFixed(1)}
+              {view.isUserTurn &&
+                (() => {
+                  const gap = Math.round(view.pickIndex + 1 - player.adp!);
+                  if (Math.abs(gap) <= 3) return " — goes right around this pick";
+                  return gap > 0
+                    ? ` — usually goes ~${gap} picks earlier`
+                    : ` — usually goes ~${-gap} picks later`;
+                })()}
+            </span>
+          )}
+          {Object.keys(player.gpBySeason ?? {}).length > 0 && (
             <span className="muted small">
               Games played:{" "}
-              {Object.entries(player.gpBySeason)
+              {Object.entries(player.gpBySeason ?? {})
                 .map(([s, g]) => `'${s.slice(2)} ${g}`)
                 .join(" · ")}
+              {player.availability != null && (
+                <>
+                  {" "}
+                  — expected to play about {Math.round(player.availability * 100)}% of games
+                  {player.availability < 0.65 ? ", which lowers his value" : ""}
+                </>
+              )}
             </span>
           )}
         </div>
+        {player.z && <ValueBreakdown z={player.z} punts={punts} value={value} />}
+        {preview?.playerId === player.id &&
+          preview.pickIndex === view.pickIndex && (
+            <ImpactRows
+              preview={preview.data}
+              punts={punts}
+              needed={new Set(view.neededCategories)}
+            />
+          )}
         <button className="btn primary xl" disabled={!view.isUserTurn} onClick={onDraft}>
           {view.isUserTurn ? `Draft ${last}` : "Waiting for your pick…"}
         </button>
       </div>
     </section>
+  );
+}
+
+const BAR_MAX_Z = 3; // bars are scaled to ±3; larger scores fill the bar
+
+/** Where a player's value comes from: one bar per category score, centred on 0. */
+function ValueBreakdown({
+  z,
+  punts,
+  value,
+}: {
+  z: Record<Category, number>;
+  punts: ReadonlySet<Category>;
+  value: number;
+}) {
+  return (
+    <div className="breakdown">
+      <div className="impact-head">
+        <strong>Where his value comes from</strong>
+        <span className="muted small">0 = average player · sum {value.toFixed(1)}</span>
+      </div>
+      {CATEGORIES.map((c) => {
+        const v = z[c];
+        const width = (Math.min(Math.abs(v), BAR_MAX_Z) / BAR_MAX_Z) * 50;
+        return (
+          <div key={c} className={punts.has(c) ? "breakdown-row punted" : "breakdown-row"}>
+            <span className="rank-cat">{c}</span>
+            <span className="diverge" aria-hidden="true">
+              <span
+                className={v >= 0 ? "diverge-bar pos" : "diverge-bar neg"}
+                style={v >= 0 ? { left: "50%", width: `${width}%` } : { right: "50%", width: `${width}%` }}
+              />
+            </span>
+            <span className={v >= 0 ? "breakdown-val pos" : "breakdown-val neg"}>
+              {v >= 0 ? "+" : "−"}
+              {Math.abs(v).toFixed(1)}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Per-category rank the user's team would hold with this player added. */
+function ImpactRows({
+  preview,
+  punts,
+  needed,
+}: {
+  preview: PreviewView;
+  punts: ReadonlySet<Category>;
+  needed: ReadonlySet<Category>;
+}) {
+  const hasBefore = preview.before.size > 0;
+  return (
+    <div className="impact">
+      <div className="impact-head">
+        <strong>If you draft him</strong>
+        <span className="muted small">your category ranks</span>
+      </div>
+      {CATEGORIES.map((c) => {
+        const r = preview.ranks?.[c];
+        if (!r) return null;
+        const moved = hasBefore ? r.before - r.after : 0;
+        return (
+          <div
+            key={c}
+            className={
+              punts.has(c)
+                ? "impact-row punted"
+                : needed.has(c)
+                  ? "impact-row needed"
+                  : "impact-row"
+            }
+          >
+            <span className="rank-cat">{c}</span>
+            <span className="impact-move">
+              <span>{hasBefore ? ordinal(r.before) : "—"}</span>
+              <span className="impact-arrow" aria-hidden="true">→</span>
+              <strong className={rankTone(r.after)}>{ordinal(r.after)}</strong>
+            </span>
+            <span
+              className={
+                moved > 0
+                  ? "impact-delta up"
+                  : moved < 0
+                    ? "impact-delta down"
+                    : "impact-delta flat"
+              }
+            >
+              {moved > 0 ? `+${moved}` : moved < 0 ? moved : "—"}
+            </span>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

@@ -109,7 +109,13 @@ Design notes:
   capped), punt (zeroes an assigned category). Visible as badges in the UI.
 - **Player values:** z-scores per category; TO sign-flipped; FG%/FT% use
   volume-adjusted impact (`FGM − lg%·FGA`) so percentages carry attempt
-  volume.
+  volume, capped at ±3 so one shooting line can't sink a player.
+- **Availability** (`analysis/availability.py`): expected share of games from
+  three seasons of games played (weights 3/2/1), pulled toward the pool
+  average. A season missed entirely only counts while the player is still
+  injured; unsigned players get 30%. Production is scaled by √availability
+  (a replacement covers part of a missed game); turnovers aren't scaled.
+  Current ESPN injury status is display-only.
 - **Roster profiles:** raw per-game totals (FG%/FT% = Σ makes ÷ Σ attempts)
   plus per-slot z for fair mid-draft comparison. Labeled equal-games
   projections, not weekly forecasts.

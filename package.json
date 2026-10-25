@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "npm --prefix web run dev",
-    "dev:backend": "uv --directory backend run uvicorn app.main:app --port 8000",
+    "dev": "API_URL=http://localhost:8017 npm --prefix web run dev",
+    "dev:backend": "uv --directory backend run uvicorn app.main:app --port 8017",
     "build": "npm --prefix web run build",
     "test": "uv --directory backend run pytest tests/ -q",
     "smoke": "npm --prefix web run smoke",

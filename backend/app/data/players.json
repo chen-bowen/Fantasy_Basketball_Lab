@@ -1,11 +1,13 @@
 [
  {
   "id": "nba-1629029",
+  "adp": 3.5,
   "nbaId": 1629029,
   "name": "Luka Don\u010di\u0107",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -31,11 +33,13 @@
  },
  {
   "id": "nba-1628983",
+  "adp": 3.5,
   "nbaId": 1628983,
   "name": "Shai Gilgeous-Alexander",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -61,11 +65,13 @@
  },
  {
   "id": "nba-1630162",
+  "adp": 6.5,
   "nbaId": 1630162,
   "name": "Anthony Edwards",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -91,11 +97,13 @@
  },
  {
   "id": "nba-1627759",
+  "adp": 31.0,
   "nbaId": 1627759,
   "name": "Jaylen Brown",
   "team": "PHI",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -121,11 +129,13 @@
  },
  {
   "id": "nba-1630178",
+  "adp": 10.5,
   "nbaId": 1630178,
   "name": "Tyrese Maxey",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -151,11 +161,13 @@
  },
  {
   "id": "nba-1628378",
+  "adp": 11.5,
   "nbaId": 1628378,
   "name": "Donovan Mitchell",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -181,11 +193,13 @@
  },
  {
   "id": "nba-202695",
+  "adp": 31.0,
   "nbaId": 202695,
   "name": "Kawhi Leonard",
   "team": "TOR",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -211,11 +225,13 @@
  },
  {
   "id": "nba-203999",
+  "adp": 1.0,
   "nbaId": 203999,
   "name": "Nikola Joki\u0107",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -241,11 +257,13 @@
  },
  {
   "id": "nba-203507",
+  "adp": 5.5,
   "nbaId": 203507,
   "name": "Giannis Antetokounmpo",
   "team": "MIA",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -271,11 +289,13 @@
  },
  {
   "id": "nba-203954",
+  "adp": 54.5,
   "nbaId": 203954,
   "name": "Joel Embiid",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
@@ -301,11 +321,13 @@
  },
  {
   "id": "nba-1628369",
+  "adp": 8.5,
   "nbaId": 1628369,
   "name": "Jayson Tatum",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -331,11 +353,13 @@
  },
  {
   "id": "nba-1628374",
+  "adp": 44.0,
   "nbaId": 1628374,
   "name": "Lauri Markkanen",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -361,11 +385,13 @@
  },
  {
   "id": "nba-201939",
+  "adp": 24.5,
   "nbaId": 201939,
   "name": "Stephen Curry",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -391,11 +417,13 @@
  },
  {
   "id": "nba-1626164",
+  "adp": 23.0,
   "nbaId": 1626164,
   "name": "Devin Booker",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -421,11 +449,13 @@
  },
  {
   "id": "nba-1628973",
+  "adp": 16.0,
   "nbaId": 1628973,
   "name": "Jalen Brunson",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -451,11 +481,13 @@
  },
  {
   "id": "nba-201142",
+  "adp": 17.0,
   "nbaId": 201142,
   "name": "Kevin Durant",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -481,11 +513,13 @@
  },
  {
   "id": "nba-1627750",
+  "adp": 24.5,
   "nbaId": 1627750,
   "name": "Jamal Murray",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -511,11 +545,13 @@
  },
  {
   "id": "nba-1641705",
+  "adp": 2.0,
   "nbaId": 1641705,
   "name": "Victor Wembanyama",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -541,11 +577,13 @@
  },
  {
   "id": "nba-203081",
+  "adp": 65.0,
   "nbaId": 203081,
   "name": "Damian Lillard",
   "team": "POR",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -570,11 +608,13 @@
  },
  {
   "id": "nba-203076",
+  "adp": 35.5,
   "nbaId": 203076,
   "name": "Anthony Davis",
   "team": "WAS",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -600,11 +640,13 @@
  },
  {
   "id": "nba-202681",
+  "adp": 47.5,
   "nbaId": 202681,
   "name": "Kyrie Irving",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -629,11 +671,13 @@
  },
  {
   "id": "nba-1630166",
+  "adp": 36.5,
   "nbaId": 1630166,
   "name": "Deni Avdija",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -659,11 +703,13 @@
  },
  {
   "id": "nba-1629008",
+  "adp": 53.0,
   "nbaId": 1629008,
   "name": "Michael Porter Jr.",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -689,11 +735,13 @@
  },
  {
   "id": "nba-1629027",
+  "adp": 23.0,
   "nbaId": 1629027,
   "name": "Trae Young",
   "team": "WAS",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -719,11 +767,13 @@
  },
  {
   "id": "nba-1627783",
+  "adp": 38.5,
   "nbaId": 1627783,
   "name": "Pascal Siakam",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -749,11 +799,13 @@
  },
  {
   "id": "nba-1630595",
+  "adp": 6.0,
   "nbaId": 1630595,
   "name": "Cade Cunningham",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -779,11 +831,13 @@
  },
  {
   "id": "nba-201935",
+  "adp": 29.5,
   "nbaId": 201935,
   "name": "James Harden",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -809,11 +863,13 @@
  },
  {
   "id": "nba-1641718",
+  "adp": 58.5,
   "nbaId": 1641718,
   "name": "Keyonte George",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -839,11 +895,13 @@
  },
  {
   "id": "nba-1630559",
+  "adp": 29.0,
   "nbaId": 1630559,
   "name": "Austin Reaves",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -869,11 +927,13 @@
  },
  {
   "id": "nba-1629630",
+  "adp": 81.0,
   "nbaId": 1629630,
   "name": "Ja Morant",
   "team": "POR",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -899,11 +959,13 @@
  },
  {
   "id": "nba-1630552",
+  "adp": 9.5,
   "nbaId": 1630552,
   "name": "Jalen Johnson",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -929,11 +991,13 @@
  },
  {
   "id": "nba-1631094",
+  "adp": 37.5,
   "nbaId": 1631094,
   "name": "Paolo Banchero",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -959,11 +1023,13 @@
  },
  {
   "id": "nba-1626181",
+  "adp": 83.5,
   "nbaId": 1626181,
   "name": "Norman Powell",
   "team": "CHI",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -989,11 +1055,13 @@
  },
  {
   "id": "nba-1627742",
+  "adp": 82.0,
   "nbaId": 1627742,
   "name": "Brandon Ingram",
   "team": "LAC",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -1019,11 +1087,13 @@
  },
  {
   "id": "nba-1630530",
+  "adp": 49.5,
   "nbaId": 1630530,
   "name": "Trey Murphy III",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1049,11 +1119,13 @@
  },
  {
   "id": "nba-203944",
+  "adp": 60.0,
   "nbaId": 203944,
   "name": "Julius Randle",
   "team": "BKN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1079,11 +1151,13 @@
  },
  {
   "id": "nba-1642843",
+  "adp": 10.5,
   "nbaId": 1642843,
   "name": "Cooper Flagg",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -1107,11 +1181,13 @@
  },
  {
   "id": "nba-1629627",
+  "adp": 60.0,
   "nbaId": 1629627,
   "name": "Zion Williamson",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1137,11 +1213,13 @@
  },
  {
   "id": "nba-2544",
+  "adp": 38.0,
   "nbaId": 2544,
   "name": "LeBron James",
   "team": "PHI",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -1167,11 +1245,13 @@
  },
  {
   "id": "nba-1629638",
+  "adp": 54.0,
   "nbaId": 1629638,
   "name": "Nickeil Alexander-Walker",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1197,11 +1277,13 @@
  },
  {
   "id": "nba-1631101",
+  "adp": null,
   "nbaId": 1631101,
   "name": "Shaedon Sharpe",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -1227,11 +1309,13 @@
  },
  {
   "id": "nba-1630532",
+  "adp": 54.5,
   "nbaId": 1630532,
   "name": "Franz Wagner",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1257,11 +1341,13 @@
  },
  {
   "id": "nba-1629639",
+  "adp": 61.0,
   "nbaId": 1629639,
   "name": "Tyler Herro",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1287,11 +1373,13 @@
  },
  {
   "id": "nba-1630578",
+  "adp": 20.5,
   "nbaId": 1630578,
   "name": "Alperen Sengun",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -1317,11 +1405,13 @@
  },
  {
   "id": "nba-1641706",
+  "adp": 52.5,
   "nbaId": 1641706,
   "name": "Brandon Miller",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1347,11 +1437,13 @@
  },
  {
   "id": "nba-1628415",
+  "adp": 135.0,
   "nbaId": 1628415,
   "name": "Dillon Brooks",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1377,11 +1469,13 @@
  },
  {
   "id": "nba-1628389",
+  "adp": 26.0,
   "nbaId": 1628389,
   "name": "Bam Adebayo",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -1407,11 +1501,13 @@
  },
  {
   "id": "nba-1630217",
+  "adp": 47.0,
   "nbaId": 1630217,
   "name": "Desmond Bane",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1437,11 +1533,13 @@
  },
  {
   "id": "nba-1626157",
+  "adp": 17.5,
   "nbaId": 1626157,
   "name": "Karl-Anthony Towns",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -1467,11 +1565,13 @@
  },
  {
   "id": "nba-1630163",
+  "adp": 21.0,
   "nbaId": 1630163,
   "name": "LaMelo Ball",
   "team": "MIN",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1497,11 +1597,13 @@
  },
  {
   "id": "nba-202710",
+  "adp": 150.0,
   "nbaId": 202710,
   "name": "Jimmy Butler III",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -1527,11 +1629,13 @@
  },
  {
   "id": "nba-1631105",
+  "adp": 33.5,
   "nbaId": 1631105,
   "name": "Jalen Duren",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -1557,11 +1661,13 @@
  },
  {
   "id": "nba-1628991",
+  "adp": 62.0,
   "nbaId": 1628991,
   "name": "Jaren Jackson Jr.",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1587,11 +1693,13 @@
  },
  {
   "id": "nba-1629628",
+  "adp": 118.0,
   "nbaId": 1629628,
   "name": "RJ Barrett",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1617,11 +1725,13 @@
  },
  {
   "id": "nba-203897",
+  "adp": 106.0,
   "nbaId": 203897,
   "name": "Zach LaVine",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1647,11 +1757,13 @@
  },
  {
   "id": "nba-1627734",
+  "adp": 21.5,
   "nbaId": 1627734,
   "name": "Domantas Sabonis",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1677,11 +1789,13 @@
  },
  {
   "id": "nba-1629636",
+  "adp": 50.0,
   "nbaId": 1629636,
   "name": "Darius Garland",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1707,11 +1821,13 @@
  },
  {
   "id": "nba-203468",
+  "adp": 101.0,
   "nbaId": 203468,
   "name": "CJ McCollum",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1737,11 +1853,13 @@
  },
  {
   "id": "nba-1628368",
+  "adp": 63.5,
   "nbaId": 1628368,
   "name": "De'Aaron Fox",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1767,11 +1885,13 @@
  },
  {
   "id": "nba-203924",
+  "adp": 161.5,
   "nbaId": 203924,
   "name": "Jerami Grant",
   "team": "MEM",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1797,11 +1917,13 @@
  },
  {
   "id": "nba-1630169",
+  "adp": 14.5,
   "nbaId": 1630169,
   "name": "Tyrese Haliburton",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1826,11 +1948,13 @@
  },
  {
   "id": "nba-1642851",
+  "adp": 44.5,
   "nbaId": 1642851,
   "name": "Kon Knueppel",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -1854,11 +1978,13 @@
  },
  {
   "id": "nba-201942",
+  "adp": 98.5,
   "nbaId": 201942,
   "name": "DeMar DeRozan",
   "team": "DEN",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1884,11 +2010,13 @@
  },
  {
   "id": "nba-1641708",
+  "adp": 20.0,
   "nbaId": 1641708,
   "name": "Amen Thompson",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -1914,11 +2042,13 @@
  },
  {
   "id": "nba-1630596",
+  "adp": 32.5,
   "nbaId": 1630596,
   "name": "Evan Mobley",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -1944,11 +2074,13 @@
  },
  {
   "id": "nba-1630567",
+  "adp": 14.0,
   "nbaId": 1630567,
   "name": "Scottie Barnes",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -1974,11 +2106,13 @@
  },
  {
   "id": "nba-1630224",
+  "adp": 97.0,
   "nbaId": 1630224,
   "name": "Jalen Green",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2004,11 +2138,13 @@
  },
  {
   "id": "nba-1630180",
+  "adp": 166.5,
   "nbaId": 1630180,
   "name": "Saddiq Bey",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2033,11 +2169,13 @@
  },
  {
   "id": "nba-1631097",
+  "adp": 159.0,
   "nbaId": 1631097,
   "name": "Bennedict Mathurin",
   "team": "NOP",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2063,11 +2201,13 @@
  },
  {
   "id": "nba-1627749",
+  "adp": 64.0,
   "nbaId": 1627749,
   "name": "Dejounte Murray",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2093,11 +2233,13 @@
  },
  {
   "id": "nba-1629632",
+  "adp": 89.5,
   "nbaId": 1629632,
   "name": "Coby White",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -2123,11 +2265,13 @@
  },
  {
   "id": "nba-1629645",
+  "adp": 140.5,
   "nbaId": 1629645,
   "name": "Kevin Porter Jr.",
   "team": "",
   "lastTeam": "MIL",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2152,11 +2296,13 @@
  },
  {
   "id": "nba-202331",
+  "adp": 88.5,
   "nbaId": 202331,
   "name": "Paul George",
   "team": "BOS",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2182,11 +2328,13 @@
  },
  {
   "id": "nba-1631157",
+  "adp": 87.5,
   "nbaId": 1631157,
   "name": "Ryan Rollins",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2212,11 +2360,13 @@
  },
  {
   "id": "nba-1631096",
+  "adp": 43.5,
   "nbaId": 1631096,
   "name": "Chet Holmgren",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -2242,11 +2392,13 @@
  },
  {
   "id": "nba-1631114",
+  "adp": 38.5,
   "nbaId": 1631114,
   "name": "Jalen Williams",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2272,11 +2424,13 @@
  },
  {
   "id": "nba-1628970",
+  "adp": 90.5,
   "nbaId": 1628970,
   "name": "Miles Bridges",
   "team": "PHX",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2302,11 +2456,13 @@
  },
  {
   "id": "nba-203078",
+  "adp": null,
   "nbaId": 203078,
   "name": "Bradley Beal",
   "team": "LAC",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -2332,11 +2488,13 @@
  },
  {
   "id": "nba-1630581",
+  "adp": 21.5,
   "nbaId": 1630581,
   "name": "Josh Giddey",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2362,11 +2520,13 @@
  },
  {
   "id": "nba-1630202",
+  "adp": 87.0,
   "nbaId": 1630202,
   "name": "Payton Pritchard",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2392,11 +2552,13 @@
  },
  {
   "id": "nba-1629614",
+  "adp": 138.5,
   "nbaId": 1629614,
   "name": "Andrew Nembhard",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2422,11 +2584,13 @@
  },
  {
   "id": "nba-204001",
+  "adp": 103.0,
   "nbaId": 204001,
   "name": "Kristaps Porzi\u0146\u0123is",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -2452,11 +2616,13 @@
  },
  {
   "id": "nba-1628384",
+  "adp": 70.5,
   "nbaId": 1628384,
   "name": "OG Anunoby",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2482,11 +2648,13 @@
  },
  {
   "id": "nba-1642264",
+  "adp": 49.0,
   "nbaId": 1642264,
   "name": "Stephon Castle",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2511,11 +2679,13 @@
  },
  {
   "id": "nba-1628401",
+  "adp": 42.0,
   "nbaId": 1628401,
   "name": "Derrick White",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2541,11 +2711,13 @@
  },
  {
   "id": "nba-1628960",
+  "adp": 145.0,
   "nbaId": 1628960,
   "name": "Grayson Allen",
   "team": "CHA",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2571,11 +2743,13 @@
  },
  {
   "id": "nba-1630193",
+  "adp": 97.5,
   "nbaId": 1630193,
   "name": "Immanuel Quickley",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2601,11 +2775,13 @@
  },
  {
   "id": "nba-1642259",
+  "adp": 75.0,
   "nbaId": 1642259,
   "name": "Alex Sarr",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -2630,11 +2806,13 @@
  },
  {
   "id": "nba-201950",
+  "adp": 140.0,
   "nbaId": 201950,
   "name": "Jrue Holiday",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2660,11 +2838,13 @@
  },
  {
   "id": "nba-1627736",
+  "adp": null,
   "nbaId": 1627736,
   "name": "Malik Beasley",
   "team": "",
   "lastTeam": "DET",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2689,11 +2869,13 @@
  },
  {
   "id": "nba-1641824",
+  "adp": 71.5,
   "nbaId": 1641824,
   "name": "Matas Buzelis",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2718,11 +2900,13 @@
  },
  {
   "id": "nba-203932",
+  "adp": 127.0,
   "nbaId": 203932,
   "name": "Aaron Gordon",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2748,11 +2932,13 @@
  },
  {
   "id": "nba-1642845",
+  "adp": 74.0,
   "nbaId": 1642845,
   "name": "VJ Edgecombe",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2776,11 +2962,13 @@
  },
  {
   "id": "nba-1631095",
+  "adp": 100.5,
   "nbaId": 1631095,
   "name": "Jabari Smith Jr.",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2806,11 +2994,13 @@
  },
  {
   "id": "nba-203952",
+  "adp": 102.0,
   "nbaId": 203952,
   "name": "Andrew Wiggins",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2836,11 +3026,13 @@
  },
  {
   "id": "nba-1629012",
+  "adp": 146.0,
   "nbaId": 1629012,
   "name": "Collin Sexton",
   "team": "LAL",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -2866,11 +3058,13 @@
  },
  {
   "id": "nba-1631170",
+  "adp": 124.0,
   "nbaId": 1631170,
   "name": "Jaime Jaquez Jr.",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2896,11 +3090,13 @@
  },
  {
   "id": "nba-1628386",
+  "adp": 64.0,
   "nbaId": 1628386,
   "name": "Jarrett Allen",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -2926,11 +3122,13 @@
  },
  {
   "id": "nba-1630230",
+  "adp": null,
   "nbaId": 1630230,
   "name": "Naji Marshall",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2956,11 +3154,13 @@
  },
  {
   "id": "nba-1630168",
+  "adp": 61.5,
   "nbaId": 1630168,
   "name": "Onyeka Okongwu",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -2986,11 +3186,13 @@
  },
  {
   "id": "nba-201566",
+  "adp": 153.0,
   "nbaId": 201566,
   "name": "Russell Westbrook",
   "team": "",
   "lastTeam": "SAC",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3016,11 +3218,13 @@
  },
  {
   "id": "nba-202696",
+  "adp": 124.0,
   "nbaId": 202696,
   "name": "Nikola Vu\u010devi\u0107",
   "team": "ORL",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -3046,11 +3250,13 @@
  },
  {
   "id": "nba-1641710",
+  "adp": 158.5,
   "nbaId": 1641710,
   "name": "Anthony Black",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -3076,11 +3282,13 @@
  },
  {
   "id": "nba-1641729",
+  "adp": null,
   "nbaId": 1641729,
   "name": "Brice Sensabaugh",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3106,11 +3314,13 @@
  },
  {
   "id": "nba-1630245",
+  "adp": 121.5,
   "nbaId": 1630245,
   "name": "Ayo Dosunmu",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3136,11 +3346,13 @@
  },
  {
   "id": "nba-1630183",
+  "adp": 88.5,
   "nbaId": 1630183,
   "name": "Jaden McDaniels",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3166,11 +3378,13 @@
  },
  {
   "id": "nba-1642273",
+  "adp": 156.5,
   "nbaId": 1642273,
   "name": "Kyshawn George",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3195,11 +3409,13 @@
  },
  {
   "id": "nba-1631212",
+  "adp": 135.0,
   "nbaId": 1631212,
   "name": "Peyton Watson",
   "team": "CLE",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3225,11 +3441,13 @@
  },
  {
   "id": "nba-1628969",
+  "adp": 64.5,
   "nbaId": 1628969,
   "name": "Mikal Bridges",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3255,11 +3473,13 @@
  },
  {
   "id": "nba-1629014",
+  "adp": 120.0,
   "nbaId": 1629014,
   "name": "Anfernee Simons",
   "team": "PHI",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3285,11 +3505,13 @@
  },
  {
   "id": "nba-1642847",
+  "adp": 147.0,
   "nbaId": 1642847,
   "name": "Jeremiah Fears",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3313,11 +3535,13 @@
  },
  {
   "id": "nba-1629023",
+  "adp": 162.0,
   "nbaId": 1629023,
   "name": "P.J. Washington",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3343,11 +3567,13 @@
  },
  {
   "id": "nba-1630703",
+  "adp": null,
   "nbaId": 1630703,
   "name": "Scoot Henderson",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3373,11 +3599,13 @@
  },
  {
   "id": "nba-1627832",
+  "adp": 133.0,
   "nbaId": 1627832,
   "name": "Fred VanVleet",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -3402,11 +3630,13 @@
  },
  {
   "id": "nba-1627826",
+  "adp": 69.0,
   "nbaId": 1627826,
   "name": "Ivica Zubac",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -3432,11 +3662,13 @@
  },
  {
   "id": "nba-1626162",
+  "adp": 127.0,
   "nbaId": 1626162,
   "name": "Kelly Oubre Jr.",
   "team": "IND",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3462,11 +3694,13 @@
  },
  {
   "id": "nba-1630200",
+  "adp": null,
   "nbaId": 1630200,
   "name": "Tre Jones",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3492,11 +3726,13 @@
  },
  {
   "id": "nba-1630583",
+  "adp": null,
   "nbaId": 1630583,
   "name": "Santi Aldama",
   "team": "DAL",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -3522,11 +3758,13 @@
  },
  {
   "id": "nba-1630170",
+  "adp": 139.0,
   "nbaId": 1630170,
   "name": "Devin Vassell",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3552,11 +3790,13 @@
  },
  {
   "id": "nba-1630174",
+  "adp": 122.0,
   "nbaId": 1630174,
   "name": "Aaron Nesmith",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -3582,11 +3822,13 @@
  },
  {
   "id": "nba-1642846",
+  "adp": 146.5,
   "nbaId": 1642846,
   "name": "Ace Bailey",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3610,11 +3852,13 @@
  },
  {
   "id": "nba-1641764",
+  "adp": 119.5,
   "nbaId": 1641764,
   "name": "Brandin Podziemski",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -3640,11 +3884,13 @@
  },
  {
   "id": "nba-1630591",
+  "adp": 123.5,
   "nbaId": 1630591,
   "name": "Jalen Suggs",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3670,11 +3916,13 @@
  },
  {
   "id": "nba-1626171",
+  "adp": 123.0,
   "nbaId": 1626171,
   "name": "Bobby Portis Jr.",
   "team": "MIA",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3700,11 +3948,13 @@
  },
  {
   "id": "nba-1629631",
+  "adp": null,
   "nbaId": 1629631,
   "name": "De'Andre Hunter",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3730,11 +3980,13 @@
  },
  {
   "id": "nba-1642349",
+  "adp": 174.5,
   "nbaId": 1642349,
   "name": "Ajay Mitchell",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3759,11 +4011,13 @@
  },
  {
   "id": "nba-1642907",
+  "adp": 104.0,
   "nbaId": 1642907,
   "name": "Cedric Coward",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -3787,11 +4041,13 @@
  },
  {
   "id": "nba-1628381",
+  "adp": 116.5,
   "nbaId": 1628381,
   "name": "John Collins",
   "team": "DET",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3817,11 +4073,13 @@
  },
  {
   "id": "nba-1629675",
+  "adp": 55.0,
   "nbaId": 1629675,
   "name": "Naz Reid",
   "team": "CHA",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -3847,11 +4105,13 @@
  },
  {
   "id": "nba-1630560",
+  "adp": null,
   "nbaId": 1630560,
   "name": "Cam Thomas",
   "team": "",
   "lastTeam": "MIL",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -3877,11 +4137,13 @@
  },
  {
   "id": "nba-1642263",
+  "adp": 140.5,
   "nbaId": 1642263,
   "name": "Reed Sheppard",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3906,11 +4168,13 @@
  },
  {
   "id": "nba-203501",
+  "adp": null,
   "nbaId": 203501,
   "name": "Tim Hardaway Jr.",
   "team": "MIA",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3936,11 +4200,13 @@
  },
  {
   "id": "nba-1629673",
+  "adp": 145.0,
   "nbaId": 1629673,
   "name": "Jordan Poole",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3966,11 +4232,13 @@
  },
  {
   "id": "nba-1629656",
+  "adp": 153.5,
   "nbaId": 1629656,
   "name": "Quentin Grimes",
   "team": "LAL",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -3996,11 +4264,13 @@
  },
  {
   "id": "nba-1641739",
+  "adp": 145.5,
   "nbaId": 1641739,
   "name": "Toumani Camara",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4026,11 +4296,13 @@
  },
  {
   "id": "nba-202699",
+  "adp": 121.5,
   "nbaId": 202699,
   "name": "Tobias Harris",
   "team": "SAS",
   "lastTeam": "DET",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -4056,11 +4328,13 @@
  },
  {
   "id": "nba-1642281",
+  "adp": null,
   "nbaId": 1642281,
   "name": "Jaylon Tyson",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4085,11 +4359,13 @@
  },
  {
   "id": "nba-1629640",
+  "adp": null,
   "nbaId": 1629640,
   "name": "Keldon Johnson",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4115,11 +4391,13 @@
  },
  {
   "id": "nba-1630314",
+  "adp": null,
   "nbaId": 1630314,
   "name": "Brandon Williams",
   "team": "GSW",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4145,11 +4423,13 @@
  },
  {
   "id": "nba-1628398",
+  "adp": 165.0,
   "nbaId": 1628398,
   "name": "Kyle Kuzma",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4175,11 +4455,13 @@
  },
  {
   "id": "nba-1630241",
+  "adp": null,
   "nbaId": 1630241,
   "name": "Sam Merrill",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4205,11 +4487,13 @@
  },
  {
   "id": "nba-1631221",
+  "adp": 155.0,
   "nbaId": 1631221,
   "name": "Collin Gillespie",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4235,11 +4519,13 @@
  },
  {
   "id": "nba-1627763",
+  "adp": null,
   "nbaId": 1627763,
   "name": "Malcolm Brogdon",
   "team": "",
   "lastTeam": "WAS",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4264,11 +4550,13 @@
  },
  {
   "id": "nba-1626156",
+  "adp": null,
   "nbaId": 1626156,
   "name": "D'Angelo Russell",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4294,11 +4582,13 @@
  },
  {
   "id": "nba-1629028",
+  "adp": 125.0,
   "nbaId": 1629028,
   "name": "Deandre Ayton",
   "team": "WAS",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -4324,11 +4614,13 @@
  },
  {
   "id": "nba-1641713",
+  "adp": null,
   "nbaId": 1641713,
   "name": "GG Jackson",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4354,11 +4646,13 @@
  },
  {
   "id": "nba-1642377",
+  "adp": null,
   "nbaId": 1642377,
   "name": "Jaylen Wells",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4383,11 +4677,13 @@
  },
  {
   "id": "nba-1628370",
+  "adp": null,
   "nbaId": 1628370,
   "name": "Malik Monk",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4413,11 +4709,13 @@
  },
  {
   "id": "nba-1642875",
+  "adp": 169.0,
   "nbaId": 1642875,
   "name": "Maxime Raynaud",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -4441,11 +4739,13 @@
  },
  {
   "id": "nba-1631099",
+  "adp": 137.0,
   "nbaId": 1631099,
   "name": "Keegan Murray",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -4471,11 +4771,13 @@
  },
  {
   "id": "nba-1629022",
+  "adp": null,
   "nbaId": 1629022,
   "name": "Lonnie Walker IV",
   "team": "",
   "lastTeam": "PHI",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4500,11 +4802,13 @@
  },
  {
   "id": "nba-1629001",
+  "adp": null,
   "nbaId": 1629001,
   "name": "De'Anthony Melton",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4530,11 +4834,13 @@
  },
  {
   "id": "nba-1631108",
+  "adp": null,
   "nbaId": 1631108,
   "name": "Max Christie",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4560,11 +4866,13 @@
  },
  {
   "id": "nba-1641730",
+  "adp": null,
   "nbaId": 1641730,
   "name": "Noah Clowney",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4590,11 +4898,13 @@
  },
  {
   "id": "nba-1629661",
+  "adp": 139.0,
   "nbaId": 1629661,
   "name": "Cameron Johnson",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -4620,11 +4930,13 @@
  },
  {
   "id": "nba-1628978",
+  "adp": 168.0,
   "nbaId": 1628978,
   "name": "Donte DiVincenzo",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -4650,11 +4962,13 @@
  },
  {
   "id": "nba-1629130",
+  "adp": null,
   "nbaId": 1629130,
   "name": "Duncan Robinson",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4680,11 +4994,13 @@
  },
  {
   "id": "nba-1630228",
+  "adp": 143.0,
   "nbaId": 1630228,
   "name": "Jonathan Kuminga",
   "team": "MIN",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -4710,11 +5026,13 @@
  },
  {
   "id": "nba-1642848",
+  "adp": null,
   "nbaId": 1642848,
   "name": "Tre Johnson",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4738,11 +5056,13 @@
  },
  {
   "id": "nba-1642270",
+  "adp": 57.5,
   "nbaId": 1642270,
   "name": "Donovan Clingan",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -4767,11 +5087,13 @@
  },
  {
   "id": "nba-1630541",
+  "adp": null,
   "nbaId": 1630541,
   "name": "Moses Moody",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -4797,11 +5119,13 @@
  },
  {
   "id": "nba-1631128",
+  "adp": 178.0,
   "nbaId": 1631128,
   "name": "Christian Braun",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4827,11 +5151,13 @@
  },
  {
   "id": "nba-1628404",
+  "adp": 91.5,
   "nbaId": 1628404,
   "name": "Josh Hart",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4857,11 +5183,13 @@
  },
  {
   "id": "nba-1630540",
+  "adp": null,
   "nbaId": 1630540,
   "name": "Miles McBride",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4887,11 +5215,13 @@
  },
  {
   "id": "nba-1630700",
+  "adp": 57.0,
   "nbaId": 1630700,
   "name": "Dyson Daniels",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4917,11 +5247,13 @@
  },
  {
   "id": "nba-1626167",
+  "adp": 110.0,
   "nbaId": 1626167,
   "name": "Myles Turner",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -4947,11 +5279,13 @@
  },
  {
   "id": "nba-1642844",
+  "adp": 76.5,
   "nbaId": 1642844,
   "name": "Dylan Harper",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -4975,11 +5309,13 @@
  },
  {
   "id": "nba-1628976",
+  "adp": 182.0,
   "nbaId": 1628976,
   "name": "Wendell Carter Jr.",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5005,11 +5341,13 @@
  },
  {
   "id": "nba-1641731",
+  "adp": null,
   "nbaId": 1641731,
   "name": "Bilal Coulibaly",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5035,11 +5373,13 @@
  },
  {
   "id": "nba-1642852",
+  "adp": 88.5,
   "nbaId": 1642852,
   "name": "Derik Queen",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5063,11 +5403,13 @@
  },
  {
   "id": "nba-1642268",
+  "adp": null,
   "nbaId": 1642268,
   "name": "Isaiah Collier",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5092,11 +5434,13 @@
  },
  {
   "id": "nba-202691",
+  "adp": 133.5,
   "nbaId": 202691,
   "name": "Klay Thompson",
   "team": "MIA",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5122,11 +5466,13 @@
  },
  {
   "id": "nba-1631109",
+  "adp": 118.0,
   "nbaId": 1631109,
   "name": "Mark Williams",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -5152,11 +5498,13 @@
  },
  {
   "id": "nba-1629651",
+  "adp": 105.5,
   "nbaId": 1629651,
   "name": "Nic Claxton",
   "team": "CHI",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -5182,11 +5530,13 @@
  },
  {
   "id": "nba-1641716",
+  "adp": null,
   "nbaId": 1641716,
   "name": "Jarace Walker",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5212,11 +5562,13 @@
  },
  {
   "id": "nba-1629060",
+  "adp": 151.5,
   "nbaId": 1629060,
   "name": "Rui Hachimura",
   "team": "LAC",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5242,11 +5594,13 @@
  },
  {
   "id": "nba-1631110",
+  "adp": null,
   "nbaId": 1631110,
   "name": "Jeremy Sochan",
   "team": "",
   "lastTeam": "SAS",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5272,11 +5626,13 @@
  },
  {
   "id": "nba-1642271",
+  "adp": 148.0,
   "nbaId": 1642271,
   "name": "Kyle Filipowski",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5301,11 +5657,13 @@
  },
  {
   "id": "nba-1641796",
+  "adp": null,
   "nbaId": 1641796,
   "name": "Pelle Larsson",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5330,11 +5688,13 @@
  },
  {
   "id": "nba-1630572",
+  "adp": 175.0,
   "nbaId": 1630572,
   "name": "Sandro Mamukelashvili",
   "team": "LAL",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5360,11 +5720,13 @@
  },
  {
   "id": "nba-1642285",
+  "adp": null,
   "nbaId": 1642285,
   "name": "Cam Spencer",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5389,11 +5751,13 @@
  },
  {
   "id": "nba-1630198",
+  "adp": null,
   "nbaId": 1630198,
   "name": "Isaiah Joe",
   "team": "DET",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5419,11 +5783,13 @@
  },
  {
   "id": "nba-1630577",
+  "adp": 128.0,
   "nbaId": 1630577,
   "name": "Julian Champagnie",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5449,11 +5815,13 @@
  },
  {
   "id": "nba-1642276",
+  "adp": 80.5,
   "nbaId": 1642276,
   "name": "Kel'el Ware",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5478,11 +5846,13 @@
  },
  {
   "id": "nba-1631117",
+  "adp": 55.0,
   "nbaId": 1631117,
   "name": "Walker Kessler",
   "team": "LAL",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5508,11 +5878,13 @@
  },
  {
   "id": "nba-203915",
+  "adp": null,
   "nbaId": 203915,
   "name": "Spencer Dinwiddie",
   "team": "",
   "lastTeam": "DAL",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5537,11 +5909,13 @@
  },
  {
   "id": "nba-203994",
+  "adp": 141.0,
   "nbaId": 203994,
   "name": "Jusuf Nurki\u0107",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -5567,11 +5941,13 @@
  },
  {
   "id": "nba-203497",
+  "adp": 72.0,
   "nbaId": 203497,
   "name": "Rudy Gobert",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5597,11 +5973,13 @@
  },
  {
   "id": "nba-203992",
+  "adp": null,
   "nbaId": 203992,
   "name": "Bogdan Bogdanovi\u0107",
   "team": "HOU",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5627,11 +6005,13 @@
  },
  {
   "id": "nba-1631342",
+  "adp": null,
   "nbaId": 1631342,
   "name": "Daeqwon Plowden",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5656,11 +6036,13 @@
  },
  {
   "id": "nba-203471",
+  "adp": null,
   "nbaId": 203471,
   "name": "Dennis Schr\u00f6der",
   "team": "CHA",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5686,11 +6068,13 @@
  },
  {
   "id": "nba-1641722",
+  "adp": null,
   "nbaId": 1641722,
   "name": "Jordan Hawkins",
   "team": "CHI",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5716,11 +6100,13 @@
  },
  {
   "id": "nba-1630527",
+  "adp": null,
   "nbaId": 1630527,
   "name": "Brandon Boston",
   "team": "",
   "lastTeam": "NOP",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5745,11 +6131,13 @@
  },
  {
   "id": "nba-1642267",
+  "adp": null,
   "nbaId": 1642267,
   "name": "Bub Carrington",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5774,11 +6162,13 @@
  },
  {
   "id": "nba-1627751",
+  "adp": 152.5,
   "nbaId": 1627751,
   "name": "Jakob Poeltl",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5804,11 +6194,13 @@
  },
  {
   "id": "nba-1629111",
+  "adp": null,
   "nbaId": 1629111,
   "name": "Jock Landale",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -5834,11 +6226,13 @@
  },
  {
   "id": "nba-1630553",
+  "adp": null,
   "nbaId": 1630553,
   "name": "Keon Johnson",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5863,11 +6257,13 @@
  },
  {
   "id": "nba-1626179",
+  "adp": null,
   "nbaId": 1626179,
   "name": "Terry Rozier",
   "team": "",
   "lastTeam": "MIA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5892,11 +6288,13 @@
  },
  {
   "id": "nba-1631106",
+  "adp": 155.0,
   "nbaId": 1631106,
   "name": "Tari Eason",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -5922,11 +6320,13 @@
  },
  {
   "id": "nba-1631260",
+  "adp": 119.0,
   "nbaId": 1631260,
   "name": "AJ Green",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5952,11 +6352,13 @@
  },
  {
   "id": "nba-1642856",
+  "adp": 144.5,
   "nbaId": 1642856,
   "name": "Egor D\u00ebmin",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -5980,11 +6382,13 @@
  },
  {
   "id": "nba-1642860",
+  "adp": null,
   "nbaId": 1642860,
   "name": "Will Riley",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6008,11 +6412,13 @@
  },
  {
   "id": "nba-203114",
+  "adp": null,
   "nbaId": 203114,
   "name": "Khris Middleton",
   "team": "WAS",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6038,11 +6444,13 @@
  },
  {
   "id": "nba-1629674",
+  "adp": 146.5,
   "nbaId": 1629674,
   "name": "Neemias Queta",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -6068,11 +6476,13 @@
  },
  {
   "id": "nba-1630533",
+  "adp": null,
   "nbaId": 1630533,
   "name": "Ziaire Williams",
   "team": "LAL",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6098,11 +6508,13 @@
  },
  {
   "id": "nba-1627884",
+  "adp": null,
   "nbaId": 1627884,
   "name": "Derrick Jones Jr.",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6128,11 +6540,13 @@
  },
  {
   "id": "nba-1630173",
+  "adp": null,
   "nbaId": 1630173,
   "name": "Precious Achiuwa",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6158,11 +6572,13 @@
  },
  {
   "id": "nba-1630191",
+  "adp": 138.0,
   "nbaId": 1630191,
   "name": "Isaiah Stewart",
   "team": "MEM",
   "lastTeam": "DET",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -6188,11 +6604,13 @@
  },
  {
   "id": "nba-1641757",
+  "adp": null,
   "nbaId": 1641757,
   "name": "Jordan Miller",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -6218,11 +6636,13 @@
  },
  {
   "id": "nba-1628989",
+  "adp": null,
   "nbaId": 1628989,
   "name": "Kevin Huerter",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6248,11 +6668,13 @@
  },
  {
   "id": "nba-1641709",
+  "adp": 87.0,
   "nbaId": 1641709,
   "name": "Ausar Thompson",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -6278,11 +6700,13 @@
  },
  {
   "id": "nba-1627777",
+  "adp": null,
   "nbaId": 1627777,
   "name": "Georges Niang",
   "team": "GSW",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6307,11 +6731,13 @@
  },
  {
   "id": "nba-203084",
+  "adp": null,
   "nbaId": 203084,
   "name": "Harrison Barnes",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6337,11 +6763,13 @@
  },
  {
   "id": "nba-1641733",
+  "adp": null,
   "nbaId": 1641733,
   "name": "Nick Smith Jr.",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6367,11 +6795,13 @@
  },
  {
   "id": "nba-1630590",
+  "adp": 148.0,
   "nbaId": 1630590,
   "name": "Scotty Pippen Jr.",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6397,11 +6827,13 @@
  },
  {
   "id": "nba-1641783",
+  "adp": null,
   "nbaId": 1641783,
   "name": "Tristan da Silva",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6426,11 +6858,13 @@
  },
  {
   "id": "nba-1626220",
+  "adp": null,
   "nbaId": 1626220,
   "name": "Royce O'Neale",
   "team": "CHA",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6456,11 +6890,13 @@
  },
  {
   "id": "nba-1629599",
+  "adp": null,
   "nbaId": 1629599,
   "name": "Amir Coffey",
   "team": "",
   "lastTeam": "LAC",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6486,11 +6922,13 @@
  },
  {
   "id": "nba-1642258",
+  "adp": null,
   "nbaId": 1642258,
   "name": "Zaccharie Risacher",
   "team": "DAL",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6515,11 +6953,13 @@
  },
  {
   "id": "nba-1629655",
+  "adp": 161.5,
   "nbaId": 1629655,
   "name": "Daniel Gafford",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6545,11 +6985,13 @@
  },
  {
   "id": "nba-1630643",
+  "adp": null,
   "nbaId": 1630643,
   "name": "Jay Huff",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -6575,11 +7017,13 @@
  },
  {
   "id": "nba-1641787",
+  "adp": null,
   "nbaId": 1641787,
   "name": "Tosan Evbuomwan",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6605,11 +7049,13 @@
  },
  {
   "id": "nba-1630598",
+  "adp": null,
   "nbaId": 1630598,
   "name": "Aaron Wiggins",
   "team": "ATL",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6635,11 +7081,13 @@
  },
  {
   "id": "nba-1629622",
+  "adp": null,
   "nbaId": 1629622,
   "name": "Max Strus",
   "team": "LAC",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -6665,11 +7113,13 @@
  },
  {
   "id": "nba-1629004",
+  "adp": null,
   "nbaId": 1629004,
   "name": "Svi Mykhailiuk",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6695,11 +7145,13 @@
  },
  {
   "id": "nba-1630558",
+  "adp": 164.5,
   "nbaId": 1630558,
   "name": "Davion Mitchell",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6725,11 +7177,13 @@
  },
  {
   "id": "nba-1630171",
+  "adp": null,
   "nbaId": 1630171,
   "name": "Isaac Okoro",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6755,11 +7209,13 @@
  },
  {
   "id": "nba-1629013",
+  "adp": 192.0,
   "nbaId": 1629013,
   "name": "Landry Shamet",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -6785,11 +7241,13 @@
  },
  {
   "id": "nba-203935",
+  "adp": null,
   "nbaId": 203935,
   "name": "Marcus Smart",
   "team": "HOU",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
@@ -6815,11 +7273,13 @@
  },
  {
   "id": "nba-1628392",
+  "adp": 117.0,
   "nbaId": 1628392,
   "name": "Isaiah Hartenstein",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -6845,11 +7305,13 @@
  },
  {
   "id": "nba-1630573",
+  "adp": null,
   "nbaId": 1630573,
   "name": "Sam Hauser",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6875,11 +7337,13 @@
  },
  {
   "id": "nba-1641744",
+  "adp": 92.5,
   "nbaId": 1641744,
   "name": "Zach Edey",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -6904,11 +7368,13 @@
  },
  {
   "id": "nba-203991",
+  "adp": null,
   "nbaId": 203991,
   "name": "Clint Capela",
   "team": "HOU",
   "lastTeam": "ATL",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -6934,11 +7400,13 @@
  },
  {
   "id": "nba-1642874",
+  "adp": null,
   "nbaId": 1642874,
   "name": "Danny Wolf",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6962,11 +7430,13 @@
  },
  {
   "id": "nba-1630529",
+  "adp": null,
   "nbaId": 1630529,
   "name": "Herbert Jones",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -6992,11 +7462,13 @@
  },
  {
   "id": "nba-1642849",
+  "adp": null,
   "nbaId": 1642849,
   "name": "Nolan Traore",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7020,11 +7492,13 @@
  },
  {
   "id": "nba-101108",
+  "adp": 176.0,
   "nbaId": 101108,
   "name": "Chris Paul",
   "team": "",
   "lastTeam": "SAS",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7050,11 +7524,13 @@
  },
  {
   "id": "nba-1642262",
+  "adp": null,
   "nbaId": 1642262,
   "name": "Cody Williams",
   "team": "MIN",
   "lastTeam": "UTA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7079,11 +7555,13 @@
  },
  {
   "id": "nba-1641726",
+  "adp": null,
   "nbaId": 1641726,
   "name": "Dereck Lively II",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "C"
   ],
@@ -7109,11 +7587,13 @@
  },
  {
   "id": "nba-1630692",
+  "adp": null,
   "nbaId": 1630692,
   "name": "Jordan Goodwin",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7139,11 +7619,13 @@
  },
  {
   "id": "nba-1641717",
+  "adp": 159.5,
   "nbaId": 1641717,
   "name": "Cason Wallace",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7169,11 +7651,13 @@
  },
  {
   "id": "nba-1642363",
+  "adp": null,
   "nbaId": 1642363,
   "name": "Nique Clifford",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7197,11 +7681,13 @@
  },
  {
   "id": "nba-201572",
+  "adp": 135.0,
   "nbaId": 201572,
   "name": "Brook Lopez",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -7227,11 +7713,13 @@
  },
  {
   "id": "nba-1642867",
+  "adp": 143.0,
   "nbaId": 1642867,
   "name": "Collin Murray-Boyles",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7255,11 +7743,13 @@
  },
  {
   "id": "nba-1630249",
+  "adp": null,
   "nbaId": 1630249,
   "name": "V\u00edt Krej\u010d\u00ed",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7285,11 +7775,13 @@
  },
  {
   "id": "nba-203110",
+  "adp": 122.0,
   "nbaId": 203110,
   "name": "Draymond Green",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -7315,11 +7807,13 @@
  },
  {
   "id": "nba-203484",
+  "adp": null,
   "nbaId": 203484,
   "name": "Kentavious Caldwell-Pope",
   "team": "PHI",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7345,11 +7839,13 @@
  },
  {
   "id": "nba-1628379",
+  "adp": null,
   "nbaId": 1628379,
   "name": "Luke Kennard",
   "team": "PHX",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7375,11 +7871,13 @@
  },
  {
   "id": "nba-201143",
+  "adp": 107.0,
   "nbaId": 201143,
   "name": "Al Horford",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
@@ -7405,11 +7903,13 @@
  },
  {
   "id": "nba-1629652",
+  "adp": null,
   "nbaId": 1629652,
   "name": "Luguentz Dort",
   "team": "ATL",
   "lastTeam": "OKC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7435,11 +7935,13 @@
  },
  {
   "id": "nba-1631222",
+  "adp": null,
   "nbaId": 1631222,
   "name": "Jake LaRavia",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7465,11 +7967,13 @@
  },
  {
   "id": "nba-1627752",
+  "adp": null,
   "nbaId": 1627752,
   "name": "Taurean Prince",
   "team": "DET",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7495,11 +7999,13 @@
  },
  {
   "id": "nba-1631121",
+  "adp": null,
   "nbaId": 1631121,
   "name": "Bryce McGowens",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7525,11 +8031,13 @@
  },
  {
   "id": "nba-1629018",
+  "adp": null,
   "nbaId": 1629018,
   "name": "Gary Trent Jr.",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7555,11 +8063,13 @@
  },
  {
   "id": "nba-1628971",
+  "adp": null,
   "nbaId": 1628971,
   "name": "Bruce Brown",
   "team": "",
   "lastTeam": "DEN",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7585,11 +8095,13 @@
  },
  {
   "id": "nba-1631217",
+  "adp": 147.0,
   "nbaId": 1631217,
   "name": "Moussa Diabat\u00e9",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7615,11 +8127,13 @@
  },
  {
   "id": "nba-1642354",
+  "adp": null,
   "nbaId": 1642354,
   "name": "KJ Simpson",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7644,11 +8158,13 @@
  },
  {
   "id": "nba-1631230",
+  "adp": 200.0,
   "nbaId": 1631230,
   "name": "Dominick Barlow",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "F"
   ],
@@ -7674,11 +8190,13 @@
  },
  {
   "id": "nba-1642358",
+  "adp": null,
   "nbaId": 1642358,
   "name": "AJ Johnson",
   "team": "NOP",
   "lastTeam": "WAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7703,11 +8221,13 @@
  },
  {
   "id": "nba-1641750",
+  "adp": null,
   "nbaId": 1641750,
   "name": "Ryan Kalkbrenner",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -7731,11 +8251,13 @@
  },
  {
   "id": "nba-1642879",
+  "adp": null,
   "nbaId": 1642879,
   "name": "Ben Saraf",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7759,11 +8281,13 @@
  },
  {
   "id": "nba-1627739",
+  "adp": null,
   "nbaId": 1627739,
   "name": "Kris Dunn",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7789,11 +8313,13 @@
  },
  {
   "id": "nba-1629611",
+  "adp": null,
   "nbaId": 1629611,
   "name": "Terance Mann",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7819,11 +8345,13 @@
  },
  {
   "id": "nba-1641767",
+  "adp": null,
   "nbaId": 1641767,
   "name": "Ben Sheppard",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -7849,11 +8377,13 @@
  },
  {
   "id": "nba-1628998",
+  "adp": null,
   "nbaId": 1628998,
   "name": "Cody Martin",
   "team": "",
   "lastTeam": "PHX",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7879,11 +8409,13 @@
  },
  {
   "id": "nba-1629610",
+  "adp": null,
   "nbaId": 1629610,
   "name": "DaQuan Jeffries",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7909,11 +8441,13 @@
  },
  {
   "id": "nba-1642347",
+  "adp": null,
   "nbaId": 1642347,
   "name": "Jamal Shead",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7938,11 +8472,13 @@
  },
  {
   "id": "nba-1642962",
+  "adp": null,
   "nbaId": 1642962,
   "name": "Drake Powell",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -7966,11 +8502,13 @@
  },
  {
   "id": "nba-1629312",
+  "adp": null,
   "nbaId": 1629312,
   "name": "Haywood Highsmith",
   "team": "",
   "lastTeam": "MIA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -7996,11 +8534,13 @@
  },
  {
   "id": "nba-1628436",
+  "adp": null,
   "nbaId": 1628436,
   "name": "Luke Kornet",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
+  "injury": null,
   "positions": [
    "C"
   ],
@@ -8026,11 +8566,13 @@
  },
  {
   "id": "nba-1642345",
+  "adp": 143.0,
   "nbaId": 1642345,
   "name": "Oso Ighodaro",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -8055,11 +8597,13 @@
  },
  {
   "id": "nba-1630231",
+  "adp": null,
   "nbaId": 1630231,
   "name": "KJ Martin",
   "team": "",
   "lastTeam": "UTA",
   "signed": false,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -8084,11 +8628,13 @@
  },
  {
   "id": "nba-1642942",
+  "adp": null,
   "nbaId": 1642942,
   "name": "Jahmai Mashack",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -8112,11 +8658,13 @@
  },
  {
   "id": "nba-1629731",
+  "adp": null,
   "nbaId": 1629731,
   "name": "Dean Wade",
   "team": "PHI",
   "lastTeam": "CLE",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -8142,11 +8690,13 @@
  },
  {
   "id": "nba-1631200",
+  "adp": null,
   "nbaId": 1631200,
   "name": "Kris Murray",
   "team": "MEM",
   "lastTeam": "POR",
   "signed": true,
+  "injury": null,
   "positions": [
    "F"
   ],
@@ -8172,11 +8722,13 @@
  },
  {
   "id": "nba-203500",
+  "adp": null,
   "nbaId": 203500,
   "name": "Steven Adams",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
@@ -8201,11 +8753,13 @@
  },
  {
   "id": "nba-1642461",
+  "adp": null,
   "nbaId": 1642461,
   "name": "Spencer Jones",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
+  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
@@ -8230,11 +8784,13 @@
  },
  {
   "id": "nba-1642883",
+  "adp": null,
   "nbaId": 1642883,
   "name": "Sion James",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
+  "injury": null,
   "positions": [
    "G"
   ],
@@ -8258,11 +8814,13 @@
  },
  {
   "id": "nba-1627732",
+  "adp": 161.0,
   "nbaId": 1627732,
   "name": "Ben Simmons",
   "team": "SAC",
   "lastTeam": "LAC",
   "signed": true,
+  "injury": "Out",
   "positions": [
    "G"
   ],
@@ -8287,11 +8845,13 @@
  },
  {
   "id": "nba-203901",
+  "adp": null,
   "nbaId": 203901,
   "name": "Elfrid Payton",
   "team": "",
   "lastTeam": "NOP",
   "signed": false,
+  "injury": null,
   "positions": [
    "G"
   ],

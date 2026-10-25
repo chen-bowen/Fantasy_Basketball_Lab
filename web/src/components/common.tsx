@@ -58,6 +58,64 @@ export function PlayerMeta({ player }: { player: ApiPlayer }) {
           Free agent
         </span>
       )}
+      {player.injury && (
+        <>
+          {" "}
+          <span
+            className={player.injury === "Out" ? "injury-tag out" : "injury-tag"}
+            title="Current injury status from ESPN; doesn't change his value"
+          >
+            {player.injury}
+          </span>
+        </>
+      )}
+    </span>
+  );
+}
+
+/** How deep into the available list the 0 end of the Fit scale sits. */
+const FIT_FLOOR_DEPTH = 30;
+/** Minimum raw-Fit width of the scale, so near-equal players stay near-equal late in a draft. */
+const FIT_MIN_SPREAD = 1.5;
+
+export interface FitScale {
+  best: number;
+  floor: number;
+}
+
+/** Scale for this pick from available Fits sorted best first. */
+export function fitScale(sortedFits: number[]): FitScale {
+  const best = sortedFits[0] ?? 0;
+  const floor = sortedFits[Math.min(FIT_FLOOR_DEPTH, sortedFits.length) - 1] ?? best;
+  return { best, floor: Math.min(floor, best - FIT_MIN_SPREAD) };
+}
+
+/** Fit on a 0–10 scale for this pick: the best option available scores 10.0. */
+export function fitScore(fit: number, scale: FitScale): number {
+  return Math.max(0, Math.min(10, ((fit - scale.floor) / (scale.best - scale.floor)) * 10));
+}
+
+/** Value tiers by overall rank: roughly the first round, rounds 2–3, 4–6, 7–13, undrafted. */
+const VALUE_TIERS: { maxRank: number; stars: number; label: string }[] = [
+  { maxRank: 12, stars: 5, label: "Elite" },
+  { maxRank: 36, stars: 4, label: "Star" },
+  { maxRank: 72, stars: 3, label: "Starter" },
+  { maxRank: 156, stars: 2, label: "Rotation" },
+  { maxRank: Infinity, stars: 1, label: "Bench" },
+];
+
+export function valueTier(rank: number | null) {
+  return VALUE_TIERS.find((t) => (rank ?? Infinity) <= t.maxRank)!;
+}
+
+export function Stars({ count, max = 5 }: { count: number; max?: number }) {
+  return (
+    <span className="stars" role="img" aria-label={`${count} of ${max} stars`}>
+      {Array.from({ length: max }, (_, i) => (
+        <svg key={i} width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className={i < count ? "on" : ""}>
+          <path d="M6 .8l1.6 3.3 3.6.5-2.6 2.5.6 3.6L6 9l-3.2 1.7.6-3.6L.8 4.6l3.6-.5z" />
+        </svg>
+      ))}
     </span>
   );
 }
