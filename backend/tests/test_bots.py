@@ -1,6 +1,7 @@
 """Milestones 4 & 5 acceptance: bot personalities, reproducibility,
 rewind and branch."""
 
+from app.analysis.player_values import DRAFT_WEIGHTS
 from app.engine.bots import BotSpec, bot_weights, choose_bot_pick
 from app.engine.draft import (
     apply_pick,
@@ -41,7 +42,7 @@ class TestBotPersonalities:
         state = create_draft(make_config(bot_specs=specs))
         w = bot_weights(state, pool, values, 0)
         assert w["BLK"] == 0.0
-        assert w["PTS"] == 1.0
+        assert w["PTS"] == DRAFT_WEIGHTS["PTS"]
 
     def test_needs_weights_within_cap(self, pool, values):
         specs = tuple(BotSpec(kind="needs") for _ in range(NUM_TEAMS))
@@ -50,7 +51,7 @@ class TestBotPersonalities:
             t = current_team_id(state)
             state = apply_pick(state, pool, choose_bot_pick(state, pool, values, t))
         w = bot_weights(state, pool, values, 1)
-        assert all(0.6 <= w[c] <= 2.0 for c in w)
+        assert all(0.6 <= w[c] / DRAFT_WEIGHTS[c] <= 2.0 for c in w)
 
     def test_bots_never_pick_unavailable(self, pool, values):
         state = run_draft(make_config(), pool, values)

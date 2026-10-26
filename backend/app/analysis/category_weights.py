@@ -1,13 +1,15 @@
 """Category weight construction for bots and the user's display weights.
 
-Needs-based weighting is deliberately capped: a bot trailing a category
-shifts attention toward it but won't reach for extreme picks.
+Everything starts from DRAFT_WEIGHTS (how the room prices categories).
+Needs-based weighting multiplies them, and is deliberately capped: a bot
+trailing a category shifts attention toward it but won't reach for
+extreme picks.
 """
 
 from __future__ import annotations
 
 from ..engine.types import CATEGORIES, Category
-from .player_values import CategoryWeights, UNIFORM_WEIGHTS
+from .player_values import DRAFT_WEIGHTS, CategoryWeights
 from .roster_profile import RosterProfile
 
 NEEDS_GAIN = 0.45  # how strongly a deficit translates into weight
@@ -33,24 +35,32 @@ def _mean_per_slot_z(
     return acc
 
 
+def needs_multipliers(
+    profiles: list[RosterProfile], team_id: int
+) -> CategoryWeights:
+    """Start at 1, push toward categories where the team's per-slot z
+    trails the field — capped to [MIN_WEIGHT, MAX_WEIGHT]."""
+    team = profiles[team_id]
+    if team.size == 0:
+        return {c: 1.0 for c in CATEGORIES}
+    field = _mean_per_slot_z(profiles, team_id)
+    m: CategoryWeights = {}
+    for c in CATEGORIES:
+        deficit = field[c] - team.per_slot_z[c]  # >0 means weaker
+        m[c] = min(MAX_WEIGHT, max(MIN_WEIGHT, 1 + NEEDS_GAIN * deficit))
+    return m
+
+
 def needs_weights(
     profiles: list[RosterProfile], team_id: int
 ) -> CategoryWeights:
-    """Start uniform, push weight toward categories where the team's
-    per-slot z trails the field — capped to [MIN_WEIGHT, MAX_WEIGHT]."""
-    team = profiles[team_id]
-    if team.size == 0:
-        return dict(UNIFORM_WEIGHTS)
-    field = _mean_per_slot_z(profiles, team_id)
-    w: CategoryWeights = {}
-    for c in CATEGORIES:
-        deficit = field[c] - team.per_slot_z[c]  # >0 means weaker
-        w[c] = min(MAX_WEIGHT, max(MIN_WEIGHT, 1 + NEEDS_GAIN * deficit))
-    return w
+    """Draft weights scaled by the team's needs multipliers."""
+    m = needs_multipliers(profiles, team_id)
+    return {c: DRAFT_WEIGHTS[c] * m[c] for c in CATEGORIES}
 
 
 def punt_bot_weights(punt_category: Category) -> CategoryWeights:
     """Punt drafter: the assigned category is ignored entirely."""
-    w = dict(UNIFORM_WEIGHTS)
+    w = dict(DRAFT_WEIGHTS)
     w[punt_category] = 0.0
     return w

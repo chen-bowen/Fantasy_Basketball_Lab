@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from ..analysis.category_weights import needs_weights, punt_bot_weights
 from ..analysis.player_values import (
-    UNIFORM_WEIGHTS,
+    DRAFT_WEIGHTS,
     CategoryWeights,
     CategoryZ,
     score_player,
@@ -51,7 +51,7 @@ def bot_weights(
     """The w_{t,c} term for a bot team at the current draft state."""
     spec = state.config.bot_specs[team_id]
     if spec.kind == "value":
-        return dict(UNIFORM_WEIGHTS)
+        return dict(DRAFT_WEIGHTS)
     if spec.kind == "punt":
         return punt_bot_weights(spec.punt_category or "TO")
     if spec.kind == "needs":

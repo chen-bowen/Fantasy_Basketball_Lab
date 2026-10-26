@@ -12,7 +12,7 @@ from pydantic import BaseModel
 
 from . import store
 from .analysis.player_values import (
-    UNIFORM_WEIGHTS,
+    DRAFT_WEIGHTS,
     compute_player_values,
     score_player,
 )
@@ -50,7 +50,7 @@ ROSTER_SIZE = 13
 # Player z-scores are a pure function of the frozen dataset — compute once.
 PLAYER_VALUES, POOL_STATS = compute_player_values(PLAYERS)
 OVERALL = {
-    pid: score_player(z, UNIFORM_WEIGHTS) for pid, z in PLAYER_VALUES.items()
+    pid: score_player(z, DRAFT_WEIGHTS) for pid, z in PLAYER_VALUES.items()
 }
 OVERALL_RANK = {
     pid: i + 1 for i, pid in enumerate(sorted(OVERALL, key=lambda pid: -OVERALL[pid]))
@@ -146,6 +146,7 @@ def players() -> dict[str, Any]:
             for p in PLAYERS
         ],
         "count": len(PLAYERS),
+        "draftWeights": DRAFT_WEIGHTS,
     }
 
 

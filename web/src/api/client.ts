@@ -35,7 +35,7 @@ export interface ApiPlayer {
   fta: number;
   tov: number;
   adp: number | null; // aggregated draft position (Yahoo/ESPN avg via FantasyPros)
-  overall: number | null; // sum of the 9 category z's, no punts or needs applied
+  overall: number | null; // draft-weighted sum of the 9 category z's, no punts or needs applied
   overallRank: number | null; // 1 = highest overall value in the pool
   availability: number | null; // expected share of games, 0–1, from games-played history + injury status (scales value)
   injury: string | null; // current ESPN status, e.g. "Out", "Day-To-Day"; lowers availability
@@ -86,6 +86,7 @@ export interface DraftView {
   scores: Record<string, number>; // player id → score under user's punts
   fit: Record<string, number>; // available player id → Fit for the user's team
   fitWeights: Record<Category, number>;
+  draftWeights: Record<Category, number>; // how the room prices each category; z × weight adds up to value
   neededCategories: Category[];
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
@@ -164,7 +165,7 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  players: () => req<{ players: ApiPlayer[]; count: number }>("/players"),
+  players: () => req<{ players: ApiPlayer[]; count: number; draftWeights: Record<Category, number> }>("/players"),
   listDrafts: () => req<DraftSummary[]>("/drafts"),
   createDraft: (seed: string, userSlot: number) =>
     req<DraftView>("/drafts", {

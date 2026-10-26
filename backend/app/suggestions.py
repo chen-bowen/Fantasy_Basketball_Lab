@@ -22,7 +22,7 @@ from typing import Any
 
 from .analysis.fit import fit_weights
 from .analysis.player_values import (
-    UNIFORM_WEIGHTS,
+    DRAFT_WEIGHTS,
     compute_player_values,
     score_player,
 )
@@ -189,7 +189,7 @@ def first_pick_options(
     config = state.config
     seeds = seeds or sim_seeds(config.seed)
     available = available_player_ids(state, PLAYER_POOL)
-    overall = lambda i: score_player(_VALUES[i], UNIFORM_WEIGHTS)
+    overall = lambda i: score_player(_VALUES[i], DRAFT_WEIGHTS)
     candidates = sorted(available, key=lambda i: -overall(i))[:FIRST_PICK_CANDIDATES]
 
     combos = [

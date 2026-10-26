@@ -94,11 +94,26 @@ the candidate pick(s), let every later user pick take the best Fit under
 that punt, and average the head-to-head record over 6 drafts (this seed
 plus 5 noise variants with the same bot personalities).
 
-## Availability and injury risk
+## How players are valued
 
-Nobody plays 82 games, so values are built on what a player is *expected*
-to produce, not his per-game line (`analysis/availability.py`,
-`analysis/player_values.py`):
+Every player gets a z-score per category against the pool
+(`analysis/player_values.py`). Two things turn those into a draft board
+that looks like a real one:
+
+**Draft weights.** In the standings every category is one win, but nobody
+drafts that way: a plain z-sum makes a low-turnover 3-and-D guard with a
+good free-throw stroke look like a first-rounder, because +1 z in steals
+or turnovers reads the same as +1 z in points. `DRAFT_WEIGHTS` is how the
+room actually prices the categories — PTS 2.0, REB 1.5, AST 1.5, BLK 1.0,
+FG%/FT% 0.75, STL/3PM 0.5, TO 0.25 — fitted against aggregated ADP and
+rounded (fitted on half the pool, they hold on the other half). Everything
+builds on them: value bots score with them, needs bots and Fit multiply
+them by the team's needs, punts zero them. Head-to-head standings and the
+build simulations still count every category equally.
+
+**Availability.** Nobody plays 82 games, so values are built on what a
+player is *expected* to produce, not his per-game line
+(`analysis/availability.py`):
 
 - **Availability** = durability × current status. Durability is his share
   of games over the last three seasons (newest weighted most, shrunk toward
@@ -122,9 +137,13 @@ to produce, not his per-game line (`analysis/availability.py`,
   the model as is. That is what makes a hurt star fall to the one drafter
   who always gambles, rather than to everyone at the same pick.
 
-The user's own values, Fit and suggestions are risk-neutral. Against real
-ADP on the frozen pool, this lifts the rank correlation of the model's
-draft order from 0.74 to 0.78.
+The user's own values, Fit and suggestions are risk-neutral.
+
+Against real ADP on the frozen pool, the rank correlation of the model's
+draft order is 0.89 (0.74 with a plain z-sum and the old availability
+rule); 27 of the model's top 30 are in ADP's top 30. The main gap left is
+age — the dataset has no age field, so veterans like Harden and Durant
+rank a round or two above where the market takes them.
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived

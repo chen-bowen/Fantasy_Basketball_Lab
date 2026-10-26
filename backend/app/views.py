@@ -10,11 +10,11 @@ from __future__ import annotations
 from typing import Any
 
 from .analysis.player_values import (
-    UNIFORM_WEIGHTS,
+    DRAFT_WEIGHTS,
     punt_weights,
     score_player,
 )
-from .analysis.fit import fit_score, fit_weights, needed_categories
+from .analysis.fit import fit_multipliers, fit_score, fit_weights, needed_categories
 from .analysis.roster_profile import build_roster_profile, rank_teams
 from .analysis.standings import records
 from .engine.draft import (
@@ -97,6 +97,7 @@ def draft_view(
     scores = {pid: score_player(z, weights) for pid, z in values.items()}
     drafted = drafted_set(state)
     fit_w = fit_weights(profiles, state.config.user_slot, set(user_punts))
+    fit_m = fit_multipliers(profiles, state.config.user_slot)
     fit = {
         pid: fit_score(z, fit_w) for pid, z in values.items() if pid not in drafted
     }
@@ -126,8 +127,9 @@ def draft_view(
         "scores": scores,
         "fit": fit,
         "fitWeights": fit_w,
+        "draftWeights": DRAFT_WEIGHTS,
         "neededCategories": [
-            c for c in needed_categories(fit_w) if c not in user_punts
+            c for c in needed_categories(fit_m) if c not in user_punts
         ],
         "profiles": [profile_to_json(p) for p in profiles],
         "ranks": ranks,

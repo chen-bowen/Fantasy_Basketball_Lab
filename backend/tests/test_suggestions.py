@@ -1,4 +1,5 @@
-from app.analysis.fit import fit_weights, needed_categories
+from app.analysis.fit import fit_multipliers, fit_weights, needed_categories
+from app.analysis.player_values import DRAFT_WEIGHTS
 from app.analysis.roster_profile import build_roster_profile, rank_teams
 from app.analysis.standings import records
 from app.engine.draft import apply_pick, create_draft, current_team_id
@@ -26,18 +27,24 @@ def _profiles(state, pool, values):
     return [build_roster_profile([pool[i] for i in r], values) for r in state.rosters]
 
 
-def test_fit_zeroes_punts_and_is_uniform_on_empty_roster(pool, values):
+def test_fit_zeroes_punts_and_is_plain_value_on_empty_roster(pool, values):
     state = create_draft(make_config(user_slot=3))
     w = fit_weights(_profiles(state, pool, values), 3, {"FT%"})
     assert w["FT%"] == 0.0
-    assert all(w[c] == 1.0 for c in CATEGORIES if c != "FT%")
+    assert all(w[c] == DRAFT_WEIGHTS[c] for c in CATEGORIES if c != "FT%")
+    assert needed_categories(fit_multipliers(_profiles(state, pool, values), 3)) == []
 
 
 def test_fit_boosts_categories_the_team_trails(pool, values):
     state = run_draft(make_config(user_slot=3), pool, values)
-    w = fit_weights(_profiles(state, pool, values), 3, set())
-    for c in needed_categories(w):
-        assert w[c] > 1.0
+    profiles = _profiles(state, pool, values)
+    m = fit_multipliers(profiles, 3)
+    w = fit_weights(profiles, 3, set())
+    needed = needed_categories(m)
+    assert needed  # a full roster trails the field somewhere
+    for c in needed:
+        assert m[c] > 1.0
+        assert w[c] > DRAFT_WEIGHTS[c]
 
 
 def test_records_are_consistent(pool, values):

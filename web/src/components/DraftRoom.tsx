@@ -487,7 +487,9 @@ function PlayerPanel({
             </span>
           )}
         </div>
-        {player.z && <ValueBreakdown z={player.z} punts={punts} value={value} />}
+        {player.z && (
+          <ValueBreakdown z={player.z} weights={view.draftWeights} punts={punts} value={value} />
+        )}
         {preview?.playerId === player.id &&
           preview.pickIndex === view.pickIndex && (
             <ImpactRows
@@ -506,13 +508,18 @@ function PlayerPanel({
 
 const BAR_MAX_Z = 3; // bars are scaled to ±3; larger scores fill the bar
 
-/** Where a player's value comes from: one bar per category score, centred on 0. */
+/** Where a player's value comes from: one bar per category, centred on 0.
+ *  Each bar is his z-score in that category times the draft weight the room
+ *  gives it (points count most, turnovers hardly at all), so the bars add up
+ *  to his value. */
 function ValueBreakdown({
   z,
+  weights,
   punts,
   value,
 }: {
   z: Record<Category, number>;
+  weights: Record<Category, number>;
   punts: ReadonlySet<Category>;
   value: number;
 }) {
@@ -520,14 +527,20 @@ function ValueBreakdown({
     <div className="breakdown">
       <div className="impact-head">
         <strong>Where his value comes from</strong>
-        <span className="muted small">0 = average player · sum {value.toFixed(1)}</span>
+        <span className="muted small">0 = average player · adds up to {value.toFixed(1)}</span>
       </div>
       {CATEGORIES.map((c) => {
-        const v = z[c];
+        const w = weights[c] ?? 1;
+        const v = z[c] * w;
         const width = (Math.min(Math.abs(v), BAR_MAX_Z) / BAR_MAX_Z) * 50;
         return (
           <div key={c} className={punts.has(c) ? "breakdown-row punted" : "breakdown-row"}>
-            <span className="rank-cat">{c}</span>
+            <span
+              className="rank-cat"
+              title={`${z[c] >= 0 ? "+" : "−"}${Math.abs(z[c]).toFixed(1)} vs. the pool, × ${w} (how much drafters weigh ${c})`}
+            >
+              {c}
+            </span>
             <span className="diverge" aria-hidden="true">
               <span
                 className={v >= 0 ? "diverge-bar pos" : "diverge-bar neg"}
