@@ -29,7 +29,9 @@ from .engine.draft import (
     rewind_to_pick,
     serialize_draft,
 )
-from .suggestions import suggestions
+from .analysis.punt_plan import suggest_punts
+from .analysis.roster_profile import build_roster_profile
+from .suggestions import gone_before_next_turn, suggestions
 from .views import bot_spec_to_json, draft_view, player_to_json, preview_view
 
 app = FastAPI(title="Fantasy Draft Lab API")
@@ -81,9 +83,31 @@ def _save(
 
 
 def _view(draft_id: str, state: DraftState, blob: dict[str, Any]):
+    punts = blob.get("userPunts", [])
+    lookahead = None
+    if state.status == "in_progress" and current_team_id(state) == state.config.user_slot:
+        lookahead = gone_before_next_turn(state, set(punts))
     return draft_view(
-        draft_id, state, blob.get("userPunts", []), PLAYER_POOL, PLAYER_VALUES
+        draft_id,
+        state,
+        punts,
+        PLAYER_POOL,
+        PLAYER_VALUES,
+        punt_mode=blob.get("puntMode", "auto"),
+        lookahead=lookahead,
     )
+
+
+def _follow_roster(state: DraftState, blob: dict[str, Any]) -> None:
+    """In auto mode, keep the user's punts in step with the roster."""
+    if blob.get("puntMode", "auto") != "auto":
+        return
+    profiles = [
+        build_roster_profile([PLAYER_POOL[i] for i in r], PLAYER_VALUES)
+        for r in state.rosters
+    ]
+    plan = suggest_punts(profiles, state.config.user_slot, blob.get("userPunts", []))
+    blob["userPunts"] = plan["punts"]
 
 
 def _maybe_save_completed_run(draft_id: str, state: DraftState, blob: dict) -> None:
@@ -116,6 +140,7 @@ class PickReq(BaseModel):
 
 class PuntsReq(BaseModel):
     punts: list[str]
+    mode: str | None = None  # "auto" lets the roster decide; default (None) means set by hand
 
 
 class RewindReq(BaseModel):
@@ -173,6 +198,7 @@ def create(req: CreateDraftReq):
     blob: dict[str, Any] = {
         "createdAt": int(time.time() * 1000),
         "userPunts": [],
+        "puntMode": "auto",
         "runSaved": False,
     }
     _save(draft_id, state, blob)
@@ -192,6 +218,7 @@ def make_pick(draft_id: str, req: PickReq):
         state = apply_pick(state, PLAYER_POOL, req.playerId)
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
+    _follow_roster(state, blob)
     _save(draft_id, state, blob)
     _maybe_save_completed_run(draft_id, state, blob)
     return _view(draft_id, state, blob)
@@ -232,8 +259,16 @@ def resume(draft_id: str):
 
 @app.put("/api/drafts/{draft_id}/punts")
 def set_punts(draft_id: str, req: PuntsReq):
+    """Set punts by hand (switches the draft to manual mode), or hand the
+    decision back to the roster with mode "auto"."""
     state, blob = _load(draft_id)
-    blob["userPunts"] = req.punts
+    if req.mode == "auto":
+        blob["puntMode"] = "auto"
+        blob["userPunts"] = req.punts
+        _follow_roster(state, blob)
+    else:
+        blob["puntMode"] = "manual"
+        blob["userPunts"] = req.punts
     _save(draft_id, state, blob)
     return _view(draft_id, state, blob)
 
@@ -271,6 +306,7 @@ def rewind(draft_id: str, req: RewindReq):
     )
     state = rewind_to_pick(state, PLAYER_POOL, req.pickIndex)
     blob["runSaved"] = False  # this branch should save its own completed run
+    _follow_roster(state, blob)
     _save(draft_id, state, blob)
     return _view(draft_id, state, blob)
 

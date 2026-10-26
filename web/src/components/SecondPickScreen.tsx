@@ -8,7 +8,7 @@ import {
   type SecondPickOption,
 } from "../api/client";
 import { andList, slotPicks, teamName } from "../state/teams";
-import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip } from "./common";
+import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip, ZStrip } from "./common";
 
 interface Props {
   view: DraftView;
@@ -16,7 +16,7 @@ interface Props {
   options: SecondPickOption[] | null; // null while simulations run
   consensus: ConsensusPick | null;
   tested: number;
-  onDraft: (playerId: string, punt: Category) => void;
+  onDraft: (playerId: string, punt: Category | null) => void;
   onBrowse: () => void;
 }
 
@@ -128,7 +128,9 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
                         </span>
                         <span className="wins-row">
                           <span className={o.keepsPunt ? "chip dark" : "chip accent-soft"}>
-                            {o.keepsPunt ? `Keeps punt ${o.punt}` : `Switch to punt ${o.punt}`}
+                            {o.punt === null
+                              ? o.keepsPunt ? "No punt" : "Drop the punt"
+                              : o.keepsPunt ? `Keeps punt ${o.punt}` : `Switch to punt ${o.punt}`}
                           </span>
                           <span className="meter">
                             <span style={{ width: `${(o.wins / 11) * 100}%` }} />
@@ -142,6 +144,17 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
                           {o.runs < FEW_RUNS
                             ? `Only ${o.runs} test draft${o.runs === 1 ? "" : "s"}: he usually doesn't last this long.`
                             : `${o.winsRange ? `${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)}` : o.wins.toFixed(1)} across ${o.runs} test drafts`}
+                          {consensus && consensus.playerId !== o.playerId && (() => {
+                            const gap = o.wins - consensus.wins;
+                            const cp = playerMap.get(consensus.playerId);
+                            return cp
+                              ? ` · ${Math.abs(gap) < 0.15 ? "even with" : gap > 0 ? `+${gap.toFixed(1)} over` : `${gap.toFixed(1)} under`} ${cp.name.split(" ").slice(-1)[0]}, the market's pick`
+                              : "";
+                          })()}
+                        </span>
+                        <span className="stack-sm">
+                          <span className="muted small">What he brings</span>
+                          {p.z && <ZStrip z={p.z} punts={new Set<Category>(o.punt ? [o.punt] : [])} />}
                         </span>
                         <PairingNotes why={o.why} anchor={first.name} punt={o.punt} />
                         {o.wait.pick != null && o.wait.runs > 0 && (
@@ -158,7 +171,7 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
                         {o.ranksAfter && (
                           <span className="stack-sm">
                             <span className="muted small">Your team after this pick</span>
-                            <RankStrip ranks={o.ranksAfter} punts={new Set([o.punt])} size="sm" />
+                            <RankStrip ranks={o.ranksAfter} punts={new Set<Category>(o.punt ? [o.punt] : [])} size="sm" />
                           </span>
                         )}
                         {o.nextOptions.length > 0 && (
@@ -181,7 +194,9 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
                   <div className="action-text">
                     <strong>
                       {chosenPlayer.name} ·{" "}
-                      {chosen.keepsPunt ? `keeps punt ${chosen.punt}` : `switches to punt ${chosen.punt}`}
+                      {chosen.punt === null
+                        ? chosen.keepsPunt ? "no punt" : "drops the punt"
+                        : chosen.keepsPunt ? `keeps punt ${chosen.punt}` : `switches to punt ${chosen.punt}`}
                     </strong>
                     <span>
                       Expects {chosen.wins.toFixed(1)} matchup wins of 11 across {chosen.runs} simulated

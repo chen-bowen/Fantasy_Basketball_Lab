@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
   api,
   CATEGORIES,
@@ -27,35 +27,65 @@ interface Props {
   onInspect: (id: string | null) => void;
   onDraft: (id: string) => void;
   onTogglePunt: (c: Category) => void;
+  onAutoPunts: () => void;
+  onBackToBuild: (() => void) | null; // back to the build screens, on the first two turns
 }
 
 const HELPS_Z = 0.4;
 const HURTS_Z = -0.9;
+/** A player is "likely gone" when he's drafted before your next turn in at least half the look-ahead runs. */
+const GONE_THRESHOLD = 0.5;
 
-export function DraftRoom({ view, playerMap, inspectedId, onInspect, onDraft, onTogglePunt }: Props) {
+export function DraftRoom({
+  view, playerMap, inspectedId, onInspect, onDraft, onTogglePunt, onAutoPunts, onBackToBuild,
+}: Props) {
   const punts = useMemo(() => new Set<Category>(view.userPunts), [view.userPunts]);
+  const lookahead = view.nextUserPick != null && Object.keys(view.gone).length > 0;
+  const canWait = useMemo(
+    () => new Set(lookahead ? Object.keys(view.gone).filter((id) => view.gone[id] < GONE_THRESHOLD) : []),
+    [view.gone, lookahead],
+  );
+  // Sorted by Fit, but players who will still be there next turn go below
+  // the ones who won't: Fit says who helps most, the look-ahead says who
+  // you have to take now.
   const available = useMemo(
     () =>
       Object.keys(view.fit)
         .map((id) => playerMap.get(id)!)
         .filter(Boolean)
-        .sort((a, b) => view.fit[b.id] - view.fit[a.id]),
-    [view.fit, playerMap],
+        .sort(
+          (a, b) =>
+            Number(canWait.has(a.id)) - Number(canWait.has(b.id)) || view.fit[b.id] - view.fit[a.id],
+        ),
+    [view.fit, playerMap, canWait],
   );
-  const scale = useMemo(() => fitScale(available.map((p) => view.fit[p.id])), [available, view.fit]);
+  // Scale on fits sorted by fit alone: `available` is reordered for display
+  // (can't-wait first), and the scale must not inherit that ordering or
+  // several different raw Fits would all clamp to 10.0.
+  const scale = useMemo(
+    () => fitScale(available.map((p) => view.fit[p.id]).sort((a, b) => b - a)),
+    [available, view.fit],
+  );
   const focus =
     (inspectedId && view.fit[inspectedId] !== undefined && playerMap.get(inspectedId)) ||
     available[0];
 
   return (
     <>
-      <BuildBanner view={view} punts={punts} onTogglePunt={onTogglePunt} />
+      <BuildBanner
+        view={view}
+        punts={punts}
+        onTogglePunt={onTogglePunt}
+        onAutoPunts={onAutoPunts}
+        onBackToBuild={onBackToBuild}
+      />
       <main className="room">
         <FitTable
           view={view}
           players={available}
           scale={scale}
           punts={punts}
+          canWait={canWait}
           focusId={focus?.id ?? null}
           onInspect={onInspect}
         />
@@ -82,26 +112,42 @@ function BuildBanner({
   view,
   punts,
   onTogglePunt,
+  onAutoPunts,
+  onBackToBuild,
 }: {
   view: DraftView;
   punts: ReadonlySet<Category>;
   onTogglePunt: (c: Category) => void;
+  onAutoPunts: () => void;
+  onBackToBuild: (() => void) | null;
 }) {
   const [editing, setEditing] = useState(false);
   const needs = view.neededCategories;
+  const auto = view.puntMode === "auto";
+  const plan = view.puntPlan;
+  const planDiffers =
+    !auto && (plan.punts.length !== punts.size || plan.punts.some((c) => !punts.has(c)));
   return (
     <div className="banner-wrap">
       <section className="card banner">
         <div className="banner-text">
           <span className="banner-title">
-            <strong>{punts.size ? "Your build" : "No punt yet"}</strong>
+            <strong>{punts.size ? "Your build" : "No punt"}</strong>
             {[...punts].map((c) => (
               <span key={c} className="chip dark">
                 Punt {c}
               </span>
             ))}
+            <span className="chip" title={auto ? "The punt follows your roster after every pick" : "Punts set by hand"}>
+              {auto ? "follows your roster" : "set by hand"}
+            </span>
           </span>
           <span className="muted">
+            {auto
+              ? plan.reason
+              : planDiffers
+                ? `${plan.reason} (You're on manual — ${plan.punts.length ? `the roster would punt ${andList(plan.punts)}.` : "the roster would punt nothing."})`
+                : plan.reason}{" "}
             {needs.length
               ? `Fit is boosting what your team is behind in: ${andList(needs)}.`
               : view.rosters[view.userSlot].length
@@ -109,6 +155,16 @@ function BuildBanner({
                 : "Fit is plain value until your team has a shape."}
           </span>
         </div>
+        {onBackToBuild && (
+          <button className="btn" onClick={onBackToBuild}>
+            Back to build options
+          </button>
+        )}
+        {!auto && (
+          <button className="btn" onClick={onAutoPunts} title="Let the roster decide the punt from here">
+            Let the roster decide
+          </button>
+        )}
         <button className="btn" aria-expanded={editing} onClick={() => setEditing(!editing)}>
           {editing ? "Done" : "Change punts"}
         </button>
@@ -139,6 +195,7 @@ function FitTable({
   players,
   scale,
   punts,
+  canWait,
   focusId,
   onInspect,
 }: {
@@ -146,6 +203,7 @@ function FitTable({
   players: ApiPlayer[];
   scale: FitScale;
   punts: ReadonlySet<Category>;
+  canWait: ReadonlySet<string>;
   focusId: string | null;
   onInspect: (id: string) => void;
 }) {
@@ -196,7 +254,13 @@ function FitTable({
       </div>
       <p className="table-note">
         <strong>Fit</strong> (0–10) is how much a player helps your team at this pick: the best
-        option available scores 10, and it updates after every pick.{" "}
+        option available scores 10, and it updates after every pick.
+        {view.nextUserPick != null && canWait.size > 0 && sortBy === "fit" && (
+          <>
+            {" "}Players likely still there at your next pick (#{view.nextUserPick}) are listed
+            below the ones who won't be — take those first.
+          </>
+        )}{" "}
         <strong>Value</strong> (stars) is his price at the draft table — where drafters
         take him, weighing categories the way real drafts do (points and assists over
         steals or free throws): five stars is first-round quality. When Fit runs ahead of
@@ -254,12 +318,22 @@ function FitTable({
             </tr>
           </thead>
           <tbody>
-            {rows.slice(0, limit).map((p) => {
+            {rows.slice(0, limit).map((p, i, arr) => {
               const score = fitScore(view.fit[p.id], scale);
               const tier = valueTier(p.overallRank);
+              const waits = canWait.has(p.id);
+              const divider =
+                sortBy === "fit" && waits && (i === 0 || !canWait.has(arr[i - 1].id));
               return (
+                <Fragment key={p.id}>
+                  {divider && (
+                    <tr className="divider-row" aria-hidden="true">
+                      <td colSpan={mode === "fit" ? 4 : 5 + CATEGORIES.length}>
+                        Likely still there at #{view.nextUserPick} — you can wait on these
+                      </td>
+                    </tr>
+                  )}
                 <tr
-                  key={p.id}
                   className={p.id === focusId ? "focused" : ""}
                   onClick={() => onInspect(p.id)}
                 >
@@ -269,6 +343,9 @@ function FitTable({
                       <span className="row-name">
                         <strong>{p.name}</strong>
                         <PlayerMeta player={p} />
+                        {waits && sortBy !== "fit" && (
+                          <span className="chip wait" title={`Still there at #${view.nextUserPick} in most look-ahead runs`}>can wait</span>
+                        )}
                       </span>
                     </button>
                   </td>
@@ -305,6 +382,7 @@ function FitTable({
                     </>
                   )}
                 </tr>
+                </Fragment>
               );
             })}
           </tbody>
@@ -425,7 +503,7 @@ function PlayerPanel({
             </span>
           </div>
           <span className="badge-pair">
-            <span className="fit-badge" title="Best option available at this pick = 10">
+            <span className="fit-badge" title="Fit for your team on a 0–10 scale: 10 = best option at this pick, 0 = outside roughly the top 30">
               <strong>{fitScore(fit, scale).toFixed(1)}</strong>
               <span>fit / 10</span>
             </span>
@@ -466,6 +544,19 @@ function PlayerPanel({
                     ? ` — usually goes ~${gap} picks earlier`
                     : ` — usually goes ~${-gap} picks later`;
                 })()}
+            </span>
+          )}
+          {view.nextUserPick != null && view.gone[player.id] !== undefined && (
+            <span className={view.gone[player.id] >= 0.5 ? "small ink" : "muted small"}>
+              {view.nextUserPick === view.pickIndex + 2
+                ? `You pick again right after this one (#${view.nextUserPick}).`
+                : view.gone[player.id] >= 0.99
+                  ? `Gone before your next pick (#${view.nextUserPick}) in every look-ahead run — now or never.`
+                  : view.gone[player.id] >= 0.5
+                    ? `Gone before your next pick (#${view.nextUserPick}) in ${Math.round(view.gone[player.id] * 100)}% of look-ahead runs.`
+                    : view.gone[player.id] <= 0.01
+                      ? `Still there at your next pick (#${view.nextUserPick}) in every look-ahead run — you can wait on him.`
+                      : `Still there at #${view.nextUserPick} in ${Math.round((1 - view.gone[player.id]) * 100)}% of look-ahead runs.`}
             </span>
           )}
           {Object.keys(player.gpBySeason ?? {}).length > 0 && (

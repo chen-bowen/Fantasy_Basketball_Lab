@@ -99,6 +99,12 @@ export default function App() {
         onInspect={actions.inspect}
         onDraft={actions.userPick}
         onTogglePunt={actions.togglePunt}
+        onAutoPunts={actions.autoPunts}
+        onBackToBuild={
+          view.isUserTurn && browseAll && userPickCount(view) < 2
+            ? () => actions.setBrowseAll(false)
+            : null
+        }
       />
     );
   }

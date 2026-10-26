@@ -91,6 +91,10 @@ export interface DraftView {
   ranks: Record<Category, number[]>;
   records: TeamRecord[];
   userPunts: Category[];
+  puntMode: "auto" | "manual"; // auto: punts follow the roster after every pick
+  puntPlan: PuntPlan;
+  nextUserPick: number | null; // overall pick number of the user's next turn (on the user's turn)
+  gone: Record<string, number>; // player id → share of look-ahead runs in which he's drafted before then
 }
 
 export interface TeamRecord {
@@ -112,7 +116,7 @@ export interface PairingReason {
 
 export interface FirstPickOption {
   playerId: string;
-  punt: Category;
+  punt: Category | null; // null: best with no punt plan
   wins: number; // expected matchup wins of 11, averaged over runs
   runs: number;
   winsRange: [number, number] | null; // min/max over the runs
@@ -124,7 +128,7 @@ export interface FirstPickOption {
 
 export interface SecondPickOption {
   playerId: string;
-  punt: Category;
+  punt: Category | null; // null: no punt
   keepsPunt: boolean;
   wins: number;
   runs: number;
@@ -139,8 +143,16 @@ export interface SecondPickOption {
 export interface ConsensusPick {
   playerId: string;
   wins: number;
-  punt: Category;
+  punt: Category | null;
   runs: number;
+}
+
+/** What the roster says to punt right now, and why. */
+export interface PuntPlan {
+  punts: Category[];
+  category: Category | null;
+  rank: number | null;
+  reason: string;
 }
 
 export type Suggestions =
@@ -207,10 +219,11 @@ export const api = {
     req<DraftView>(`/drafts/${id}/pause`, { method: "POST" }),
   resume: (id: string) =>
     req<DraftView>(`/drafts/${id}/resume`, { method: "POST" }),
-  setPunts: (id: string, punts: Category[]) =>
+  /** Set punts by hand (manual mode), or with mode "auto" hand the decision back to the roster. */
+  setPunts: (id: string, punts: Category[], mode?: "auto") =>
     req<DraftView>(`/drafts/${id}/punts`, {
       method: "PUT",
-      body: JSON.stringify({ punts }),
+      body: JSON.stringify(mode ? { punts, mode } : { punts }),
     }),
   preview: (id: string, playerId: string) =>
     req<PreviewView>(`/drafts/${id}/preview`, {

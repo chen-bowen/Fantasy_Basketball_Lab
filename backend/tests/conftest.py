@@ -21,6 +21,16 @@ NUM_TEAMS = 12
 ROSTER_SIZE = 13
 
 
+@pytest.fixture(autouse=True)
+def _isolated_store(tmp_path, monkeypatch):
+    """API tests write drafts/runs through the real store module; point it
+    at a temp dir so test sessions never appear in the app's draft list."""
+    import app.store as store
+
+    monkeypatch.setattr(store, "DRAFTS_DIR", tmp_path / "drafts")
+    monkeypatch.setattr(store, "RUNS_DIR", tmp_path / "runs")
+
+
 @pytest.fixture(scope="session")
 def players():
     return PLAYERS

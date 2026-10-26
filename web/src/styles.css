@@ -658,3 +658,13 @@ tr.focused { background: #fff7f1 !important; box-shadow: inset 3px 0 0 var(--acc
 }
 
 .pairing-notes { line-height: 1.4; }
+
+.divider-row td {
+  padding: 10px 12px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted, #6b7280);
+  border-top: 1px dashed #cfd4dc;
+  background: #fafbfc;
+}
+.chip.wait { background: #eef0f3; color: #4b5563; font-size: 10px; }

@@ -24,13 +24,29 @@ export function DraftHeader({ view, speed, screen, onNavigate, onPause, onResume
         <div className="progress-block">
           <div className="progress-text">
             {view.complete ? (
-              <strong>Draft complete</strong>
+              <>
+                <strong>Draft complete</strong>
+                {" "}
+                <span
+                  className="muted small mono"
+                  title="Draft code — paste it under 'Same league again?' on the setup screen to replay this league"
+                >
+                  code {view.seed}
+                </span>
+              </>
             ) : (
               <>
                 <strong>
                   Round {view.round} of {view.rosterSize} · Pick {view.pickIndex + 1}
                 </strong>
                 {view.status === "paused" && <span className="chip warn">Paused</span>}
+                {" "}
+                <span
+                  className="muted small mono"
+                  title="Draft code — paste it under 'Same league again?' on the setup screen to replay this league"
+                >
+                  code {view.seed}
+                </span>
               </>
             )}
           </div>

@@ -68,7 +68,7 @@ def test_first_pick_options(pool, values):
     assert opts
     assert [o["wins"] for o in opts] == sorted((o["wins"] for o in opts), reverse=True)
     for o in opts:
-        assert o["punt"] in PUNT_OPTIONS
+        assert o["punt"] is None or o["punt"] in PUNT_OPTIONS
         assert 0 <= o["wins"] <= 11
         assert o["playerId"] not in state.rosters[0]
         assert len(o["finishRanks"]) == 9
@@ -77,10 +77,11 @@ def test_first_pick_options(pool, values):
 
 def test_second_pick_options_flag_punt_switches(pool, values):
     state = _advance_to_user(create_draft(make_config(user_slot=3)), pool, values)
-    first = first_pick_options(state, seeds=sim_seeds("test-seed", 1))[0]
+    first = first_pick_options(state, seeds=sim_seeds("test-seed", 3))[0]
     state = apply_pick(state, pool, first["playerId"])
     state = _advance_to_user(state, pool, values)
-    result = second_pick_options(state, {first["punt"]}, seeds=sim_seeds("test-seed", 1))
+    punts = {first["punt"]} if first["punt"] else set()
+    result = second_pick_options(state, punts, seeds=sim_seeds("test-seed", 3))
     opts = result["options"]
     assert 0 < len(opts) <= 4
     assert len({o["playerId"] for o in opts}) == len(opts)
@@ -88,6 +89,7 @@ def test_second_pick_options_flag_punt_switches(pool, values):
     assert result["consensus"] is None or 0 <= result["consensus"]["wins"] <= 11
     for o in opts:
         assert o["keepsPunt"] == (o["punt"] == first["punt"])
+        assert o["punt"] is None or o["punt"] in PUNT_OPTIONS
         assert len(o["ranksAfter"]) == 9
         assert o["winsRange"][0] <= o["wins"] <= o["winsRange"][1]
         why = o["why"]
@@ -95,7 +97,7 @@ def test_second_pick_options_flag_punt_switches(pool, values):
         assert not (set(why["adds"]) & set(why["overlaps"]))  # a category is one or the other
         assert o["punt"] not in why["adds"] + why["overlaps"] + why["costs"]
         assert 0 < why["availability"] <= 1 and why["marketRank"] >= 1
-        assert o["wait"]["runs"] == 1 and 0 <= o["wait"]["stillThere"] <= 1
+        assert o["wait"]["runs"] == 3 and 0 <= o["wait"]["stillThere"] <= 3
 
 
 def test_pairing_reason_reads_the_roster(pool, values):
@@ -133,3 +135,35 @@ def test_expected_wins_resolve_between_rosters_that_tie_on_record(pool, values):
     assert ew[0] > ew[1] > ew[2]
     assert abs(sum(ew) - 3) < 1e-9  # each matchup's probability is split between the two teams
     assert abs(matchup_win_prob(strong, strong) - 0.5) < 1e-9
+
+
+def test_natural_punts_concede_weak_categories_plus_incumbent(pool, values):
+    """Next to Jokić (elite FG%/AST) no new plan punts FG% or AST; 'no
+    punt' is always on the table, and the incumbent plan is always tested
+    even when the roster no longer looks weak in it."""
+    from app.suggestions import natural_punts
+    state = create_draft(make_config(user_slot=0))
+    jokic = next(p.id for p in pool.values() if p.name == "Nikola Jokić")
+    state = apply_pick(state, pool, jokic)
+    naw = next(p.id for p in pool.values() if p.name == "Nickeil Alexander-Walker")
+    plans = natural_punts(state, naw, "FG%")
+    assert plans[0] is None
+    assert "FG%" in plans  # incumbent plan: the sims decide whether it survives
+    assert "AST" not in plans
+    assert "TO" in plans  # both turn it over
+
+
+def test_lookahead_marks_who_is_gone_by_the_next_turn(pool, values):
+    from app.suggestions import gone_before_next_turn, top_of_board
+    state = _advance_to_user(create_draft(make_config(user_slot=5)), pool, values)
+    la = gone_before_next_turn(state, set(), seeds=sim_seeds("test-seed", 2))
+    assert la["nextPick"] == 2 * 12 - 5  # snake: slot 6 picks 6th, then 19th
+    gone = la["gone"]
+    board = top_of_board(state, 40)
+    assert all(gone[pid] >= 0.5 for pid in board[:4])  # the board's top goes before you pick again
+    assert all(gone[pid] == 0.0 for pid in board[-5:])  # the 36th–40th best can wait
+    # The user's own turn is not a pick in between, so on back-to-back picks nobody is gone.
+    last = _advance_to_user(create_draft(make_config(user_slot=11)), pool, values)
+    la2 = gone_before_next_turn(last, set(), seeds=sim_seeds("test-seed", 2))
+    assert la2["nextPick"] == len(last.picks) + 2
+    assert all(v == 0.0 for v in la2["gone"].values())

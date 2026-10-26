@@ -13,14 +13,14 @@ interface Props {
   view: DraftView;
   playerMap: Map<string, ApiPlayer>;
   options: FirstPickOption[] | null; // null while simulations run
-  onDraft: (playerId: string, punt: Category) => void;
+  onDraft: (playerId: string, punt: Category | null) => void;
   onBrowse: () => void;
 }
 
 const PHOTO_BG = ["#E6ECF5", "#E3F0EE", "#F5EBE3", "#ECEDF1", "#EAF1E4"];
 
 /** The three categories a build finishes best in (punt excluded). */
-export function strengths(ranks: number[], punt: Category, n = 3): Category[] {
+export function strengths(ranks: number[], punt: Category | null, n = 3): Category[] {
   return CATEGORIES.map((c, j) => ({ c, r: ranks[j] }))
     .filter(({ c }) => c !== punt)
     .sort((a, b) => a.r - b.r)
@@ -81,7 +81,7 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
           <div className="pick-cards" role="radiogroup" aria-label="First pick options">
             {options.map((o, i) => {
               const p = playerMap.get(o.playerId)!;
-              const punts = new Set<Category>([o.punt]);
+              const punts = new Set<Category>(o.punt ? [o.punt] : []);
               return (
                 <button
                   key={o.playerId}
@@ -101,7 +101,7 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
                       <PlayerMeta player={p} />
                     </span>
                     <span className="wins-row">
-                      <span className="chip dark">Punt {o.punt}</span>
+                      <span className="chip dark">{o.punt ? `Punt ${o.punt}` : "No punt"}</span>
                       <span className="meter">
                         <span style={{ width: `${(o.wins / 11) * 100}%` }} />
                       </span>
@@ -145,14 +145,15 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
             <section className="action-bar">
               <div className="action-text">
                 <strong>
-                  {chosenPlayer.name} · punt {chosen.punt}
+                  {chosenPlayer.name} · {chosen.punt ? `punt ${chosen.punt}` : "no punt"}
                 </strong>
                 <span>
                   {chosen.finishRanks
                     ? `This build finishes strongest in ${andList(strengths(chosen.finishRanks, chosen.punt))}. `
                     : ""}
-                  After this pick, Fit plans around a {chosen.punt} punt. You can still switch
-                  builds with your second pick.
+                  {chosen.punt
+                    ? `After this pick, Fit plans around a ${chosen.punt} punt; the plan keeps following your roster from there.`
+                    : "No category is weak enough to concede with him; Fit stays balanced, and a punt is suggested if your roster develops one."}
                 </span>
               </div>
               <button className="link-btn" onClick={onBrowse}>

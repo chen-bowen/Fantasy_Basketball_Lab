@@ -11,6 +11,7 @@ from typing import Any
 
 from .analysis.player_values import punt_weights, score_player
 from .analysis.fit import fit_score, fit_weights, needed_categories
+from .analysis.punt_plan import suggest_punts
 from .analysis.roster_profile import build_roster_profile, rank_teams
 from .analysis.standings import records
 from .engine.draft import (
@@ -83,11 +84,14 @@ def draft_view(
     user_punts: list[str],
     pool: dict[str, Player],
     values: dict[str, dict[str, float]],
+    punt_mode: str = "auto",
+    lookahead: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     profiles = [
         build_roster_profile([pool[i] for i in roster], values)
         for roster in state.rosters
     ]
+    punt_plan = suggest_punts(profiles, state.config.user_slot, list(user_punts))
     ranks = rank_teams(profiles)
     weights = punt_weights(set(user_punts))
     scores = {pid: score_player(z, weights) for pid, z in values.items()}
@@ -129,6 +133,12 @@ def draft_view(
         "ranks": ranks,
         "records": records(ranks),
         "userPunts": list(user_punts),
+        "puntMode": punt_mode,  # "auto": punts follow the roster; "manual": set by hand
+        "puntPlan": punt_plan,  # what the roster says to punt, and why
+        # Look-ahead to the user's next turn (only on the user's turn):
+        # share of quick runs in which each available player is gone by then.
+        "nextUserPick": (lookahead or {}).get("nextPick"),
+        "gone": (lookahead or {}).get("gone", {}),
     }
 
 

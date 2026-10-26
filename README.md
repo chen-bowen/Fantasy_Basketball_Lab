@@ -81,7 +81,7 @@ ticks, and `src/components/` render the DraftView the API returns.
 | `POST /api/drafts/{id}/picks` | apply a pick (validated, snake order) |
 | `POST /api/drafts/{id}/bot-pick` | advance one bot pick |
 | `POST .../pause` `.../resume` | status control |
-| `PUT /api/drafts/{id}/punts` | user punt categories → rescored view |
+| `PUT /api/drafts/{id}/punts` | `{punts, mode?}` — set punts by hand (manual), or `mode: "auto"` to let the roster decide → rescored view |
 | `POST /api/drafts/{id}/preview` | before/after roster profile for a player |
 | `POST /api/drafts/{id}/rewind` | rewind to pick n (saves abandoned branch) |
 | `GET /api/drafts/{id}/suggestions` | build options for the user's 1st/2nd pick (simulated) |
@@ -98,14 +98,32 @@ a probabilistic win (normal CDF of the per-slot z gap, `CATEGORY_NOISE`),
 so comfortable leads count for more than narrow ones and the estimate
 keeps resolving between good options — under the deterministic record a
 Fit-drafted team already shows 10–11 wins whatever its second pick is, and
-the ordering of options was noise. Candidates are the best Fit under each
-punt plus the market's top of the board under his natural punts; near-ties
-break toward the higher market value. Every option explains itself
-(`why`: categories he adds / offsets / doubles up on / costs next to the
-roster, games played, market rank), says whether he would still be there
-at the next turn (`wait`), and the response carries the market's pick at
-this spot (`consensus`) so the options can be read against it. 8 full
-drafts per option (`SIM_SEEDS`); the min–max over them is shown on screen.
+the ordering of options was noise.
+
+Every plausible candidate is tested: the market's top of the board plus
+the best Fits under no punt and under each punt (~20 players), each with
+no punt and with the punts the roster-plus-him would be genuinely weak in
+(`natural_punts` — a punt concedes a category you can't win, never one you
+own). Two stages keep it fast: 2 drafts per combination to screen, 8 for
+the leaders (`SCREEN_SEEDS`, `SIM_SEEDS`); the min–max is shown on screen.
+Near-ties break toward the higher market value. Every option explains
+itself (`why`: categories he adds / offsets / doubles up on / costs next to
+the roster, games played, market rank), says whether he would still be
+there at the next turn (`wait`), and the response carries the market's
+pick at this spot (`consensus`) so the options can be read against it.
+
+**Look-ahead** (in the DraftView on the user's turn as `gone` and
+`nextUserPick`): a few quick runs to the user's next turn give, for every
+available player, the share in which he is drafted before then. The draft
+room lists players who can wait below the ones who can't, so Fit never
+argues for a reach.
+
+**Punt plan** (`analysis/punt_plan.py`, `puntMode` / `puntPlan` in the
+view): in auto mode (the default) the user's punt follows the roster after
+every pick — a puntable category the team sits in the bottom third of is
+conceded, a punt is kept while the team is still weak there and replaced
+only once it isn't. Setting punts by hand switches to manual; `PUT
+/punts` with `mode: "auto"` hands the decision back.
 
 ## Availability and injury risk
 

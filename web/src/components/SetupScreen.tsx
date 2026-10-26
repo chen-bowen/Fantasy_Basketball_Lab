@@ -23,7 +23,9 @@ export function SetupScreen({
   onResume,
 }: Props) {
   const [slot, setSlot] = useState<number | null>(null);
-  const [seed, setSeed] = useState(randomSeed());
+  const [freshSeed, setFreshSeed] = useState(randomSeed); // the league you get with no code
+  const [code, setCode] = useState(""); // a pasted replay code, if any
+  const seed = code.trim() || freshSeed;
   const [bots, setBots] = useState<BotSpecView[] | null>(null);
 
   const canStart = slot !== null;
@@ -118,7 +120,13 @@ export function SetupScreen({
           <div className="field">
             <div className="field-head">
               <span className="field-label">Your opponents</span>
-              <button className="btn" onClick={() => setSeed(randomSeed())}>
+              <button
+                className="btn"
+                onClick={() => {
+                  setFreshSeed(randomSeed());
+                  setCode("");
+                }}
+              >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                   <path d="M2 4h3c3 0 3 8 6 8h3M12 10l2 2-2 2M2 12h3c1 0 1.6-.9 2.2-2M14 4h-3c-1 0-1.6.9-2.2 2M12 2l2 2-2 2" />
                 </svg>
@@ -163,22 +171,23 @@ export function SetupScreen({
           </div>
 
           <details className="replay">
-            <summary>Replay code</summary>
+            <summary>Same league again?</summary>
             <div className="stack-sm">
               <div className="field-row">
                 <input
                   id="seed"
-                  aria-label="Replay code"
+                  aria-label="Draft code"
                   className="mono"
-                  value={seed}
-                  onChange={(e) => setSeed(e.target.value)}
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="Paste a draft code (optional)"
                   spellCheck={false}
                 />
               </div>
               <span className="muted small">
-                This code sets your opponents and their pick tendencies. Enter a code from
-                an earlier draft to face the same league again; make the same picks and the
-                draft replays exactly.
+                Leave blank for a fresh league. Every draft's code is in its header — paste
+                one here to face the same opponents again; make the same picks and it
+                replays exactly.
               </span>
             </div>
           </details>
@@ -186,7 +195,7 @@ export function SetupScreen({
           <button
             className="btn primary xl"
             disabled={!canStart}
-            onClick={() => canStart && onStart(seed || randomSeed(), slot!)}
+            onClick={() => canStart && onStart(seed, slot!)}
           >
             {canStart ? `Start draft from pick ${slot! + 1}` : "Choose a slot to start"}
           </button>

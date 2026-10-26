@@ -181,14 +181,15 @@ export function useSession() {
     [state.view, set, fail],
   );
 
-  /** Draft a player and commit to the punt his build is built around. */
+  /** Draft a player and start from the plan his build is built around; the
+   *  roster keeps adjusting it from here (auto mode). */
   const draftWithPunt = useCallback(
-    (playerId: string, punt: Category) => {
+    (playerId: string, punt: Category | null) => {
       const v = state.view;
       if (!v?.id) return;
       const id = v.id;
       api
-        .setPunts(id, [punt])
+        .setPunts(id, punt ? [punt] : [], "auto")
         .then(() => api.pick(id, playerId))
         .then((nv) => set({ view: nv, inspectedId: null, browseAll: false }))
         .catch(fail);
@@ -219,6 +220,13 @@ export function useSession() {
     },
     [state.view, set, fail],
   );
+
+  /** Hand the punt decision back to the roster. */
+  const autoPunts = useCallback(() => {
+    const v = state.view;
+    if (!v?.id) return;
+    api.setPunts(v.id, v.userPunts, "auto").then((nv) => set({ view: nv })).catch(fail);
+  }, [state.view, set, fail]);
 
   const setBrowseAll = useCallback(
     (browseAll: boolean) => set({ browseAll }),
@@ -275,6 +283,7 @@ export function useSession() {
         resumeDraft,
         userPick,
         draftWithPunt,
+        autoPunts,
         pause,
         resume,
         setSpeed,
@@ -294,6 +303,7 @@ export function useSession() {
       resumeDraft,
       userPick,
       draftWithPunt,
+      autoPunts,
       pause,
       resume,
       setSpeed,
