@@ -1,4 +1,4 @@
-# Fantasy Draft Lab — Draft Simulator
+# Fantasy Basektabll Lab
 
 Single-player, category-league fantasy basketball mock draft. You pick against
 11 rule-based bots, watch your team's category identity develop, and review
