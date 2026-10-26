@@ -85,8 +85,12 @@ export interface DraftView {
   draftedIds: string[];
   scores: Record<string, number>; // player id → score under user's punts
   fit: Record<string, number>; // available player id → Fit for the user's team
-  fitWeights: Record<Category, number>;
-  neededCategories: Category[];
+  fitWeights: Record<Category, number>; // how much a unit of each category moves the user's expected record (mean 1; punts 0)
+  neededCategories: Category[]; // categories Fit leans toward (weight ≥ 1.1)
+  stances: Record<Category, CategoryStance>; // how Fit treats each category right now
+  candidates: string[]; // players in range at the user's upcoming pick, best Fit first — the recommendations
+  window: DraftWindow; // what "in range" covers at this pick
+  fitScale: FitScale; // the 0–10 scale: best candidate = 10, last candidate = 0
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
   records: TeamRecord[];
@@ -95,6 +99,26 @@ export interface DraftView {
   puntPlan: PuntPlan;
   nextUserPick: number | null; // overall pick number of the user's next turn (on the user's turn)
   gone: Record<string, number>; // player id → share of look-ahead runs in which he's drafted before then
+}
+
+/**
+ * How Fit treats a category: "lean" (a pick moves the record most here), "even",
+ * "behind" (too far back to chase — not boosted), "ahead" (already owned — not
+ * bought again), "punt" (zeroed).
+ */
+export type CategoryStance = "lean" | "even" | "behind" | "ahead" | "punt";
+
+/** The draft window: the top of the board that is in range at the user's upcoming pick. */
+export interface DraftWindow {
+  size: number | null; // how many of the available board's top players are candidates
+  pick: number | null; // the user's upcoming pick number
+  nextPick: number | null; // the one after (null on the last turn: everyone left is in range)
+  reach: number | null; // spots of reach beyond the picks until nextPick
+}
+
+export interface FitScale {
+  best: number; // raw Fit that maps to 10
+  floor: number; // raw Fit that maps to 0
 }
 
 export interface TeamRecord {

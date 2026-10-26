@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CATEGORIES, type ApiPlayer, type Category, type PairingReason } from "../api/client";
+import { CATEGORIES, type ApiPlayer, type Category, type FitScale, type PairingReason } from "../api/client";
 import { andList, ordinal } from "../state/teams";
 
 /** NBA CDN headshot (by nbaId) with an initials fallback. */
@@ -73,26 +73,15 @@ export function PlayerMeta({ player }: { player: ApiPlayer }) {
   );
 }
 
-/** How deep into the available list the 0 end of the Fit scale sits. */
-const FIT_FLOOR_DEPTH = 30;
-/** Minimum raw-Fit width of the scale, so near-equal players stay near-equal late in a draft. */
-const FIT_MIN_SPREAD = 1.5;
-
-export interface FitScale {
-  best: number;
-  floor: number;
-}
-
-/** Scale for this pick from available Fits sorted best first. */
-export function fitScale(sortedFits: number[]): FitScale {
-  const best = sortedFits[0] ?? 0;
-  const floor = sortedFits[Math.min(FIT_FLOOR_DEPTH, sortedFits.length) - 1] ?? best;
-  return { best, floor: Math.min(floor, best - FIT_MIN_SPREAD) };
-}
-
-/** Fit on a 0–10 scale for this pick: the best option available scores 10.0. */
+/**
+ * Fit on a 0–10 scale for this pick, from the scale the backend derives from the
+ * candidates in range: the best candidate scores 10.0, the last one 0.
+ * Players outside the window are placed on the same scale (and clamped).
+ */
 export function fitScore(fit: number, scale: FitScale): number {
-  return Math.max(0, Math.min(10, ((fit - scale.floor) / (scale.best - scale.floor)) * 10));
+  const span = scale.best - scale.floor;
+  if (span <= 0) return 10;
+  return Math.max(0, Math.min(10, ((fit - scale.floor) / span) * 10));
 }
 
 /** Value tiers by overall rank: roughly the first round, rounds 2–3, 4–6, 7–13, undrafted. */

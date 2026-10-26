@@ -32,6 +32,9 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
   const punts = new Set<Category>(view.userPunts);
   const ranksNow = CATEGORIES.map((c) => view.ranks[c][slot]);
   const covered = CATEGORIES.filter((c, j) => !punts.has(c) && ranksNow[j] <= 3);
+  // What one player leaves open — plain roster arithmetic for the narrative;
+  // the options below are ranked by simulation, not by this.
+  const missing = CATEGORIES.filter((c, j) => !punts.has(c) && ranksNow[j] >= view.numTeams - 2);
   const since = view.picks.filter((p) => p.index > firstPick.index);
   const nextPick = slotPicks(slot, view.numTeams, 3)[2];
   const chosen = options?.[sel];
@@ -73,9 +76,10 @@ export function SecondPickScreen({ view, playerMap, options, consensus, tested, 
             </div>
             <p className="body-text">
               {covered.length > 0 && <>{first.name.split(" ").slice(-1)[0]} already covers {andList(covered)}. </>}
-              {view.neededCategories.length > 0 && (
+              {missing.length > 0 && (
                 <>
-                  This pick should bring <strong>{andList(view.neededCategories)}</strong>.
+                  This pick could bring <strong>{andList(missing)}</strong> — or not: the options
+                  below are ranked by simulated record, not by what he lacks.
                 </>
               )}
             </p>

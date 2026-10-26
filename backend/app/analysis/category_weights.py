@@ -1,12 +1,13 @@
-"""Category weight construction for bots and the user's display weights.
+"""Category weight construction for bots.
 
 Needs-based weighting is deliberately capped: a bot trailing a category
-shifts attention toward it but won't reach for extreme picks.
+shifts attention toward it but won't reach for extreme picks. (The user's
+Fit no longer uses it — see fit.py, which weighs categories by what they
+are worth to the team's expected record instead of by the deficit alone.)
 
 Both builders take a `base` weight vector: uniform (every category is worth
-the same — the scoresheet's view, used for the user's Fit) or the market's
-(what drafters pay, used by bots; see market.py). Needs multiply the base,
-punts zero it.
+the same — the scoresheet's view) or the market's (what drafters pay, used
+by bots; see market.py). Needs multiply the base, punts zero it.
 """
 
 from __future__ import annotations

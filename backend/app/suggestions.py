@@ -25,6 +25,7 @@ from .analysis.market import MARKET_WEIGHTS
 from .analysis.player_values import compute_player_values, score_player
 from .analysis.roster_profile import build_roster_profile, rank_teams
 from .analysis.standings import expected_wins
+from .analysis.window import draft_window, user_turns
 from .data.pool import PLAYERS, PLAYER_POOL
 from .engine.bots import choose_bot_pick
 from .engine.draft import (
@@ -69,6 +70,7 @@ LOOKAHEAD_SEEDS = 4  # quick runs to the user's next turn, for who will still be
 MARKET_TIEBREAK = 0.10  # wins per unit of market value
 
 _VALUES, _STATS = compute_player_values(PLAYERS)
+_MARKET = {pid: score_player(z, MARKET_WEIGHTS) for pid, z in _VALUES.items()}
 _EXECUTOR: Executor | None = None
 _CACHE: dict[tuple, dict[str, Any]] = {}
 
@@ -92,8 +94,11 @@ def _profiles(state: DraftState):
 
 
 def best_fit(state: DraftState, team_id: int, punts: set[str], n: int = 1) -> list[str]:
-    w = fit_weights(_profiles(state), team_id, punts)
-    ids = available_player_ids(state, PLAYER_POOL)
+    """The user's pick by Fit: the best Fits among the players in range at
+    this pick (analysis/window.py), so a simulated user never spends a
+    pick on someone the room would leave for him two rounds later."""
+    w = fit_weights(_profiles(state), team_id, punts, state.config.roster_size)
+    ids = draft_window(state, PLAYER_POOL, _MARKET) or available_player_ids(state, PLAYER_POOL)
     return sorted(ids, key=lambda i: -score_player(_VALUES[i], w))[:n]
 
 
@@ -259,13 +264,13 @@ def natural_punts(
 
 
 def market_value(player_id: str) -> float:
-    return score_player(_VALUES[player_id], MARKET_WEIGHTS)
+    return _MARKET[player_id]
 
 
 def top_of_board(state: DraftState, n: int) -> list[str]:
     """Best available by market value — what a drafter sees on the clock."""
     ids = available_player_ids(state, PLAYER_POOL)
-    return sorted(ids, key=lambda i: -market_value(i))[:n]
+    return sorted(ids, key=lambda i: -_MARKET[i])[:n]
 
 
 STRONG_Z = 0.8  # a category a player clearly brings
@@ -488,8 +493,8 @@ def gone_before_next_turn(
     draft room uses it to separate players who must be taken now from
     players who can wait a round."""
     slot = state.config.user_slot
-    if current_team_id(state) != slot or is_complete(state):
-        return {"nextPick": None, "gone": {}}
+    if current_team_id(state) != slot or is_complete(state) or len(user_turns(state, 2)) < 2:
+        return {"nextPick": None, "gone": {}}  # not on the clock, or no next turn to look ahead to
     seeds = seeds or sim_seeds(state.config.seed, LOOKAHEAD_SEEDS)
     first_choices = best_fit(state, slot, punts, 2)
     available = available_player_ids(state, PLAYER_POOL)

@@ -5,6 +5,7 @@ import {
   type ApiPlayer,
   type Category,
   type DraftView,
+  type FitScale,
   type PreviewView,
 } from "../api/client";
 import { andList, ordinal, teamBadgeWithRisk, teamName, teamPunts } from "../state/teams";
@@ -13,11 +14,9 @@ import {
   PlayerMeta,
   Stars,
   ZStrip,
-  fitScale,
   fitScore,
   rankTone,
   valueTier,
-  type FitScale,
 } from "./common";
 
 interface Props {
@@ -45,27 +44,18 @@ export function DraftRoom({
     () => new Set(lookahead ? Object.keys(view.gone).filter((id) => view.gone[id] < GONE_THRESHOLD) : []),
     [view.gone, lookahead],
   );
-  // Sorted by Fit, but players who will still be there next turn go below
-  // the ones who won't: Fit says who helps most, the look-ahead says who
-  // you have to take now.
-  const available = useMemo(
-    () =>
-      Object.keys(view.fit)
-        .map((id) => playerMap.get(id)!)
-        .filter(Boolean)
-        .sort(
-          (a, b) =>
-            Number(canWait.has(a.id)) - Number(canWait.has(b.id)) || view.fit[b.id] - view.fit[a.id],
-        ),
-    [view.fit, playerMap, canWait],
-  );
-  // Scale on fits sorted by fit alone: `available` is reordered for display
-  // (can't-wait first), and the scale must not inherit that ordering or
-  // several different raw Fits would all clamp to 10.0.
-  const scale = useMemo(
-    () => fitScale(available.map((p) => view.fit[p.id]).sort((a, b) => b - a)),
-    [available, view.fit],
-  );
+  // The recommendations are the candidates: the players in range at this
+  // pick (the top of the board as the market sees it — whoever is expected
+  // to go before your next turn, plus some reach), ordered by Fit. Everyone
+  // else is a later-round target: still scored, listed below, never the pick.
+  const candidates = useMemo(() => new Set(view.candidates), [view.candidates]);
+  const available = useMemo(() => {
+    const later = Object.keys(view.fit)
+      .filter((id) => !candidates.has(id))
+      .sort((a, b) => view.fit[b] - view.fit[a]);
+    return [...view.candidates, ...later].map((id) => playerMap.get(id)!).filter(Boolean);
+  }, [view.fit, view.candidates, candidates, playerMap]);
+  const scale = view.fitScale;
   const focus =
     (inspectedId && view.fit[inspectedId] !== undefined && playerMap.get(inspectedId)) ||
     available[0];
@@ -85,6 +75,7 @@ export function DraftRoom({
           players={available}
           scale={scale}
           punts={punts}
+          candidates={candidates}
           canWait={canWait}
           focusId={focus?.id ?? null}
           onInspect={onInspect}
@@ -94,7 +85,14 @@ export function DraftRoom({
             <PlayerPanel
               view={view}
               player={focus}
-              isTop={focus.id === available[0]?.id}
+              isTop={focus.id === view.candidates[0]}
+              inRange={candidates.has(focus.id)}
+              canWait={canWait.has(focus.id)}
+              runnerUp={
+                focus.id === view.candidates[0] && canWait.has(focus.id)
+                  ? view.candidates.slice(1).map((id) => playerMap.get(id)).find((p) => p && !canWait.has(p.id)) ?? null
+                  : null
+              }
               scale={scale}
               punts={punts}
               onDraft={() => onDraft(focus.id)}
@@ -122,7 +120,6 @@ function BuildBanner({
   onBackToBuild: (() => void) | null;
 }) {
   const [editing, setEditing] = useState(false);
-  const needs = view.neededCategories;
   const auto = view.puntMode === "auto";
   const plan = view.puntPlan;
   const planDiffers =
@@ -148,11 +145,7 @@ function BuildBanner({
               : planDiffers
                 ? `${plan.reason} (You're on manual — ${plan.punts.length ? `the roster would punt ${andList(plan.punts)}.` : "the roster would punt nothing."})`
                 : plan.reason}{" "}
-            {needs.length
-              ? `Fit is boosting what your team is behind in: ${andList(needs)}.`
-              : view.rosters[view.userSlot].length
-                ? "Your team isn't far behind in any category, so Fit is close to plain value."
-                : "Fit is plain value until your team has a shape."}
+            {fitStanceText(view)}
           </span>
         </div>
         {onBackToBuild && (
@@ -187,6 +180,27 @@ function BuildBanner({
   );
 }
 
+/**
+ * One sentence on how Fit is weighing the categories right now: what it
+ * leans toward (where one pick moves your record most), and what it has
+ * stopped chasing — a category you're too far behind in to catch the pack,
+ * or one you already own. Never "fix what you're worst at".
+ */
+function fitStanceText(view: DraftView): string {
+  if (view.rosters[view.userSlot].length === 0) return "Fit is plain value until your team has a shape.";
+  const lean = CATEGORIES.filter((c) => view.stances[c] === "lean");
+  const behind = CATEGORIES.filter((c) => view.stances[c] === "behind");
+  const ahead = CATEGORIES.filter((c) => view.stances[c] === "ahead");
+  const parts: string[] = [];
+  if (lean.length) parts.push(`Fit leans toward ${andList(lean)}, where one pick moves your record most.`);
+  const skipped: string[] = [];
+  if (behind.length) skipped.push(`${andList(behind)} (too far behind to catch the pack — don't spend picks on it)`);
+  if (ahead.length) skipped.push(`${andList(ahead)} (already yours)`);
+  if (skipped.length) parts.push(`It isn't chasing ${skipped.join(" or ")}.`);
+  if (!parts.length) return "Every category is still in play, so Fit is close to plain value — just weighed the way the scoresheet counts, not the way the market pays.";
+  return parts.join(" ");
+}
+
 const POSITIONS = ["All", "G", "F", "C", "PG", "SG", "SF", "PF"];
 const PAGE = 50;
 
@@ -195,6 +209,7 @@ function FitTable({
   players,
   scale,
   punts,
+  candidates,
   canWait,
   focusId,
   onInspect,
@@ -203,6 +218,7 @@ function FitTable({
   players: ApiPlayer[];
   scale: FitScale;
   punts: ReadonlySet<Category>;
+  candidates: ReadonlySet<string>;
   canWait: ReadonlySet<string>;
   focusId: string | null;
   onInspect: (id: string) => void;
@@ -220,11 +236,19 @@ function FitTable({
         (!q || p.name.toLowerCase().includes(q) || p.team.toLowerCase().includes(q)) &&
         (pos === "All" || p.positions.includes(pos)),
     );
-    // `players` arrives sorted by Fit; re-sort only when sorting by value.
+    // `players` arrives as candidates by Fit, then the rest by Fit; re-sort
+    // only when sorting by value.
     return sortBy === "fit"
       ? shown
       : [...shown].sort((a, b) => (b.overall ?? 0) - (a.overall ?? 0));
   }, [players, query, pos, sortBy]);
+  const win = view.window;
+  const rangeText =
+    win.size == null
+      ? ""
+      : win.nextPick == null
+        ? "Your last pick: everyone left is in range."
+        : `In range now: the ${win.size} players the board expects to go before your next pick (#${win.nextPick}), plus ${win.reach} spots of reach.`;
   const sortHeader = (key: "fit" | "value", label: string) => (
     <button
       className={sortBy === key ? "sort-btn on" : "sort-btn"}
@@ -254,13 +278,9 @@ function FitTable({
       </div>
       <p className="table-note">
         <strong>Fit</strong> (0–10) is how much a player helps your team at this pick: the best
-        option available scores 10, and it updates after every pick.
-        {view.nextUserPick != null && canWait.size > 0 && sortBy === "fit" && (
-          <>
-            {" "}Players likely still there at your next pick (#{view.nextUserPick}) are listed
-            below the ones who won't be — take those first.
-          </>
-        )}{" "}
+        candidate in range scores 10, and it updates after every pick. {rangeText}
+        {" "}Players the board expects to go later are listed below the line: they keep a Fit, but
+        the pick comes from the candidates — you can likely get them at a later turn.{" "}
         <strong>Value</strong> (stars) is his price at the draft table — where drafters
         take him, weighing categories the way real drafts do (points and assists over
         steals or free throws): five stars is first-round quality. When Fit runs ahead of
@@ -321,20 +341,22 @@ function FitTable({
             {rows.slice(0, limit).map((p, i, arr) => {
               const score = fitScore(view.fit[p.id], scale);
               const tier = valueTier(p.overallRank);
-              const waits = canWait.has(p.id);
+              const inRange = candidates.has(p.id);
+              const waits = inRange && canWait.has(p.id);
               const divider =
-                sortBy === "fit" && waits && (i === 0 || !canWait.has(arr[i - 1].id));
+                sortBy === "fit" && !inRange && (i === 0 || candidates.has(arr[i - 1].id));
               return (
                 <Fragment key={p.id}>
                   {divider && (
                     <tr className="divider-row" aria-hidden="true">
                       <td colSpan={mode === "fit" ? 4 : 5 + CATEGORIES.length}>
-                        Likely still there at #{view.nextUserPick} — you can wait on these
+                        Usually drafted later — not in range at #{win.pick}
+                        {win.nextPick != null && `; likely still there at your next pick (#${win.nextPick})`}
                       </td>
                     </tr>
                   )}
                 <tr
-                  className={p.id === focusId ? "focused" : ""}
+                  className={[p.id === focusId ? "focused" : "", inRange ? "" : "later"].join(" ").trim()}
                   onClick={() => onInspect(p.id)}
                 >
                   <td className="left">
@@ -343,14 +365,17 @@ function FitTable({
                       <span className="row-name">
                         <strong>{p.name}</strong>
                         <PlayerMeta player={p} />
-                        {waits && sortBy !== "fit" && (
-                          <span className="chip wait" title={`Still there at #${view.nextUserPick} in most look-ahead runs`}>can wait</span>
+                        {!inRange && sortBy !== "fit" && (
+                          <span className="chip wait" title={`The board expects him to go after your next pick — not a candidate at #${win.pick}`}>later round</span>
+                        )}
+                        {waits && (
+                          <span className="chip wait" title={`Still there at #${view.nextUserPick} in ${Math.round((1 - view.gone[p.id]) * 100)}% of look-ahead runs`}>can wait</span>
                         )}
                       </span>
                     </button>
                   </td>
                   <td className="left">
-                    <span className="fit-cell">
+                    <span className={inRange ? "fit-cell" : "fit-cell later"}>
                       <strong>{score.toFixed(1)}</strong>
                       {mode === "fit" && (
                         <span className="meter dark">
@@ -427,6 +452,9 @@ function PlayerPanel({
   view,
   player,
   isTop,
+  inRange,
+  canWait,
+  runnerUp,
   scale,
   punts,
   onDraft,
@@ -434,7 +462,10 @@ function PlayerPanel({
 }: {
   view: DraftView;
   player: ApiPlayer;
-  isTop: boolean;
+  isTop: boolean; // the top candidate
+  inRange: boolean; // a candidate at this pick (in the draft window)
+  canWait: boolean; // likely still there at the user's next pick (look-ahead)
+  runnerUp: ApiPlayer | null; // the best candidate who won't be, when the top one can wait
   scale: FitScale;
   punts: ReadonlySet<Category>;
   onDraft: () => void;
@@ -471,15 +502,24 @@ function PlayerPanel({
   const value = player.overall ?? 0;
   const last = player.name.split(" ").slice(1).join(" ") || player.name;
 
+  const lead = isTop ? "The best fit in range at this pick. " : "";
   let why: string;
   if (helps.length) {
-    why = `${isTop ? "The best fit left for your team. " : ""}He adds ${andList(helps)}, which your team needs most right now.`;
+    why = `${lead}He adds ${andList(helps)}, where a pick moves your record most right now.`;
   } else if (otherHelps.length && view.rosters[view.userSlot].length === 0) {
     why = `${isTop ? "The best player available. " : ""}Strong in ${andList(otherHelps)}.`;
   } else if (otherHelps.length) {
-    why = `Strong in ${andList(otherHelps)}, but those aren't what your team is missing.`;
+    why = `${lead}Strong in ${andList(otherHelps)}.`;
   } else {
-    why = "Doesn't move the categories your team is behind in.";
+    why = `${lead}No standout category — his value is spread across the board.`;
+  }
+  if (!inRange) {
+    why +=
+      view.window.nextPick != null
+        ? ` The board expects him to go after your next pick (#${view.window.nextPick}), so he isn't a candidate at #${view.window.pick} — target him at a later turn rather than spend this one.`
+        : " Not in range at this pick.";
+  } else if (isTop && canWait && runnerUp) {
+    why += ` He is likely still there at #${view.nextUserPick}, though — ${runnerUp.name} won't be, and fits nearly as well.`;
   }
 
   return (
@@ -503,9 +543,16 @@ function PlayerPanel({
             </span>
           </div>
           <span className="badge-pair">
-            <span className="fit-badge" title="Fit for your team on a 0–10 scale: 10 = best option at this pick, 0 = outside roughly the top 30">
+            <span
+              className={inRange ? "fit-badge" : "fit-badge later"}
+              title={
+                inRange
+                  ? "Fit for your team on a 0–10 scale: 10 = the best candidate in range at this pick, 0 = the last one"
+                  : "Fit on this pick's scale, but he is outside the draft window — usually drafted later"
+              }
+            >
               <strong>{fitScore(fit, scale).toFixed(1)}</strong>
-              <span>fit / 10</span>
+              <span>{inRange ? "fit / 10" : "later round"}</span>
             </span>
             <span className="value-badge" title={`Value ${value.toFixed(1)}`}>
               <Stars count={tier.stars} />
@@ -529,8 +576,8 @@ function PlayerPanel({
           {Math.abs(fit - value) > 0.05 && (
             <span className="muted small">
               {fit > value
-                ? "Fit is above his draft value: he covers what your team lacks, or does it in categories the market underpays for."
-                : "Fit is below his draft value because his strengths are already covered, punted, or priced in."}
+                ? "Fit is above his draft value: he produces in categories the market underpays for, or in ones where a pick moves your record most."
+                : "Fit is below his draft value: his strengths are in categories that are punted, already yours, out of reach, or priced in by the market."}
             </span>
           )}
           {player.adp != null && (

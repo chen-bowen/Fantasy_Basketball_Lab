@@ -58,7 +58,8 @@ backend/
     analysis/     player_values.py · roster_profile.py · category_weights.py
     data/         pool.py (frozen pool loader) + players.json
     store.py      JSON-file persistence (sessions + saved runs)
-    analysis/     … fit.py (needs-aware Fit) · standings.py (head-to-head records)
+    analysis/     … fit.py (Fit: gradient of expected wins) · window.py (draft window)
+                  · standings.py (head-to-head records)
     suggestions.py  first/second-pick build options, by simulating the rest
                     of the draft (process pool, cached per draft position)
     views.py      DraftView serializer (state + derived analysis per response)
@@ -88,17 +89,46 @@ ticks, and `src/components/` render the DraftView the API returns.
 | `GET /api/league-preview?seed=&userSlot=` | bot personalities a new draft would get |
 
 **Fit** (in every DraftView as `fit`) is a player's category z-scores
-(scoresheet weights, see below) weighted by the user's needs — categories the team trails the field in get
-up to 2× weight — with punted categories zeroed. **Build suggestions** fix
-the candidate pick(s), let every later user pick take the best Fit under
-that punt, and average the *expected* head-to-head record over 6 drafts
-(this seed plus 5 noise variants with the same bot personalities).
-Expected, not projected: `standings.expected_wins` treats each category as
-a probabilistic win (normal CDF of the per-slot z gap, `CATEGORY_NOISE`),
-so comfortable leads count for more than narrow ones and the estimate
-keeps resolving between good options — under the deterministic record a
-Fit-drafted team already shows 10–11 wins whatever its second pick is, and
-the ordering of options was noise.
+(scoresheet weights, see below) weighted by what each category is worth to
+the user's team right now, with punted categories zeroed. The weight of a
+category is the gradient of the team's expected head-to-head record
+(`analysis/fit.py`): against every opponent, the team's per-slot lead is
+projected to the full roster (an early deficit is diluted by the picks
+still to come, a late one is nearly final) and the marginal value of the
+category is the density of its win probability at that lead, times the
+chance it decides the matchup. A category that is a toss-up against much
+of the league is worth the most; one the team can't catch the pack in —
+or already owns — is worth little. So Fit never steers a roster toward
+fixing a lost cause with late-round specialists, which is what a linear
+"boost what you trail in" did: in simulation the gradient beats it by a
+third of a win per draft, and beats every sharpened variant of itself.
+The weights average 1.0, so Fit stays on the scale of a plain z sum and
+is close to plain scoresheet value early on; `stances` in the view says
+how each category is being treated ("lean", "even", "behind", "ahead",
+"punt").
+
+**Draft window** (`analysis/window.py`; `candidates`, `window` and
+`fitScale` in the view): a pick has a price, so Fit ranks *within the
+players in range* — the top of the draft board as the market sees it,
+covering every player expected to go before the user's next turn plus a
+reach of half a round (growing with the pick number, as ADP gets noisier
+deeper in). Those are the recommendations; the 0–10 Fit score is scaled
+so the best candidate is 10. Everyone else keeps a Fit but is listed as a
+later-round target, never as the pick — at pick 40 nobody ranked 100th
+is a candidate, and the player you would still get two rounds later
+doesn't cost you the one you wouldn't. The simulated user picks in the
+build suggestions and look-ahead draft from the same window.
+
+**Build suggestions** fix
+the candidate pick(s), let every later user pick take the best Fit in
+range under that punt, and average the *expected* head-to-head record
+over 6 drafts (this seed plus 5 noise variants with the same bot
+personalities). Expected, not projected: `standings.expected_wins` treats
+each category as a probabilistic win (normal CDF of the per-slot z gap,
+`CATEGORY_NOISE`), so comfortable leads count for more than narrow ones
+and the estimate keeps resolving between good options — under the
+deterministic record a Fit-drafted team already shows 10–11 wins whatever
+its second pick is, and the ordering of options was noise.
 
 Every plausible candidate is tested: the market's top of the board plus
 the best Fits under no punt and under each punt (~20 players), each with
@@ -115,8 +145,8 @@ pick at this spot (`consensus`) so the options can be read against it.
 **Look-ahead** (in the DraftView on the user's turn as `gone` and
 `nextUserPick`): a few quick runs to the user's next turn give, for every
 available player, the share in which he is drafted before then. The draft
-room lists players who can wait below the ones who can't, so Fit never
-argues for a reach.
+room flags candidates who can wait, and when the top candidate is one of
+them names the best candidate who can't.
 
 **Punt plan** (`analysis/punt_plan.py`, `puntMode` / `puntPlan` in the
 view): in auto mode (the default) the user's punt follows the roster after
