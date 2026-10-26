@@ -35,8 +35,8 @@ export interface ApiPlayer {
   fta: number;
   tov: number;
   adp: number | null; // aggregated draft position (Yahoo/ESPN avg via FantasyPros)
-  overall: number | null; // draft-weighted sum of the 9 category z's, no punts or needs applied
-  overallRank: number | null; // 1 = highest overall value in the pool
+  overall: number | null; // market value: z's weighted the way real drafts pay for categories (see backend market.py)
+  overallRank: number | null; // 1 = highest market value in the pool — tracks ADP, not the scoresheet
   availability: number | null; // expected share of games, 0–1, from games-played history + injury status (scales value)
   injury: string | null; // current ESPN status, e.g. "Out", "Day-To-Day"; lowers availability
   z: Record<Category, number> | null; // per-category z vs. the pool (TO flipped)
@@ -86,7 +86,6 @@ export interface DraftView {
   scores: Record<string, number>; // player id → score under user's punts
   fit: Record<string, number>; // available player id → Fit for the user's team
   fitWeights: Record<Category, number>;
-  draftWeights: Record<Category, number>; // how the room prices each category; z × weight adds up to value
   neededCategories: Category[];
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
@@ -100,14 +99,27 @@ export interface TeamRecord {
   ties: number;
 }
 
+/** Why a player, next to what you already have — plain roster arithmetic, no simulation. */
+export interface PairingReason {
+  adds: Category[]; // categories he is strong in that the roster isn't yet
+  patches: Category[]; // roster weaknesses he actively offsets
+  spares: Category[]; // roster weaknesses he at least doesn't deepen
+  overlaps: Category[]; // strengths the roster already has
+  costs: Category[]; // categories he clearly hurts
+  availability: number; // expected share of games, 0–1
+  marketRank: number | null; // his rank among available players by market value
+}
+
 export interface FirstPickOption {
   playerId: string;
   punt: Category;
-  wins: number;
+  wins: number; // expected matchup wins of 11, averaged over runs
   runs: number;
+  winsRange: [number, number] | null; // min/max over the runs
   noPlanWins: number | null;
   finishRanks: number[] | null;
   nextOptions: string[];
+  why: PairingReason;
 }
 
 export interface SecondPickOption {
@@ -116,13 +128,24 @@ export interface SecondPickOption {
   keepsPunt: boolean;
   wins: number;
   runs: number;
+  winsRange: [number, number] | null;
   ranksAfter: number[] | null;
   nextOptions: string[];
+  why: PairingReason;
+  wait: { runs: number; stillThere: number; pick: number | null }; // if you pass on him now
+}
+
+/** The market's pick at this spot and what it would expect to win — a yardstick for the options. */
+export interface ConsensusPick {
+  playerId: string;
+  wins: number;
+  punt: Category;
+  runs: number;
 }
 
 export type Suggestions =
   | { stage: "first"; options: FirstPickOption[] }
-  | { stage: "second"; options: SecondPickOption[] }
+  | { stage: "second"; options: SecondPickOption[]; consensus: ConsensusPick | null; tested: number }
   | { stage: null; options: [] };
 
 export interface DraftSummary {
@@ -165,7 +188,7 @@ async function req<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  players: () => req<{ players: ApiPlayer[]; count: number; draftWeights: Record<Category, number> }>("/players"),
+  players: () => req<{ players: ApiPlayer[]; count: number }>("/players"),
   listDrafts: () => req<DraftSummary[]>("/drafts"),
   createDraft: (seed: string, userSlot: number) =>
     req<DraftView>("/drafts", {

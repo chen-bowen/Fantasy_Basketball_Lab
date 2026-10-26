@@ -88,38 +88,38 @@ ticks, and `src/components/` render the DraftView the API returns.
 | `GET /api/league-preview?seed=&userSlot=` | bot personalities a new draft would get |
 
 **Fit** (in every DraftView as `fit`) is a player's category z-scores
-weighted by the user's needs — categories the team trails the field in get
+(scoresheet weights, see below) weighted by the user's needs — categories the team trails the field in get
 up to 2× weight — with punted categories zeroed. **Build suggestions** fix
 the candidate pick(s), let every later user pick take the best Fit under
-that punt, and average the head-to-head record over 6 drafts (this seed
-plus 5 noise variants with the same bot personalities).
+that punt, and average the *expected* head-to-head record over 6 drafts
+(this seed plus 5 noise variants with the same bot personalities).
+Expected, not projected: `standings.expected_wins` treats each category as
+a probabilistic win (normal CDF of the per-slot z gap, `CATEGORY_NOISE`),
+so comfortable leads count for more than narrow ones and the estimate
+keeps resolving between good options — under the deterministic record a
+Fit-drafted team already shows 10–11 wins whatever its second pick is, and
+the ordering of options was noise. Candidates are the best Fit under each
+punt plus the market's top of the board under his natural punts; near-ties
+break toward the higher market value. Every option explains itself
+(`why`: categories he adds / offsets / doubles up on / costs next to the
+roster, games played, market rank), says whether he would still be there
+at the next turn (`wait`), and the response carries the market's pick at
+this spot (`consensus`) so the options can be read against it. 8 full
+drafts per option (`SIM_SEEDS`); the min–max over them is shown on screen.
 
-## How players are valued
+## Availability and injury risk
 
-Every player gets a z-score per category against the pool
-(`analysis/player_values.py`). Two things turn those into a draft board
-that looks like a real one:
-
-**Draft weights.** In the standings every category is one win, but nobody
-drafts that way: a plain z-sum makes a low-turnover 3-and-D guard with a
-good free-throw stroke look like a first-rounder, because +1 z in steals
-or turnovers reads the same as +1 z in points. `DRAFT_WEIGHTS` is how the
-room actually prices the categories — PTS 2.0, REB 1.5, AST 1.5, BLK 1.0,
-FG%/FT% 0.75, STL/3PM 0.5, TO 0.25 — fitted against aggregated ADP and
-rounded (fitted on half the pool, they hold on the other half). Everything
-builds on them: value bots score with them, needs bots and Fit multiply
-them by the team's needs, punts zero them. Head-to-head standings and the
-build simulations still count every category equally.
-
-**Availability.** Nobody plays 82 games, so values are built on what a
-player is *expected* to produce, not his per-game line
-(`analysis/availability.py`):
+Nobody plays 82 games, so values are built on what a player is *expected*
+to produce, not his per-game line (`analysis/availability.py`,
+`analysis/player_values.py`):
 
 - **Availability** = durability × current status. Durability is his share
   of games over the last three seasons (newest weighted most, shrunk toward
   the pool average). A season he mostly missed counts in full while he is
-  still hurt, but at half weight once he is healthy again — one long
-  absence is a risk signal, two mark him injury-prone. His ESPN status
+  still hurt, but at a quarter weight once he is healthy again — one long
+  absence he has come back from is a risk signal, not a forecast (the room
+  drafts Haliburton and Tatum as near-full players); two mark him
+  injury-prone. His ESPN status
   then costs him games: Day-To-Day a few; Out a share that shrinks the more
   of the current season he has already played (a late knock vs. a
   long-term injury). Unsigned players play nothing until signed.
@@ -139,11 +139,27 @@ player is *expected* to produce, not his per-game line
 
 The user's own values, Fit and suggestions are risk-neutral.
 
-Against real ADP on the frozen pool, the rank correlation of the model's
-draft order is 0.89 (0.74 with a plain z-sum and the old availability
-rule); 27 of the model's top 30 are in ADP's top 30. The main gap left is
-age — the dataset has no age field, so veterans like Harden and Durant
-rank a round or two above where the market takes them.
+## Market value vs. the scoresheet
+
+The league scores nine categories equally, but drafters don't pay for them
+equally: real ADP rewards points and assists far above steals, FT% or
+turnovers. A plain z-score sum therefore ranks low-turnover, high-FT%
+3-and-D guards like first-rounders and drops stars with an ugly FT% or
+turnover line out of the first round. `analysis/market.py` holds category
+weights fitted to ADP (`scripts/fit_market_weights.py`, ridge regression
+shrunk toward uniform; refit after `npm run data:fetch`), blended 75/25
+with the uniform weights so a disciplined 9-cat drafter still meets
+resistance (pure ADP bots lose 10 of 11 to one).
+
+| | weights | used for |
+| --- | --- | --- |
+| **Market value** | fitted to ADP | bot drafting (punt/needs/risk on top), the UI's Value stars and `#rank`, suggestion candidates and tie-breaks |
+| **Scoresheet** | uniform | standings / head-to-head records, the user's Fit, expected wins behind suggestions |
+
+So bots draft like the room (rank correlation of their picks with ADP:
+0.90, up from 0.74), while Fit and the simulations still tell you what
+actually wins — including which players the market underrates for your
+build.
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived

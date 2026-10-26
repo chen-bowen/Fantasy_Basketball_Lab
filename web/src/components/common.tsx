@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { CATEGORIES, type ApiPlayer, type Category } from "../api/client";
-import { ordinal } from "../state/teams";
+import { CATEGORIES, type ApiPlayer, type Category, type PairingReason } from "../api/client";
+import { andList, ordinal } from "../state/teams";
 
 /** NBA CDN headshot (by nbaId) with an initials fallback. */
 export function headshotUrl(nbaId: number | null): string | null {
@@ -207,6 +207,59 @@ export function Logo() {
         <path d="M3 16h26M16 3v26M7 6.5c4 3 5.5 6 5.5 9.5S11 22.5 7 25.5M25 6.5c-4 3-5.5 6-5.5 9.5s1.5 6.5 5.5 9.5" />
       </svg>
       <span>Fantasy Draft Lab</span>
+    </span>
+  );
+}
+
+/** Why this player next to the roster you have, in one or two plain sentences. */
+export function PairingNotes({
+  why,
+  anchor,
+  punt,
+}: {
+  why: PairingReason;
+  anchor: string | null; // the player already on the roster, or null before the first pick
+  punt: Category | null;
+}) {
+  const last = anchor ? anchor.split(" ").slice(-1)[0] : null;
+  const parts: string[] = [];
+  if (why.adds.length) parts.push(`${anchor ? "adds" : "brings"} ${andList(why.adds)}`);
+  if (why.patches.length) parts.push(`offsets ${last}'s ${andList(why.patches)}`);
+  if (why.spares.length) parts.push(`doesn't deepen ${last}'s ${andList(why.spares)} problem`);
+  if (why.overlaps.length) parts.push(`doubles up on ${andList(why.overlaps)}`);
+  const costs = why.costs.filter((c) => c !== punt);
+  if (costs.length) parts.push(`costs you ${andList(costs)}`);
+  const games = Math.round(why.availability * 100);
+  const durability =
+    why.availability >= 0.85
+      ? `plays ~${games}% of games`
+      : why.availability < 0.7
+        ? `expected to miss ~${100 - games}% of games`
+        : null;
+  const price =
+    why.marketRank != null
+      ? why.marketRank === 1
+        ? "the market's pick here"
+        : `#${why.marketRank} on the board by market value`
+      : null;
+  const tail = [durability, price].filter(Boolean).join("; ");
+  if (!parts.length && !tail) return null;
+  const sentence = parts.join(", ");
+  return (
+    <span className="small pairing-notes">
+      {parts.length > 0 && (
+        <>
+          {anchor ? (
+            <>
+              <strong className="ink">With {last}:</strong> {sentence}
+            </>
+          ) : (
+            sentence.charAt(0).toUpperCase() + sentence.slice(1)
+          )}
+          {tail ? ". " : "."}
+        </>
+      )}
+      {tail && <span className="muted">{tail.charAt(0).toUpperCase() + tail.slice(1)}.</span>}
     </span>
   );
 }

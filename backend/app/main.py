@@ -11,11 +11,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from . import store
-from .analysis.player_values import (
-    DRAFT_WEIGHTS,
-    compute_player_values,
-    score_player,
-)
+from .analysis.market import MARKET_WEIGHTS
+from .analysis.player_values import compute_player_values, score_player
 from .data.pool import PLAYERS, PLAYER_POOL
 from .engine.bots import assign_bot_specs, choose_bot_pick
 from .engine.draft import (
@@ -49,8 +46,9 @@ ROSTER_SIZE = 13
 
 # Player z-scores are a pure function of the frozen dataset — compute once.
 PLAYER_VALUES, POOL_STATS = compute_player_values(PLAYERS)
+# Overall value = market value: where a player goes in a real draft.
 OVERALL = {
-    pid: score_player(z, DRAFT_WEIGHTS) for pid, z in PLAYER_VALUES.items()
+    pid: score_player(z, MARKET_WEIGHTS) for pid, z in PLAYER_VALUES.items()
 }
 OVERALL_RANK = {
     pid: i + 1 for i, pid in enumerate(sorted(OVERALL, key=lambda pid: -OVERALL[pid]))
@@ -146,7 +144,6 @@ def players() -> dict[str, Any]:
             for p in PLAYERS
         ],
         "count": len(PLAYERS),
-        "draftWeights": DRAFT_WEIGHTS,
     }
 
 

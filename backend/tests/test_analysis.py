@@ -1,8 +1,7 @@
 """Milestone 3 acceptance: z-scores, roster aggregation, punt rankings."""
 
-from app.analysis.category_weights import needs_multipliers, needs_weights
+from app.analysis.category_weights import needs_weights
 from app.analysis.player_values import (
-    DRAFT_WEIGHTS,
     UNIFORM_WEIGHTS,
     compute_player_values,
     punt_weights,
@@ -65,28 +64,12 @@ class TestPlayerValues:
 
     def test_punt_weights_change_ranking_not_stats(self, values_and_pool):
         values, _ = values_and_pool
-        a = top_by_score(values, DRAFT_WEIGHTS, 20)
+        a = top_by_score(values, UNIFORM_WEIGHTS, 20)
         b = top_by_score(values, punt_weights({"FT%"}), 20)
         assert a != b
         w = punt_weights({"FT%"})
         assert w["FT%"] == 0.0
-        assert all(w[c] == DRAFT_WEIGHTS[c] for c in CATEGORIES if c != "FT%")
-
-    def test_draft_weights_rank_stars_over_role_players(self, values_and_pool):
-        """The room prices the box score: a 3-and-D guard with low
-        turnovers must not outrank the stars, however tidy his z-sum."""
-        values, _ = values_and_pool
-        by_name = {p.name: p for p in PLAYERS}
-        rank = {
-            pid: i + 1 for i, pid in enumerate(top_by_score(values, DRAFT_WEIGHTS, len(PLAYERS)))
-        }
-        stars = ["Nikola Jokić", "Shai Gilgeous-Alexander", "Luka Dončić", "Cade Cunningham", "Anthony Edwards"]
-        role = ["Derrick White", "Mikal Bridges", "Nickeil Alexander-Walker", "Dyson Daniels"]
-        assert all(rank[by_name[s].id] <= 20 for s in stars)
-        assert all(rank[by_name[r].id] > 30 for r in role)
-        # …and the uniform z-sum is what made them look like stars.
-        uniform = {pid: i + 1 for i, pid in enumerate(top_by_score(values, UNIFORM_WEIGHTS, len(PLAYERS)))}
-        assert min(uniform[by_name[r].id] for r in role) <= 20
+        assert all(w[c] == 1.0 for c in CATEGORIES if c != "FT%")
 
 
 class TestRosterProfile:
@@ -123,11 +106,9 @@ class TestNeedsWeights:
         values, _ = values_and_pool
         empty = build_roster_profile([], values)
         full = build_roster_profile(PLAYERS[:13], values)
-        m = needs_multipliers([empty, full], 1)
         w = needs_weights([empty, full], 1)
         for c in CATEGORIES:
-            assert 0.6 <= m[c] <= 2.0
-            assert w[c] == pytest.approx(DRAFT_WEIGHTS[c] * m[c])
+            assert 0.6 <= w[c] <= 2.0
 
 
 class TestDatasetIntegrity:

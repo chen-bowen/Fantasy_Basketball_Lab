@@ -22,11 +22,9 @@ the season goes. A missed star game therefore costs a lot, a missed
 healthy 13th man who would have had his roster spot. Turnovers are the
 exception and stay per-game (see _expected).
 
-Overall score = weighted sum of category z's. The base weights are
-DRAFT_WEIGHTS — how drafters actually price the nine categories — and bot
-strategy or the user's punt settings modify them from there. A player's
-healthy z's are kept too, so a drafter's appetite for injury risk can
-scale the discount.
+Overall score = weighted sum of category z's; weights come from bot
+strategy or the user's punt settings. A player's healthy z's are kept too,
+so a drafter's appetite for injury risk can scale the discount.
 """
 
 from __future__ import annotations
@@ -40,27 +38,6 @@ CategoryZ = dict[Category, float]
 CategoryWeights = dict[Category, float]
 
 UNIFORM_WEIGHTS: CategoryWeights = {c: 1.0 for c in CATEGORIES}
-
-# How the draft room prices the categories. In the standings every category
-# is one win, but nobody drafts that way: the per-category z-sum makes a
-# low-turnover 3-and-D guard with a good free-throw stroke look like a
-# star, because +1 z in steals or turnovers reads the same as +1 z in
-# points. Drafters weigh the box-score trio most, blocks about par, the
-# percentages a little under, steals and threes half, and all but ignore
-# turnovers (they come with usage, and are the usual punt). These weights
-# are fitted against aggregated ADP and rounded; fitted on half the pool
-# they hold on the other half (rank correlation with ADP ~0.78 -> ~0.88).
-DRAFT_WEIGHTS: CategoryWeights = {
-    "PTS": 2.0,
-    "REB": 1.5,
-    "AST": 1.5,
-    "STL": 0.5,
-    "BLK": 1.0,
-    "3PM": 0.5,
-    "FG%": 0.75,
-    "FT%": 0.75,
-    "TO": 0.25,
-}
 
 PCT_Z_CAP = 3.0
 
@@ -191,8 +168,7 @@ def score_player(z: CategoryZ, w: CategoryWeights) -> float:
 
 
 def punt_weights(punts: set[Category]) -> CategoryWeights:
-    """Draft weights with the punted categories zeroed."""
-    w = dict(DRAFT_WEIGHTS)
+    w = dict(UNIFORM_WEIGHTS)
     for c in punts:
         w[c] = 0.0
     return w

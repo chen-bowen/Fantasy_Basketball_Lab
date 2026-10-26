@@ -4,8 +4,8 @@ The first two picks decide which category a team can punt. For each
 candidate (player, punt) we play the rest of the draft out several times
 from the actual current state: the candidate is taken on the spot, every
 later user pick takes the best Fit under that punt, and bots draft as
-usual. Each run is scored by the head-to-head record of the user's final
-roster. The extra runs reuse this league's bot personalities and only vary
+usual. Each run is scored by the expected head-to-head record of the user's
+final roster (standings.expected_wins — category leads count by margin). The extra runs reuse this league's bot personalities and only vary
 the seed (bot pick noise), so the estimate describes this league, not
 drafting in general.
 
@@ -21,13 +21,10 @@ from dataclasses import replace
 from typing import Any
 
 from .analysis.fit import fit_weights
-from .analysis.player_values import (
-    DRAFT_WEIGHTS,
-    compute_player_values,
-    score_player,
-)
+from .analysis.market import MARKET_WEIGHTS
+from .analysis.player_values import compute_player_values, score_player
 from .analysis.roster_profile import build_roster_profile, rank_teams
-from .analysis.standings import records
+from .analysis.standings import expected_wins
 from .data.pool import PLAYERS, PLAYER_POOL
 from .engine.bots import choose_bot_pick
 from .engine.draft import (
@@ -44,13 +41,21 @@ from .engine.draft import (
 )
 from .engine.types import CATEGORIES
 
-SIM_SEEDS = 6
+SIM_SEEDS = 8  # full drafts per tested option; the on-screen range shows the spread
 PUNT_OPTIONS = ("AST", "FG%", "FT%", "TO", "3PM")
 FIRST_PICK_CANDIDATES = 4
 SECOND_PICK_PER_PUNT = 3
 SECOND_PICK_OPTIONS = 4
 NEXT_OPTIONS = 3
 SHRINK_RUNS = 2  # pseudo-runs at the group mean when ordering second-pick options
+MARKET_CANDIDATES = 4  # top of the board as the market sees it, also tried as second picks
+MARKET_CANDIDATE_PUNTS = 2  # each tried under his weakest categories, plus the current punt
+# Expected wins averaged over the runs still carry a little noise (a 6-run
+# average has a standard error of about 0.05 wins). Break near-ties toward
+# the player the market rates higher: he is the one who won't still be
+# there next turn. One standard error per unit of market value lets the
+# market decide only between options the simulations can't separate.
+MARKET_TIEBREAK = 0.05  # wins per unit of market value
 
 _VALUES, _STATS = compute_player_values(PLAYERS)
 _EXECUTOR: Executor | None = None
@@ -139,13 +144,16 @@ def continue_draft(
     return state
 
 
-def _wins(job: tuple[dict, str, list[str], str]) -> int | None:
+def _wins(job: tuple[dict, str, list[str], str]) -> float | None:
+    """Expected matchup wins (0-11) of the user's final roster — the noisy
+    head-to-head view, so comfortable category leads count for more than
+    narrow ones and the estimate keeps resolving between good options."""
     state_dict, take, punts, seed = job
     state = deserialize_draft(state_dict, PLAYER_POOL)
     if seed != state.config.seed:
         state = replace(state, config=replace(state.config, seed=seed))
     final = continue_draft(state, set(punts), take=take)
-    return records(rank_teams(_profiles(final)))[state.config.user_slot]["wins"]
+    return expected_wins(_profiles(final))[state.config.user_slot]
 
 
 def _average_wins(
@@ -153,9 +161,10 @@ def _average_wins(
     combos: list[tuple[str, list[str]]],
     seeds: list[str],
     executor: Executor | None,
-) -> list[tuple[float | None, int]]:
-    """(average wins, completed runs) per (take-now, punts) combo, playing
-    the real draft forward from its current state under different seeds."""
+) -> list[tuple[float | None, int, tuple[float, float] | None]]:
+    """(average wins, completed runs, (min, max) over runs) per (take-now,
+    punts) combo, playing the real draft forward from its current state
+    under different seeds."""
     blob = serialize_draft(state)
     jobs = [
         (blob, take, punts, s)
@@ -167,7 +176,13 @@ def _average_wins(
     out = []
     for i in range(len(combos)):
         chunk = [w for w in results[i * len(seeds):(i + 1) * len(seeds)] if w is not None]
-        out.append((sum(chunk) / len(chunk) if chunk else None, len(chunk)))
+        out.append(
+            (
+                sum(chunk) / len(chunk) if chunk else None,
+                len(chunk),
+                (min(chunk), max(chunk)) if chunk else None,
+            )
+        )
     return out
 
 
@@ -176,6 +191,85 @@ def _shrunk(wins: float, runs: int, pool: dict[str, tuple[float, int, str]]) -> 
     available in a few runs, so one lucky run can't top the list."""
     mean = sum(w for w, _, _ in pool.values()) / len(pool)
     return (wins * runs + mean * SHRINK_RUNS) / (runs + SHRINK_RUNS)
+
+
+def market_value(player_id: str) -> float:
+    return score_player(_VALUES[player_id], MARKET_WEIGHTS)
+
+
+def top_of_board(state: DraftState, n: int) -> list[str]:
+    """Best available by market value — what a drafter sees on the clock."""
+    ids = available_player_ids(state, PLAYER_POOL)
+    return sorted(ids, key=lambda i: -market_value(i))[:n]
+
+
+STRONG_Z = 0.8  # a category a player clearly brings
+WEAK_Z = -0.8  # a category a player clearly hurts
+
+
+def pairing_reason(
+    state: DraftState, player_id: str, punt: str | None
+) -> dict[str, Any]:
+    """Why this player, next to what the user already has: the categories
+    he brings that the roster lacks, the roster weaknesses he offsets, what
+    he doubles up on, what he costs, how many games he plays, and what the
+    market thinks he is worth. Pure roster arithmetic, no simulation."""
+    slot = state.config.user_slot
+    roster = [PLAYER_POOL[i] for i in state.rosters[slot]]
+    have = build_roster_profile(roster, _VALUES).per_slot_z if roster else None
+    z = _VALUES[player_id]
+    adds, patches, spares, overlaps, costs = [], [], [], [], []
+    for c in CATEGORIES:
+        if c == punt:
+            continue
+        if z[c] >= STRONG_Z:
+            if have is not None and have[c] >= STRONG_Z:
+                overlaps.append(c)
+            else:
+                adds.append(c)
+        if have is not None and have[c] <= WEAK_Z:
+            if z[c] >= 0.5:
+                patches.append(c)  # actively offsets a roster weakness
+            elif z[c] > -0.3:
+                spares.append(c)  # at least doesn't deepen it
+        if z[c] <= WEAK_Z:
+            costs.append(c)
+    ids = available_player_ids(state, PLAYER_POOL)
+    board = sorted(ids, key=lambda i: -market_value(i))
+    return {
+        "adds": adds,
+        "patches": patches,
+        "spares": spares,
+        "overlaps": overlaps,
+        "costs": costs,
+        "availability": round(_STATS.availability[player_id], 2),
+        "marketRank": board.index(player_id) + 1 if player_id in board else None,
+    }
+
+
+def still_there_next_turn(
+    state: DraftState, player_id: str, punt: str | None, seeds: list[str]
+) -> dict[str, Any]:
+    """In how many runs the player is still on the board at the user's next
+    turn if the user passes on him now (taking the best other Fit instead)
+    — whether he can wait a round."""
+    slot = state.config.user_slot
+    punts = {punt} if punt else set()
+    alternatives = [i for i in best_fit(state, slot, punts, 2) if i != player_id]
+    if not alternatives:
+        return {"runs": 0, "stillThere": 0, "pick": None}
+    blob = serialize_draft(state)
+    still = 0
+    pick = None
+    for seed in seeds:
+        st = deserialize_draft(blob, PLAYER_POOL)
+        if seed != st.config.seed:
+            st = replace(st, config=replace(st.config, seed=seed))
+        st = continue_draft(st, punts, take=alternatives[0], stop_before_user_turn=True)
+        pick = len(st.picks) + 1
+        if player_id not in drafted_set(st):
+            still += 1
+    return {"runs": len(seeds), "stillThere": still, "pick": pick}
 
 
 def _user_ranks(state: DraftState, team_id: int) -> list[int]:
@@ -188,9 +282,8 @@ def first_pick_options(
 ) -> list[dict[str, Any]]:
     config = state.config
     seeds = seeds or sim_seeds(config.seed)
-    available = available_player_ids(state, PLAYER_POOL)
-    overall = lambda i: score_player(_VALUES[i], DRAFT_WEIGHTS)
-    candidates = sorted(available, key=lambda i: -overall(i))[:FIRST_PICK_CANDIDATES]
+    # Candidates are the top of the draft board as the market sees it.
+    candidates = top_of_board(state, FIRST_PICK_CANDIDATES)
 
     combos = [
         (c, [p] if p else [])
@@ -211,7 +304,7 @@ def first_pick_options(
         ]
         if not scored:
             continue
-        (wins, runs), punt = max(scored, key=lambda x: x[0][0])
+        (wins, runs, spread), punt = max(scored, key=lambda x: x[0][0])
         finish = continue_draft(state, {punt}, take=c)
         at_next = continue_draft(state, {punt}, take=c, stop_before_user_turn=True)
         options.append(
@@ -220,9 +313,11 @@ def first_pick_options(
                 "punt": punt,
                 "wins": round(wins, 1),
                 "runs": runs,
+                "winsRange": [round(spread[0], 1), round(spread[1], 1)] if spread else None,
                 "noPlanWins": round(no_plan, 1) if no_plan is not None else None,
                 "finishRanks": _user_ranks(finish, config.user_slot),
                 "nextOptions": best_fit(at_next, config.user_slot, {punt}, NEXT_OPTIONS),
+                "why": pairing_reason(state, c, punt),
             }
         )
     return sorted(options, key=lambda o: -o["wins"])
@@ -244,21 +339,42 @@ def second_pick_options(
         for c in best_fit(state, slot, {punt}, SECOND_PICK_PER_PUNT):
             if (c, punt) not in combos:
                 combos.append((c, punt))
+    # The market's top options, so a star the Fit ranking passes over is
+    # still tested — under the current plan and under the punts that suit
+    # him (his weakest categories), not just whichever punt comes first.
+    for c in top_of_board(state, MARKET_CANDIDATES):
+        natural = sorted(PUNT_OPTIONS, key=lambda p: _VALUES[c][p])[:MARKET_CANDIDATE_PUNTS]
+        for punt in dict.fromkeys([*([current] if current else []), *natural]):
+            if (c, punt) not in combos:
+                combos.append((c, punt))
 
     results = _average_wins(state, [(c, [p]) for c, p in combos], seeds, executor)
     best_by_player: dict[str, tuple[float, int, str]] = {}
-    for (c, punt), (wins, runs) in zip(combos, results):
+    spread_of: dict[tuple[str, str], tuple[float, float] | None] = {}
+    for (c, punt), (wins, runs, spread) in zip(combos, results):
         if wins is None:
             continue
+        spread_of[(c, punt)] = spread
         if c not in best_by_player or wins > best_by_player[c][0]:
             best_by_player[c] = (wins, runs, punt)
 
     ranked = sorted(
-        best_by_player.items(), key=lambda kv: -_shrunk(kv[1][0], kv[1][1], best_by_player)
+        best_by_player.items(),
+        key=lambda kv: -(
+            _shrunk(kv[1][0], kv[1][1], best_by_player) + MARKET_TIEBREAK * market_value(kv[0])
+        ),
     )[:SECOND_PICK_OPTIONS]
+    # The market's pick here, as a yardstick: what the room would do and
+    # what it would expect to win, so the options can be read against it.
+    consensus_id = top_of_board(state, 1)[0]
+    consensus = None
+    if consensus_id in best_by_player:
+        c_wins, c_runs, c_punt = best_by_player[consensus_id]
+        consensus = {"playerId": consensus_id, "wins": round(c_wins, 1), "punt": c_punt, "runs": c_runs}
     options = []
     for c, (wins, runs, punt) in ranked:
         at_next = continue_draft(state, {punt}, take=c, stop_before_user_turn=True)
+        spread = spread_of[(c, punt)]
         options.append(
             {
                 "playerId": c,
@@ -266,11 +382,14 @@ def second_pick_options(
                 "keepsPunt": punt == current,
                 "wins": round(wins, 1),
                 "runs": runs,
+                "winsRange": [round(spread[0], 1), round(spread[1], 1)] if spread else None,
                 "ranksAfter": _user_ranks(at_next, slot),
                 "nextOptions": best_fit(at_next, slot, {punt}, 2),
+                "why": pairing_reason(state, c, punt),
+                "wait": still_there_next_turn(state, c, punt, seeds),
             }
         )
-    return options
+    return {"options": options, "consensus": consensus, "tested": len(best_by_player)}
 
 
 def suggestions(state: DraftState, punts: list[str]) -> dict[str, Any]:
@@ -287,6 +406,6 @@ def suggestions(state: DraftState, punts: list[str]) -> dict[str, Any]:
         else:
             _CACHE[key] = {
                 "stage": "second",
-                "options": second_pick_options(state, set(punts), executor=_executor()),
+                **second_pick_options(state, set(punts), executor=_executor()),
             }
     return _CACHE[key]

@@ -7,7 +7,7 @@ import {
   type FirstPickOption,
 } from "../api/client";
 import { andList, slotPicks } from "../state/teams";
-import { Headshot, PlayerMeta, RankLegend, RankStrip, initials } from "./common";
+import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip, initials } from "./common";
 
 interface Props {
   view: DraftView;
@@ -44,8 +44,9 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
         <div className="screen-title">
           <h1 className="display-md">Your first pick sets your build</h1>
           <p className="lede">
-            Each player comes with the category he lets you punt. Win counts are averages
-            from simulated drafts against these bots.
+            Each player comes with the category he lets you punt. Win counts are expected
+            weekly-matchup wins out of 11 — leads by a mile count for more than leads by a
+            hair — averaged over simulated drafts against these bots.
           </p>
         </div>
         {gone.length > 0 && (
@@ -109,6 +110,10 @@ export function FirstPickScreen({ view, playerMap, options, onDraft, onBrowse }:
                         <span className="muted small"> / 11 wins</span>
                       </strong>
                     </span>
+                    <span className="muted small">
+                      {o.winsRange ? `${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)} across ${o.runs} test drafts` : `${o.runs} test drafts`}
+                    </span>
+                    <PairingNotes why={o.why} anchor={null} punt={o.punt} />
                     {o.finishRanks && (
                       <span className="stack-sm">
                         <span className="muted small">Where the build finishes</span>

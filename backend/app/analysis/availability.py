@@ -34,7 +34,7 @@ PRIOR_WEIGHT = 2.0  # pseudo-weight of the pool average in the shrinkage
 UNSIGNED_FACTOR = 0.3
 
 LONG_ABSENCE_GP = 25  # fewer games than this = a season mostly missed
-RECOVERED_WEIGHT = 0.5  # weight of a mostly-missed season once he is healthy
+RECOVERED_WEIGHT = 0.25  # weight of a mostly-missed season once he is healthy
 
 # Expected share of the coming games, given the current status tag.
 STATUS_FACTORS = {

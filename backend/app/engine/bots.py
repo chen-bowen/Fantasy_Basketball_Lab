@@ -5,9 +5,12 @@ state — no future picks leak in.
 
   S(p,t) = Σ w(t,c)·v(p,c) + ρ_t·[Σ w(t,c)·h(p,c) − Σ w(t,c)·v(p,c)] + ε
 
-v is the player's availability-adjusted value, h his value if he played
-every game, so the bracket is what injury risk costs him under this bot's
-weights (floored at zero: a below-replacement player loses nothing by
+w(t,c) starts from the market's category weights (market.py) — bots pay
+for categories the way real drafters do, not the way the scoresheet counts
+them — and a punt bot zeroes one category, a needs bot tilts toward its
+deficits. v is the player's availability-adjusted value, h his value if he
+played every game, so the bracket is what injury risk costs him under this
+bot's weights (floored at zero: a below-replacement player loses nothing by
 sitting, and there is nothing to gamble on). ρ_t is the bot's risk
 appetite: a cautious bot (ρ < 0) doubles down on the discount, a bold one
 (ρ > 0) shrugs off half of it, like the drafter who always gambles on the
@@ -19,8 +22,8 @@ player).
 from __future__ import annotations
 
 from ..analysis.category_weights import needs_weights, punt_bot_weights
+from ..analysis.market import MARKET_WEIGHTS
 from ..analysis.player_values import (
-    DRAFT_WEIGHTS,
     CategoryWeights,
     CategoryZ,
     score_player,
@@ -51,15 +54,15 @@ def bot_weights(
     """The w_{t,c} term for a bot team at the current draft state."""
     spec = state.config.bot_specs[team_id]
     if spec.kind == "value":
-        return dict(DRAFT_WEIGHTS)
+        return dict(MARKET_WEIGHTS)
     if spec.kind == "punt":
-        return punt_bot_weights(spec.punt_category or "TO")
+        return punt_bot_weights(spec.punt_category or "TO", MARKET_WEIGHTS)
     if spec.kind == "needs":
         profiles = [
             build_roster_profile([pool[i] for i in roster], values)
             for roster in state.rosters
         ]
-        return needs_weights(profiles, team_id)
+        return needs_weights(profiles, team_id, MARKET_WEIGHTS)
     raise ValueError(f"unknown bot kind {spec.kind}")
 
 

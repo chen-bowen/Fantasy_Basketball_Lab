@@ -197,8 +197,10 @@ function FitTable({
       <p className="table-note">
         <strong>Fit</strong> (0–10) is how much a player helps your team at this pick: the best
         option available scores 10, and it updates after every pick.{" "}
-        <strong>Value</strong> (stars) is how good he is overall, whatever your team needs:
-        five stars is first-round quality.
+        <strong>Value</strong> (stars) is his price at the draft table — where drafters
+        take him, weighing categories the way real drafts do (points and assists over
+        steals or free throws): five stars is first-round quality. When Fit runs ahead of
+        Value, the market is underrating what he does for your categories.
         {punts.size > 0 && ` Fit leaves out ${andList([...punts])} because you punt ${punts.size > 1 ? "them" : "it"}.`}
       </p>
       <div className="filters">
@@ -449,8 +451,8 @@ function PlayerPanel({
           {Math.abs(fit - value) > 0.05 && (
             <span className="muted small">
               {fit > value
-                ? "Fit is above his value because he covers what your team lacks."
-                : "Fit is below his value because his strengths are already covered or punted."}
+                ? "Fit is above his draft value: he covers what your team lacks, or does it in categories the market underpays for."
+                : "Fit is below his draft value because his strengths are already covered, punted, or priced in."}
             </span>
           )}
           {player.adp != null && (
@@ -487,9 +489,7 @@ function PlayerPanel({
             </span>
           )}
         </div>
-        {player.z && (
-          <ValueBreakdown z={player.z} weights={view.draftWeights} punts={punts} value={value} />
-        )}
+        {player.z && <ValueBreakdown z={player.z} punts={punts} value={value} />}
         {preview?.playerId === player.id &&
           preview.pickIndex === view.pickIndex && (
             <ImpactRows
@@ -508,18 +508,13 @@ function PlayerPanel({
 
 const BAR_MAX_Z = 3; // bars are scaled to ±3; larger scores fill the bar
 
-/** Where a player's value comes from: one bar per category, centred on 0.
- *  Each bar is his z-score in that category times the draft weight the room
- *  gives it (points count most, turnovers hardly at all), so the bars add up
- *  to his value. */
+/** Where a player's value comes from: one bar per category score, centred on 0. */
 function ValueBreakdown({
   z,
-  weights,
   punts,
   value,
 }: {
   z: Record<Category, number>;
-  weights: Record<Category, number>;
   punts: ReadonlySet<Category>;
   value: number;
 }) {
@@ -527,20 +522,14 @@ function ValueBreakdown({
     <div className="breakdown">
       <div className="impact-head">
         <strong>Where his value comes from</strong>
-        <span className="muted small">0 = average player · adds up to {value.toFixed(1)}</span>
+        <span className="muted small">0 = average player · sum {value.toFixed(1)}</span>
       </div>
       {CATEGORIES.map((c) => {
-        const w = weights[c] ?? 1;
-        const v = z[c] * w;
+        const v = z[c];
         const width = (Math.min(Math.abs(v), BAR_MAX_Z) / BAR_MAX_Z) * 50;
         return (
           <div key={c} className={punts.has(c) ? "breakdown-row punted" : "breakdown-row"}>
-            <span
-              className="rank-cat"
-              title={`${z[c] >= 0 ? "+" : "−"}${Math.abs(z[c]).toFixed(1)} vs. the pool, × ${w} (how much drafters weigh ${c})`}
-            >
-              {c}
-            </span>
+            <span className="rank-cat">{c}</span>
             <span className="diverge" aria-hidden="true">
               <span
                 className={v >= 0 ? "diverge-bar pos" : "diverge-bar neg"}

@@ -77,7 +77,7 @@ def test_seasons_before_debut_do_not_count():
 
 
 def test_one_long_absence_is_forgiven_only_once_healthy():
-    """A season mostly missed counts at half weight once he's back, in full
+    """A season mostly missed counts at a reduced weight once he's back, in full
     while he's still hurt — and never disappears entirely."""
     healthy_now = make("healthy_now", {"2025-26": 10, "2024-25": 75, "2023-24": 75})
     still_out = make("still_out", {"2025-26": 10, "2024-25": 75, "2023-24": 75}, injury="Out")

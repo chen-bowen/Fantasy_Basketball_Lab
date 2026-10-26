@@ -3,16 +3,19 @@ import {
   CATEGORIES,
   type ApiPlayer,
   type Category,
+  type ConsensusPick,
   type DraftView,
   type SecondPickOption,
 } from "../api/client";
 import { andList, slotPicks, teamName } from "../state/teams";
-import { Headshot, PlayerMeta, RankLegend, RankStrip } from "./common";
+import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip } from "./common";
 
 interface Props {
   view: DraftView;
   playerMap: Map<string, ApiPlayer>;
   options: SecondPickOption[] | null; // null while simulations run
+  consensus: ConsensusPick | null;
+  tested: number;
   onDraft: (playerId: string, punt: Category) => void;
   onBrowse: () => void;
 }
@@ -20,7 +23,7 @@ interface Props {
 const PHOTO_BG = ["#E3F0EE", "#EAF1E4", "#F5EBE3", "#ECEDF1"];
 const FEW_RUNS = 4;
 
-export function SecondPickScreen({ view, playerMap, options, onDraft, onBrowse }: Props) {
+export function SecondPickScreen({ view, playerMap, options, consensus, tested, onDraft, onBrowse }: Props) {
   const [sel, setSel] = useState(0);
   const slot = view.userSlot;
   const firstPick = view.picks.find((p) => p.teamId === slot)!;
@@ -138,8 +141,20 @@ export function SecondPickScreen({ view, playerMap, options, onDraft, onBrowse }
                         <span className={o.runs < FEW_RUNS ? "small warn-text" : "muted small"}>
                           {o.runs < FEW_RUNS
                             ? `Only ${o.runs} test draft${o.runs === 1 ? "" : "s"}: he usually doesn't last this long.`
-                            : `Based on ${o.runs} test drafts`}
+                            : `${o.winsRange ? `${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)}` : o.wins.toFixed(1)} across ${o.runs} test drafts`}
                         </span>
+                        <PairingNotes why={o.why} anchor={first.name} punt={o.punt} />
+                        {o.wait.pick != null && o.wait.runs > 0 && (
+                          <span className="muted small">
+                            {o.wait.pick === view.pickIndex + 2
+                              ? `You pick again right after this one (#${o.wait.pick}), so you can take him there and someone else now.`
+                              : o.wait.stillThere === o.wait.runs
+                                ? `Still there at #${o.wait.pick} in every test draft if you pass now — you could take someone else first.`
+                                : o.wait.stillThere === 0
+                                  ? `Gone before #${o.wait.pick} in every test draft — it's now or never.`
+                                  : `Still there at #${o.wait.pick} in ${o.wait.stillThere} of ${o.wait.runs} test drafts if you pass now.`}
+                          </span>
+                        )}
                         {o.ranksAfter && (
                           <span className="stack-sm">
                             <span className="muted small">Your team after this pick</span>
@@ -169,8 +184,24 @@ export function SecondPickScreen({ view, playerMap, options, onDraft, onBrowse }
                       {chosen.keepsPunt ? `keeps punt ${chosen.punt}` : `switches to punt ${chosen.punt}`}
                     </strong>
                     <span>
-                      Averages {chosen.wins.toFixed(1)} wins of 11 across {chosen.runs} simulated
-                      drafts where he was still available here.
+                      Expects {chosen.wins.toFixed(1)} matchup wins of 11 across {chosen.runs} simulated
+                      drafts where he was still available here
+                      {tested > 0 ? ` — the top ${options!.length} of ${tested} players tested` : ""}.
+                      {consensus && (() => {
+                        const cp = playerMap.get(consensus.playerId);
+                        if (!cp) return null;
+                        const gap = chosen.wins - consensus.wins;
+                        const isChosen = consensus.playerId === chosen.playerId;
+                        return isChosen
+                          ? " He's also the market's pick here."
+                          : ` The market's pick here, ${cp.name}, expects ${consensus.wins.toFixed(1)}${
+                              Math.abs(gap) < 0.15
+                                ? " — a toss-up, so don't reach if you'd rather have the name."
+                                : gap > 0
+                                  ? ` (${gap.toFixed(1)} fewer).`
+                                  : ` (${(-gap).toFixed(1)} more).`
+                            }`;
+                      })()}
                     </span>
                   </div>
                   <button className="link-btn" onClick={onBrowse}>

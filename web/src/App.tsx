@@ -84,6 +84,8 @@ export default function App() {
         view={view}
         playerMap={playerMap}
         options={ready?.stage === "second" ? ready.options : null}
+        consensus={ready?.stage === "second" ? ready.consensus : null}
+        tested={ready?.stage === "second" ? ready.tested : 0}
         onDraft={actions.draftWithPunt}
         onBrowse={() => actions.setBrowseAll(true)}
       />

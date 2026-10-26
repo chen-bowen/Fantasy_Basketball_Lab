@@ -656,3 +656,5 @@ tr.focused { background: #fff7f1 !important; box-shadow: inset 3px 0 0 var(--acc
   .zstrip .sq, .zhead span { width: 24px; }
   .option-photo { flex-basis: 96px; }
 }
+
+.pairing-notes { line-height: 1.4; }
