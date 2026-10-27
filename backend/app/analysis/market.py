@@ -20,9 +20,13 @@ with no resistance teaches nothing. At 0.75 the rank correlation with ADP
 is unchanged to two decimals (0.89) while the same user averages 9 of 11.
 
 Market weights drive where bots take players and the "value" rank the UI
-shows, so both look like a real draft. They do not touch the standings —
-a category is a category on the scoresheet — nor the user's Fit, which is
-where the lab shows you what the market underrates for your build.
+shows, so both look like a real draft. They are also the base of the
+user's Fit (fit.py) and, as 1 / weight, the per-category noise of the
+standings' expected wins (standings.py): the market's ordering of the
+categories is mostly a statement about how reliably an edge in each one
+turns into a category win, which a uniform scoresheet weighting hides.
+The deterministic league table (records) stays uniform — a category is a
+category on the scoresheet.
 
 Refit when players.json is regenerated (the ADP column is the target).
 """

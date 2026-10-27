@@ -30,7 +30,6 @@ from ..analysis.player_values import (
     CategoryZ,
     score_player,
 )
-from ..analysis.roster_profile import build_roster_profile
 from .draft import DraftState, available_player_ids
 from .random import centered_random, seeded_pick, unit_random
 from .types import BOT_RISKS, CATEGORIES, BotSpec, Player
@@ -84,6 +83,26 @@ def _cost_tuples(
     return hit[2]
 
 
+class _Shape:
+    """What needs_weights reads off a roster: size and per-slot z. Summed
+    in roster order from the z tuples, so it equals build_roster_profile's
+    per_slot_z to the bit, without the stat totals a bot never looks at."""
+
+    __slots__ = ("size", "per_slot_z")
+
+    def __init__(self, roster: tuple[str, ...], zt: dict[str, tuple[float, ...]]):
+        self.size = len(roster)
+        sums = [0.0] * len(CATEGORIES)
+        for pid in roster:
+            z = zt.get(pid)
+            if z is None:
+                continue
+            for i, v in enumerate(z):
+                sums[i] += v
+        denom = max(self.size, 1)
+        self.per_slot_z = {c: sums[i] / denom for i, c in enumerate(CATEGORIES)}
+
+
 def bot_weights(
     state: DraftState,
     pool: dict[str, Player],
@@ -97,12 +116,43 @@ def bot_weights(
     if spec.kind == "punt":
         return punt_bot_weights(spec.punt_category or "TO", MARKET_WEIGHTS)
     if spec.kind == "needs":
-        profiles = [
-            build_roster_profile([pool[i] for i in roster], values)
-            for roster in state.rosters
-        ]
-        return needs_weights(profiles, team_id, MARKET_WEIGHTS)
+        zt = _as_tuples(values)
+        shapes = [_Shape(roster, zt) for roster in state.rosters]
+        return needs_weights(shapes, team_id, MARKET_WEIGHTS)  # type: ignore[arg-type]
     raise ValueError(f"unknown bot kind {spec.kind}")
+
+
+# Base scores per player for a fixed (weights, tilt) — value and punt bots
+# use the same weights all draft, so their scores are computed once.
+_SCORES: dict[tuple, dict[str, float]] = {}
+_SCORES_MAX = 64
+
+
+def _base_scores(
+    wt: tuple[float, ...],
+    tilt: float,
+    pool: dict[str, Player],
+    zt: dict[str, tuple[float, ...]],
+    ct: dict[str, tuple[float, ...]] | None,
+    cache: bool,
+) -> dict[str, float]:
+    key = (wt, tilt, id(zt), id(ct))
+    hit = _SCORES.get(key) if cache else None
+    if hit is not None:
+        return hit
+    scores: dict[str, float] = {}
+    for pid, z in zt.items():
+        s = sum(map(mul, wt, z))
+        if ct is not None and pool[pid].signed:
+            c = ct.get(pid)
+            if c is not None:
+                s += tilt * max(0.0, sum(map(mul, wt, c)))
+        scores[pid] = s
+    if cache:
+        if len(_SCORES) >= _SCORES_MAX:
+            _SCORES.clear()
+        _SCORES[key] = scores
+    return scores
 
 
 def risk_adjustment(
@@ -138,16 +188,12 @@ def choose_bot_pick(
     # Base score for everyone; the seeded jitter only for players close
     # enough to the leader that it could change the answer (it is bounded
     # by ±EPSILON_SCALE/2), which is the same pick with far fewer hashes.
+    scores = _base_scores(wt, tilt, pool, zt, ct, cache=spec.kind != "needs")
     base: list[tuple[float, str]] = []
     for pid in available_player_ids(state, pool):
-        z = zt.get(pid)
-        if z is None:
+        s = scores.get(pid)
+        if s is None:
             continue
-        s = sum(map(mul, wt, z))
-        if ct is not None and pool[pid].signed:
-            c = ct.get(pid)
-            if c is not None:
-                s += tilt * max(0.0, sum(map(mul, wt, c)))
         base.append((s, pid))
     if not base:
         raise RuntimeError("No available players to draft")

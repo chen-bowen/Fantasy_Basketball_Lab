@@ -1,179 +1,283 @@
-"""Fit weights (the gradient of expected wins) and the draft window."""
+"""Fit recommends players who belong at this pick, ranked by what they do
+for this roster — and doesn't chase categories a pick can't change."""
 
+from app.analysis.category_weights import needs_weights
 from app.analysis.fit import (
-    CONCEDE_THRESHOLD,
-    MAX_WEIGHT,
-    MIN_WEIGHT,
-    NEED_THRESHOLD,
-    category_stances,
+    MAX_SWING,
+    MIN_CANDIDATES,
+    MIN_SWING,
+    candidate_window,
+    fit_score,
+    fit_shape,
     fit_weights,
-    win_gradient,
+    market_ranks,
+    needed_categories,
+    rank_candidates,
+    settled_categories,
+    window_max_rank,
 )
 from app.analysis.market import MARKET_WEIGHTS
 from app.analysis.player_values import score_player
-from app.analysis.roster_profile import build_roster_profile
-from app.analysis.standings import expected_wins
-from app.analysis.window import REACH_MIN, draft_window, reach, user_turns, window_info, window_size
-from app.data.pool import PLAYERS
+from app.analysis.roster_profile import build_roster_profile, rank_teams
 from app.engine.bots import choose_bot_pick
 from app.engine.draft import (
     apply_pick,
     available_player_ids,
     create_draft,
     current_team_id,
-    rewind_to_pick,
+    is_complete,
 )
 from app.engine.types import CATEGORIES
+from app.views import draft_view
 
-from .conftest import ROSTER_SIZE, make_config, run_draft
-
-
-def _profiles(rosters, values):
-    return [build_roster_profile(r, values) for r in rosters]
+from .conftest import NUM_TEAMS, ROSTER_SIZE, make_config
 
 
-def _league(values, user_roster, n_teams=12, size=None):
-    """The user's roster plus 11 bot rosters of `size` mid-board players
-    each (by market value), skipping the user's players."""
-    size = size or len(user_roster)
-    mine = {p.id for p in user_roster}
-    board = sorted(
-        (p for p in PLAYERS if p.id not in mine),
-        key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS),
+def _profiles(state, pool, values):
+    return [build_roster_profile([pool[i] for i in r], values) for r in state.rosters]
+
+
+def _recommend(state, pool, values, ranks, punts=frozenset()):
+    """What the draft room recommends on the user's turn, best Fit first."""
+    slot = state.config.user_slot
+    w = fit_weights(_profiles(state, pool, values), slot, set(punts), ROSTER_SIZE)
+    window = candidate_window(
+        available_player_ids(state, pool), values, len(state.picks) + 1, NUM_TEAMS, ranks
     )
-    others = [board[i::n_teams - 1][:size] for i in range(n_teams - 1)]
-    return [user_roster, *others]
+    return rank_candidates(window, values, w), w
 
 
-class TestFitWeights:
-    def test_empty_roster_is_plain_value_minus_punts(self, values):
-        state = create_draft(make_config(user_slot=3))
-        profiles = _profiles([[] for _ in range(12)], values)
-        w = fit_weights(profiles, 3, {"FT%"}, ROSTER_SIZE)
-        assert w["FT%"] == 0.0
-        assert all(w[c] == 1.0 for c in CATEGORIES if c != "FT%")
-
-    def test_weights_average_one_and_stay_bounded(self, pool, values):
-        state = run_draft(make_config(user_slot=3), pool, values)
-        profiles = _profiles([[pool[i] for i in r] for r in state.rosters], values)
-        w = fit_weights(profiles, 3, {"AST"}, ROSTER_SIZE)
-        assert w["AST"] == 0.0
-        live = [w[c] for c in CATEGORIES if c != "AST"]
-        assert abs(sum(live) / len(live) - 1.0) < 0.05  # normalized (clamps aside)
-        assert all(MIN_WEIGHT <= x <= MAX_WEIGHT for x in live)
-
-    def test_gradient_matches_expected_wins(self, values):
-        """The weights are the derivative of the record: nudging the team's
-        per-slot z in a category moves expected_wins by grad * delta."""
-        board = sorted(PLAYERS, key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS))[:156]
-        rosters = [board[i::12] for i in range(12)]
-        profiles = _profiles(rosters, values)
-        grad = win_gradient(profiles, 0, set(), ROSTER_SIZE)
-        base = expected_wins(profiles)[0]
-        delta = 1e-4
-        for c in ("PTS", "STL", "FT%"):
-            bumped = profiles[0].per_slot_z | {c: profiles[0].per_slot_z[c] + delta}
-            nudged = [profiles[0].__class__(**{**profiles[0].__dict__, "per_slot_z": bumped}), *profiles[1:]]
-            numeric = (expected_wins(nudged)[0] - base) / delta
-            # Full rosters: no dilution, no extra noise — the gradient is exact.
-            assert abs(numeric - grad[c]) < 0.02 * max(1.0, abs(grad[c]))
-
-    def test_a_lost_category_is_not_chased(self, values):
-        """Late in the draft, a roster far behind everyone in STL gets a
-        lower STL weight than a category it is in the thick of — the
-        opposite of the old linear needs boost."""
-        board = sorted(PLAYERS, key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS))[:150]
-        no_steals = sorted(board, key=lambda p: values[p.id]["STL"])[:11]
-        profiles = _profiles(_league(values, no_steals), values)
-        w = fit_weights(profiles, 0, set(), ROSTER_SIZE)
-        field = sum(p.per_slot_z["STL"] for p in profiles[1:]) / 11
-        assert profiles[0].per_slot_z["STL"] < field - 0.5  # genuinely hopeless
-        contested = max(CATEGORIES, key=lambda c: w[c])
-        assert w["STL"] < 1.0 < w[contested]
-        assert w["STL"] <= CONCEDE_THRESHOLD
-        assert category_stances(w, profiles, 0, set())["STL"] == "behind"
-
-    def test_an_owned_category_is_not_bought_again(self, values):
-        board = sorted(PLAYERS, key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS))[:150]
-        blockers = sorted(board, key=lambda p: -values[p.id]["BLK"])[:11]
-        profiles = _profiles(_league(values, blockers), values)
-        w = fit_weights(profiles, 0, set(), ROSTER_SIZE)
-        assert w["BLK"] < 1.0
-        assert category_stances(w, profiles, 0, set())["BLK"] in ("ahead", "even")
-        assert w["BLK"] <= CONCEDE_THRESHOLD or w["BLK"] < min(w[c] for c in CATEGORIES if c != "BLK") + 0.2
-
-    def test_early_deficits_are_diluted(self, values):
-        """One bad-FT% pick doesn't make FT% a lost cause with twelve picks
-        to come: after a single player the weights are all but uniform."""
-        board = sorted(PLAYERS, key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS))[:40]
-        brick = min(board, key=lambda p: values[p.id]["FT%"])
-        profiles = _profiles(_league(values, [brick]), values)
-        w = fit_weights(profiles, 0, set(), ROSTER_SIZE)
-        assert all(abs(w[c] - 1.0) < 0.05 for c in CATEGORIES)
-        assert all(s == "even" for s in category_stances(w, profiles, 0, set()).values())
-
-    def test_stances_follow_thresholds(self, pool, values):
-        state = run_draft(make_config(user_slot=3), pool, values)
-        profiles = _profiles([[pool[i] for i in r] for r in state.rosters], values)
-        w = fit_weights(profiles, 3, {"TO"}, ROSTER_SIZE)
-        st = category_stances(w, profiles, 3, {"TO"})
-        assert st["TO"] == "punt"
-        for c in CATEGORIES:
-            if c == "TO":
-                continue
-            if w[c] >= NEED_THRESHOLD:
-                assert st[c] == "lean"
-            elif w[c] <= CONCEDE_THRESHOLD:
-                assert st[c] in ("ahead", "behind")
-            else:
-                assert st[c] == "even"
+def _draft_following_fit(pool, values, seed, slot, until_pick=None):
+    """Play a draft where the user takes the top recommendation every turn;
+    yields (state, recommendations, weights) at each user turn."""
+    ranks = market_ranks(values)
+    state = create_draft(make_config(user_slot=slot, seed=seed))
+    turns = []
+    while not is_complete(state):
+        if until_pick is not None and len(state.picks) >= until_pick:
+            break
+        t = current_team_id(state)
+        if t == slot:
+            top, w = _recommend(state, pool, values, ranks)
+            turns.append((state, top, w))
+            pid = top[0]
+        else:
+            pid = choose_bot_pick(state, pool, values, t)
+        state = apply_pick(state, pool, pid)
+    return state, turns
 
 
-class TestDraftWindow:
-    def _advance(self, state, pool, values):
-        while current_team_id(state) != state.config.user_slot:
+def test_window_holds_players_expected_to_go_around_this_pick(pool, values):
+    ranks = market_ranks(values)
+    state, _ = _draft_following_fit(pool, values, "window", 3, until_pick=39)
+    pick = len(state.picks) + 1
+    window = candidate_window(available_player_ids(state, pool), values, pick, NUM_TEAMS, ranks)
+    assert len(window) >= MIN_CANDIDATES
+    assert all(ranks[pid] <= window_max_rank(pick, NUM_TEAMS) for pid in window)
+    assert max(ranks[pid] for pid in window) < 100  # nobody from the 9th round at pick 40
+    # Best market value first, and everyone better than the window's worst is in it.
+    assert [ranks[p] for p in window] == sorted(ranks[p] for p in window)
+    worst = max(ranks[p] for p in window)
+    assert all(ranks[p] >= worst for p in available_player_ids(state, pool) if p not in window)
+
+
+def test_window_never_runs_dry_late_in_the_draft(pool, values):
+    ranks = market_ranks(values)
+    state, _ = _draft_following_fit(pool, values, "late", 0, until_pick=150)
+    window = candidate_window(available_player_ids(state, pool), values, 151, NUM_TEAMS, ranks)
+    assert len(window) >= MIN_CANDIDATES
+
+
+def test_recommendations_stay_in_range_all_draft(pool, values):
+    """Following Fit never recommends a player who should go rounds later:
+    every top-5 recommendation from round 2 on is within the window."""
+    ranks = market_ranks(values)
+    for seed, slot in (("range-a", 0), ("range-b", 5), ("range-c", 11)):
+        _, turns = _draft_following_fit(pool, values, seed, slot)
+        assert len(turns) == ROSTER_SIZE
+        for state, top, _ in turns[1:]:
+            pick = len(state.picks) + 1
+            limit = window_max_rank(pick, NUM_TEAMS)
+            for pid in top[:5]:
+                assert ranks[pid] <= max(limit, MIN_CANDIDATES), (seed, pick, ranks[pid])
+
+
+def test_inside_the_window_order_is_by_fit_not_market(pool, values):
+    """Fit re-orders the window: a player the market rates lower can be the
+    recommendation when he does more for this roster."""
+    ranks = market_ranks(values)
+    reordered = 0
+    for seed, slot in (("order-a", 3), ("order-b", 7)):
+        _, turns = _draft_following_fit(pool, values, seed, slot)
+        for state, top, w in turns[2:9]:
+            fits = [fit_score(values[p], w) for p in top]
+            assert fits == sorted(fits, reverse=True)
+            if ranks[top[0]] != min(ranks[p] for p in top):
+                reordered += 1
+    assert reordered > 0
+
+
+def test_fit_is_market_value_on_an_empty_roster(pool, values):
+    """Same yardstick as the Value column: Fit deviates from it only for
+    what this roster needs, and there is nothing to need yet."""
+    state = create_draft(make_config(user_slot=0, seed="empty"))
+    w, swing = fit_shape(_profiles(state, pool, values), 0, set(), ROSTER_SIZE)
+    assert w == MARKET_WEIGHTS
+    assert needed_categories(swing) == [] and settled_categories(swing) == []
+    w = fit_weights(_profiles(state, pool, values), 0, {"TO"}, ROSTER_SIZE)
+    assert w["TO"] == 0.0
+    rest = {c: w[c] / MARKET_WEIGHTS[c] for c in CATEGORIES if c != "TO"}
+    assert max(rest.values()) - min(rest.values()) < 1e-9  # market shape, rescaled
+
+
+def test_fit_is_close_to_market_value_after_one_pick(pool, values):
+    """One player is not a team shape: nothing is settled, so Fit doesn't
+    swing to the categories he happens to lack."""
+    state = create_draft(make_config(user_slot=0, seed="one"))
+    while current_team_id(state) != 0:
+        state = apply_pick(state, pool, choose_bot_pick(state, pool, values, current_team_id(state)))
+    maxey = next(p.id for p in pool.values() if p.name == "Tyrese Maxey")
+    state = apply_pick(state, pool, maxey)
+    while current_team_id(state) != 0:
+        state = apply_pick(state, pool, choose_bot_pick(state, pool, values, current_team_id(state)))
+    profiles = _profiles(state, pool, values)
+    w, swing = fit_shape(profiles, 0, set(), ROSTER_SIZE)
+    assert all(abs(w[c] / MARKET_WEIGHTS[c] - 1.0) < 0.1 for c in CATEGORIES)
+    assert needed_categories(swing) == [] and settled_categories(swing) == []
+    # The old deficit weighting would already be reaching for rebounds here.
+    old = needs_weights(profiles, 0)
+    assert old["REB"] > 1.5
+    # Next to Maxey, the second pick is the board's best available by market
+    # value give or take the roster's shape: no 3-and-D specialist over a star.
+    ranks = market_ranks(values)
+    top, _ = _recommend(state, pool, values, ranks)
+    best = min(ranks[p] for p in top)
+    assert ranks[top[0]] <= best + 6
+
+
+def _roster_of_bigs(pool, values, seed="bigs", slot=5, picks=6):
+    """A mid-draft roster that is last in steals by a wide margin: the user
+    takes the lowest-STL player in the window every turn."""
+    ranks = market_ranks(values)
+    state = create_draft(make_config(user_slot=slot, seed=seed))
+    while len(state.rosters[slot]) < picks or current_team_id(state) != slot:
+        t = current_team_id(state)
+        if t == slot:
+            window = candidate_window(
+                available_player_ids(state, pool), values, len(state.picks) + 1, NUM_TEAMS, ranks
+            )
+            pid = min(window, key=lambda i: values[i]["STL"])
+        else:
+            pid = choose_bot_pick(state, pool, values, t)
+        state = apply_pick(state, pool, pid)
+    return state
+
+
+def test_fit_does_not_chase_a_hopeless_category(pool, values):
+    state = _roster_of_bigs(pool, values)
+    slot = state.config.user_slot
+    profiles = _profiles(state, pool, values)
+    assert rank_teams(profiles)["STL"][slot] == NUM_TEAMS
+    w, swing = fit_shape(profiles, slot, set(), ROSTER_SIZE)
+    # Not steered: steals stay worth less than an average category to this
+    # team, while the old weighting made them the top priority.
+    assert w["STL"] < 1.0
+    assert swing["STL"] < MAX_SWING
+    assert needs_weights(profiles, slot)["STL"] > 1.5  # what the old weighting did
+    # The reliable categories it is last in are written off, and the ones
+    # it owns are discounted.
+    assert {"PTS", "AST"} & set(settled_categories(swing))
+    assert "REB" in settled_categories(swing)
+    # And the recommendation isn't a steals specialist from rounds later.
+    top, _ = _recommend(state, pool, values, market_ranks(values))
+    pick = len(state.picks) + 1
+    assert all(market_ranks(values)[p] <= window_max_rank(pick, NUM_TEAMS) for p in top[:5])
+    assert sum(values[p]["STL"] for p in top[:3]) / 3 < 1.0
+
+
+def test_fit_discounts_a_category_already_locked_up(pool, values):
+    state = _roster_of_bigs(pool, values)
+    slot = state.config.user_slot
+    profiles = _profiles(state, pool, values)
+    assert rank_teams(profiles)["REB"][slot] == 1
+    w, swing = fit_shape(profiles, slot, set(), ROSTER_SIZE)
+    assert w["REB"] < MARKET_WEIGHTS["REB"] and "REB" in settled_categories(swing)
+    assert all(MIN_SWING <= swing[c] <= MAX_SWING for c in CATEGORIES)
+    assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 1e-9  # on the market's scale
+
+
+def test_fit_weights_zero_punts_and_renormalize_the_rest(pool, values):
+    state = _roster_of_bigs(pool, values)
+    slot = state.config.user_slot
+    w = fit_weights(_profiles(state, pool, values), slot, {"FT%"}, ROSTER_SIZE)
+    assert w["FT%"] == 0.0
+    rest = [w[c] for c in CATEGORIES if c != "FT%"]
+    assert abs(sum(rest) / len(rest) - 1.0) < 1e-9
+
+
+def test_scoresheet_arbitrage_no_longer_wins_the_sims(pool, values):
+    """A roster that hoards the noisy categories the room underpays for
+    (steals, FT%, turnovers) and concedes points is not a winner under
+    category-specific noise; the balanced Fit roster projects better."""
+    from app.analysis.player_values import UNIFORM_WEIGHTS
+    from app.analysis.standings import expected_wins
+    from app.analysis.punt_plan import suggest_punts
+    ranks = market_ranks(values)
+
+    def play(seed, slot, weights_for):
+        state = create_draft(make_config(user_slot=slot, seed=seed))
+        punts = []
+        while not is_complete(state):
             t = current_team_id(state)
-            state = apply_pick(state, pool, choose_bot_pick(state, pool, values, t))
-        return state
+            if t == slot:
+                profiles = _profiles(state, pool, values)
+                punts = suggest_punts(profiles, slot, punts)["punts"]
+                w = weights_for(profiles, set(punts))
+                window = candidate_window(available_player_ids(state, pool), values, len(state.picks) + 1, NUM_TEAMS, ranks)
+                pid = max(window, key=lambda i: score_player(values[i], w))
+            else:
+                pid = choose_bot_pick(state, pool, values, t)
+            state = apply_pick(state, pool, pid)
+        profiles = _profiles(state, pool, values)
+        return expected_wins(profiles)[slot], rank_teams(profiles)
 
-    def test_size_covers_the_picks_until_the_next_turn_plus_reach(self, pool, values):
-        state = self._advance(create_draft(make_config(user_slot=5)), pool, values)
-        assert user_turns(state) == [5, 18]
-        assert window_size(state) == (18 - 5 - 1) + reach(6)  # 12 bot picks + 6
-        assert reach(6) == REACH_MIN and reach(100) == 15
-        info = window_info(state)
-        assert info == {"size": 18, "pick": 6, "nextPick": 19, "reach": 6}
+    def uniform(profiles, punts):
+        return {c: (0.0 if c in punts else 1.0) for c in CATEGORIES}
 
-    def test_window_is_the_top_of_the_board(self, pool, values):
-        state = self._advance(create_draft(make_config(user_slot=5)), pool, values)
-        market = {pid: score_player(values[pid], MARKET_WEIGHTS) for pid in pool}
-        window = draft_window(state, pool, market)
-        board = sorted(available_player_ids(state, pool), key=lambda i: -market[i])
-        assert window == board[: window_size(state)]
-        assert len(window) == 18
+    def fit(profiles, punts):
+        return fit_weights(profiles, 3, punts, ROSTER_SIZE)
 
-    def test_window_is_stable_while_bots_draft_toward_the_user(self, pool, values):
-        """Between the user's turns the window already includes the players
-        the bots in between will take, so it only shrinks from the top."""
-        state = create_draft(make_config(user_slot=5))
-        market = {pid: score_player(values[pid], MARKET_WEIGHTS) for pid in pool}
-        before = draft_window(state, pool, market)
-        assert window_size(state) == 5 + 12 + REACH_MIN
-        at_turn = draft_window(self._advance(state, pool, values), pool, market)
-        assert set(at_turn) <= set(before)
+    u = [play(s, 3, uniform) for s in ("arb-1", "arb-2", "arb-3")]
+    f = [play(s, 3, fit) for s in ("arb-1", "arb-2", "arb-3")]
+    assert sum(w for w, _ in f) / 3 > sum(w for w, _ in u) / 3
+    # The uniform roster is the arbitrage shape: elite in steals, nowhere in points.
+    assert sum(r["STL"][3] for _, r in u) / 3 < 5 and sum(r["PTS"][3] for _, r in u) / 3 > 8
 
-    def test_back_to_back_picks_and_last_pick(self, pool, values):
-        state = self._advance(create_draft(make_config(user_slot=11)), pool, values)
-        assert user_turns(state) == [11, 12]
-        assert window_size(state) == REACH_MIN  # nobody picks in between: only the reach
-        # Last round, last user pick: everyone left is in range.
-        state = run_draft(make_config(user_slot=0), pool, values)
-        state = rewind_to_pick(state, pool, 12 * 12)  # round 13 opens with slot 0
-        assert user_turns(state) == [len(state.picks)]
-        assert window_size(state) == len(state.order) - len(state.picks)
-        assert len(draft_window(state, pool, market={pid: 0.0 for pid in pool})) == window_size(state)
 
-    def test_no_window_once_the_user_is_done(self, pool, values):
-        state = run_draft(make_config(user_slot=0), pool, values)
-        assert window_size(state) is None
-        assert draft_window(state, pool, {}) == []
+def test_draft_view_exposes_candidates_in_fit_order(pool, values):
+    ranks = market_ranks(values)
+    state, _ = _draft_following_fit(pool, values, "view", 4, until_pick=40)
+    view = draft_view("d", state, [], pool, values, market_rank=ranks)
+    pick = view["pickIndex"] + 1
+    cands = view["candidates"]
+    assert view["fitWindow"] == {
+        "pick": pick, "maxRank": window_max_rank(pick, NUM_TEAMS), "size": len(cands)
+    }
+    assert len(cands) >= MIN_CANDIDATES
+    assert all(ranks[p] <= view["fitWindow"]["maxRank"] for p in cands)
+    assert all(p in view["fit"] for p in cands)
+    fits = [view["fit"][p] for p in cands]
+    assert fits == sorted(fits, reverse=True)
+    assert set(view["settledCategories"]) == {"ahead", "behind"}
+    assert not set(view["settledCategories"]["ahead"]) & set(view["settledCategories"]["behind"])
+
+
+def test_simulated_user_picks_follow_the_window(pool, values):
+    """The suggestion engine's user policy is the room's recommendation."""
+    from app.suggestions import best_fit
+    ranks = market_ranks(values)
+    state, _ = _draft_following_fit(pool, values, "sim", 2, until_pick=45)
+    assert current_team_id(state) == 2
+    pick = len(state.picks) + 1
+    for pid in best_fit(state, 2, set(), 5):
+        assert ranks[pid] <= window_max_rank(pick, NUM_TEAMS)

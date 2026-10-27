@@ -95,6 +95,7 @@ def _view(draft_id: str, state: DraftState, blob: dict[str, Any]):
         PLAYER_VALUES,
         punt_mode=blob.get("puntMode", "auto"),
         lookahead=lookahead,
+        market_rank=OVERALL_RANK,
     )
 
 
@@ -323,5 +324,6 @@ def get_run(run_id: str):
         raise HTTPException(404, "run not found")
     state = deserialize_draft(blob["draft"], PLAYER_POOL)
     return draft_view(
-        None, state, blob.get("userPunts", []), PLAYER_POOL, PLAYER_VALUES
+        None, state, blob.get("userPunts", []), PLAYER_POOL, PLAYER_VALUES,
+        market_rank=OVERALL_RANK,
     )

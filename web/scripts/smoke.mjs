@@ -113,12 +113,14 @@ await setSpeed("instant");
 
 // ---- 2. First pick: build options ----
 log("first-pick screen reached", await waitFor(() => bodyHas("Your first pick sets your build")));
-log("build options load", await waitFor(() => count(".pick-card").then((n) => n > 0), 150));
+log("build options load", await waitFor(() => count(".build-row").then((n) => n > 0), 150));
+await evalJs(`document.querySelector('.build-more')?.click()`);
+log("every player in range is listed", await evalJs(`(() => { const t = document.body.innerText.match(/(\\d+) players tested/); const n = document.querySelectorAll('.build-row').length; return !!t && Number(t[1]) === n && n >= 10; })()`));
 await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
 
 // ---- 3. Second pick: finish the build ----
 log("second-pick screen reached", await waitFor(() => bodyHas("Finish your build")));
-log("second-pick options load", await waitFor(() => count(".option-card").then((n) => n > 0), 150));
+log("second-pick options load", await waitFor(() => count(".build-row").then((n) => n > 0), 150));
 await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
 
 // ---- 4. Draft room ----

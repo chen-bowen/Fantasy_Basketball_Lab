@@ -13,6 +13,17 @@ Two views:
     suggestion engine optimizes: under the deterministic view a second
     pick that turns five narrow leads into five comfortable ones is worth
     nothing, and every option looks like 11-0.
+
+The noise is not the same in every category. A week of points is hundreds
+of events and a per-slot edge there is a real favourite; a week of steals,
+free throws or turnovers is a handful, and the same edge is close to a
+coin flip. The market's category weights (market.py) are taken as the
+measure of how reliably a z-unit converts into a category win — an
+independent count-noise estimate ranks the categories the same way,
+turnovers aside — so the noise in category c is CATEGORY_NOISE / w_c:
+points about 0.37, steals and free throws about 1.6–1.9. Without this,
+the model rewards hoarding the noisy categories the room underpays for
+and a team that is 1st in steals and 10th in points looks like a winner.
 """
 
 from __future__ import annotations
@@ -20,12 +31,18 @@ from __future__ import annotations
 from math import erf, sqrt
 
 from ..engine.types import CATEGORIES, Category
+from .market import MARKET_WEIGHTS
 from .roster_profile import RosterProfile
 
-# Per-slot z gap at which a category is a one-sigma (84%) favourite. Drafted
-# teams sit about 0.3 apart in a typical category, which makes that matchup
-# roughly 65/35; the strongest and weakest teams (~1.2 apart) about 95/5.
+# Per-slot z gap at which an average category is a one-sigma (84%)
+# favourite. Drafted teams sit about 0.3 apart in a typical category, which
+# makes that matchup roughly 65/35; the strongest and weakest teams (~1.2
+# apart) about 95/5.
 CATEGORY_NOISE = 0.75
+# Per category: reliable categories (the ones the market pays for) resolve
+# on smaller gaps, noisy ones need bigger ones. The worth of a z-unit
+# (1 / noise) averages 1 / CATEGORY_NOISE, as the market weights average 1.
+NOISE: dict[Category, float] = {c: CATEGORY_NOISE / MARKET_WEIGHTS[c] for c in CATEGORIES}
 
 MAJORITY = len(CATEGORIES) // 2 + 1  # categories needed to win a matchup
 
@@ -53,16 +70,16 @@ def records(ranks: dict[Category, list[int]]) -> list[dict[str, int]]:
     return out
 
 
-def category_win_prob(gap: float) -> float:
+def category_win_prob(gap: float, noise: float = CATEGORY_NOISE) -> float:
     """P(win a category) when leading by `gap` per-slot z (negative = trailing)."""
-    return 0.5 * (1 + erf(gap / (CATEGORY_NOISE * sqrt(2))))
+    return 0.5 * (1 + erf(gap / (noise * sqrt(2))))
 
 
 def matchup_win_prob(a: RosterProfile, b: RosterProfile) -> float:
     """P(a wins at least MAJORITY of the 9 categories), categories independent."""
     dist = [1.0]  # dist[k] = P(k category wins so far)
     for c in CATEGORIES:
-        p = category_win_prob(a.per_slot_z[c] - b.per_slot_z[c])
+        p = category_win_prob(a.per_slot_z[c] - b.per_slot_z[c], NOISE[c])
         nxt = [0.0] * (len(dist) + 1)
         for k, q in enumerate(dist):
             nxt[k] += q * (1 - p)

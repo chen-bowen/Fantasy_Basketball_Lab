@@ -58,10 +58,10 @@ backend/
     analysis/     player_values.py · roster_profile.py · category_weights.py
     data/         pool.py (frozen pool loader) + players.json
     store.py      JSON-file persistence (sessions + saved runs)
-    analysis/     … fit.py (Fit: gradient of expected wins) · window.py (draft window)
-                  · standings.py (head-to-head records)
-    suggestions.py  first/second-pick build options, by simulating the rest
-                    of the draft (process pool, cached per draft position)
+    analysis/     … fit.py (needs-aware Fit) · standings.py (head-to-head records)
+    suggestions.py  first/second-pick build options: every player in range,
+                    by simulating the rest of the draft (process pool, cached
+                    per draft position)
     views.py      DraftView serializer (state + derived analysis per response)
     main.py       FastAPI routes
   scripts/fetch_players.py   data pipeline
@@ -85,68 +85,78 @@ ticks, and `src/components/` render the DraftView the API returns.
 | `PUT /api/drafts/{id}/punts` | `{punts, mode?}` — set punts by hand (manual), or `mode: "auto"` to let the roster decide → rescored view |
 | `POST /api/drafts/{id}/preview` | before/after roster profile for a player |
 | `POST /api/drafts/{id}/rewind` | rewind to pick n (saves abandoned branch) |
-| `GET /api/drafts/{id}/suggestions` | build options for the user's 1st/2nd pick (simulated) |
+| `GET /api/drafts/{id}/suggestions` | build options for the user's 1st/2nd pick: every player in range, simulated and tiered |
 | `GET /api/league-preview?seed=&userSlot=` | bot personalities a new draft would get |
 
-**Fit** (in every DraftView as `fit`) is a player's category z-scores
-(scoresheet weights, see below) weighted by what each category is worth to
-the user's team right now, with punted categories zeroed. The weight of a
-category is the gradient of the team's expected head-to-head record
-(`analysis/fit.py`): against every opponent, the team's per-slot lead is
-projected to the full roster (an early deficit is diluted by the picks
-still to come, a late one is nearly final) and the marginal value of the
-category is the density of its win probability at that lead, times the
-chance it decides the matchup. A category that is a toss-up against much
-of the league is worth the most; one the team can't catch the pack in —
-or already owns — is worth little. So Fit never steers a roster toward
-fixing a lost cause with late-round specialists, which is what a linear
-"boost what you trail in" did: in simulation the gradient beats it by a
-third of a win per draft, and beats every sharpened variant of itself.
-The weights average 1.0, so Fit stays on the scale of a plain z sum and
-is close to plain scoresheet value early on; `stances` in the view says
-how each category is being treated ("lean", "even", "behind", "ahead",
-"punt").
+**Fit** (in every DraftView as `fit`, with the recommended players in
+`candidates`) is a player's category z-scores weighted by what a z-unit in
+each category can still do for the user's head-to-head record, with
+punted categories zeroed. It starts from market value — the same
+yardstick as the Value column — and moves only with the roster's shape.
+Two rules keep it from wasting picks (`analysis/fit.py`):
 
-**Draft window** (`analysis/window.py`; `candidates`, `window` and
-`fitScale` in the view): a pick has a price, so Fit ranks *within the
-players in range* — the top of the draft board as the market sees it,
-covering every player expected to go before the user's next turn plus a
-reach of half a round (growing with the pick number, as ADP gets noisier
-deeper in). Those are the recommendations; the 0–10 Fit score is scaled
-so the best candidate is 10. Everyone else keeps a Fit but is listed as a
-later-round target, never as the pick — at pick 40 nobody ranked 100th
-is a candidate, and the player you would still get two rounds later
-doesn't cost you the one you wouldn't. The simulated user picks in the
-build suggestions and look-ahead draft from the same window.
+- **Candidates belong at this pick.** Fit only recommends players whose
+  market rank is within 1.5 rounds of the current pick (`fitWindow`; never
+  fewer than the best 10 on the board). The room ranks those by Fit and
+  lists everyone else underneath as "usually drafted later": a specialist
+  who will still be there two rounds from now is not the pick now, however
+  well he fits. Inside the window the order is Fit, not market — a player
+  the room underprices but who does more for this roster comes first.
+- **Weights follow leverage, not deficit.** A category's weight is the
+  marginal win probability of a z-unit there: the normal density of the
+  projected end-of-draft gap against each opponent, divided by the
+  category's noise (the expected-wins model, tighter sigma), averaged
+  over opponents. The 1/noise factor is the market weight, so with an
+  empty roster Fit *is* market value; the density is a swing multiplier
+  (normalized to mean 1, clamped to [0.5, 1.6]) that raises categories
+  still up for grabs (`neededCategories`) and lowers ones the team has
+  locked up or can't catch (`settledCategories`). A roster hopeless in
+  steals is therefore not steered into steals specialists. The gap is
+  projected by the share of the roster drafted, so after one or two
+  picks nothing is settled and Fit is still essentially market value.
 
 **Build suggestions** fix
-the candidate pick(s), let every later user pick take the best Fit in
-range under that punt, and average the *expected* head-to-head record
-over 6 drafts (this seed plus 5 noise variants with the same bot
-personalities). Expected, not projected: `standings.expected_wins` treats
-each category as a probabilistic win (normal CDF of the per-slot z gap,
-`CATEGORY_NOISE`), so comfortable leads count for more than narrow ones
+the candidate pick(s), let every later user pick take the best Fit under
+that punt, and average the *expected* head-to-head record over 8 drafts
+(this seed plus 7 noise variants with the same bot personalities).
+Expected, not projected: `standings.expected_wins` treats each category as
+a probabilistic win (normal CDF of the per-slot z gap over the category's
+noise, `NOISE[c]`), so comfortable leads count for more than narrow ones
 and the estimate keeps resolving between good options — under the
 deterministic record a Fit-drafted team already shows 10–11 wins whatever
 its second pick is, and the ordering of options was noise.
 
-Every plausible candidate is tested: the market's top of the board plus
-the best Fits under no punt and under each punt (~20 players), each with
-no punt and with the punts the roster-plus-him would be genuinely weak in
-(`natural_punts` — a punt concedes a category you can't win, never one you
-own). Two stages keep it fast: 2 drafts per combination to screen, 8 for
-the leaders (`SCREEN_SEEDS`, `SIM_SEEDS`); the min–max is shown on screen.
-Near-ties break toward the higher market value. Every option explains
-itself (`why`: categories he adds / offsets / doubles up on / costs next to
-the roster, games played, market rank), says whether he would still be
-there at the next turn (`wait`), and the response carries the market's
-pick at this spot (`consensus`) so the options can be read against it.
+Every player in range is tested — the same candidate window the draft
+room uses — each with no punt and with the punts the roster-plus-him
+would be genuinely weak in (`natural_punts` — a punt concedes a category
+you can't win, never one you own). Two stages keep it fast: 2 drafts per
+(player, punt) combination to screen, then the full 8 for every player's
+best plan and for the best player under each plan (`SCREEN_SEEDS`,
+`SIM_SEEDS`), so everything on screen has the full sample and its min–max.
+Near-ties break toward the higher market value. The response is a
+decision, not a leaderboard: one option per player, best first, grouped
+into **tiers** at the simulations' resolution (`TIE_WINS`, 0.3 — options
+within it are a toss-up, and the screen says so rather than ranking them);
+the best player under each plan as the **build alternatives** (`builds`,
+with what each gives up against the top option); the look-ahead's share
+of runs in which each player is gone before the user's next turn
+(`gone`); and the market's pick at this spot (`consensus`) as a
+yardstick. Every option explains itself (`why`: categories he adds /
+offsets / doubles up on / costs next to the roster, games played, market
+rank), shows where the build finishes, and who is likely there next turn.
+
+The success criterion is stated as a test: every player the draft expects
+to go around this pick is on the screen with an evaluation, so "Browse all
+players" is an escape hatch, never the path (`tests/test_suggestions.py`).
 
 **Look-ahead** (in the DraftView on the user's turn as `gone` and
 `nextUserPick`): a few quick runs to the user's next turn give, for every
 available player, the share in which he is drafted before then. The draft
-room flags candidates who can wait, and when the top candidate is one of
-them names the best candidate who can't.
+room lists candidates who can wait below the ones who can't, so Fit never
+argues for a reach even inside the window. The simulations' user policy
+(`suggestions.best_fit`) is the same window-and-Fit rule the room shows,
+so build options and look-ahead describe the draft the room actually
+advises.
 
 **Punt plan** (`analysis/punt_plan.py`, `puntMode` / `puntPlan` in the
 view): in auto mode (the default) the user's punt follows the roster after
@@ -187,7 +197,7 @@ to produce, not his per-game line (`analysis/availability.py`,
 
 The user's own values, Fit and suggestions are risk-neutral.
 
-## Market value vs. the scoresheet
+## Market value and category noise
 
 The league scores nine categories equally, but drafters don't pay for them
 equally: real ADP rewards points and assists far above steals, FT% or
@@ -196,18 +206,33 @@ turnovers. A plain z-score sum therefore ranks low-turnover, high-FT%
 turnover line out of the first round. `analysis/market.py` holds category
 weights fitted to ADP (`scripts/fit_market_weights.py`, ridge regression
 shrunk toward uniform; refit after `npm run data:fetch`), blended 75/25
-with the uniform weights so a disciplined 9-cat drafter still meets
-resistance (pure ADP bots lose 10 of 11 to one).
+with the uniform weights.
 
-| | weights | used for |
-| --- | --- | --- |
-| **Market value** | fitted to ADP | bot drafting (punt/needs/risk on top), the UI's Value stars and `#rank`, suggestion candidates and tie-breaks |
-| **Scoresheet** | uniform | standings / head-to-head records, the user's Fit, expected wins behind suggestions |
+The market is mostly right about this, and for a reason the scoresheet
+hides: a week of points is hundreds of events and a per-slot edge there
+is a real favourite, while a week of steals, free throws or turnovers is a
+handful and the same edge is close to a coin flip. (An independent
+count-noise estimate from per-game rates ranks the categories the same
+way, turnovers aside — drafters discount those mostly because they are
+the classic punt.) A z-sum valuation is a rotisserie valuation; in
+head-to-head the worth of a z-unit is what it does to the chance of
+winning the category. So the engine uses one yardstick throughout:
 
-So bots draft like the room (rank correlation of their picks with ADP:
-0.90, up from 0.74), while Fit and the simulations still tell you what
-actually wins — including which players the market underrates for your
-build.
+| | used for |
+| --- | --- |
+| **Market weights** `w_c` | bot drafting (punt/needs/risk on top), the UI's Value stars and `#rank`, the candidate window, the base of the user's Fit |
+| **Category noise** `NOISE[c] = 0.75 / w_c` | expected wins (standings, the build suggestions' objective), Fit's swing multipliers |
+| **Uniform** | the deterministic league table only (`records`: who ranks higher in more categories) |
+
+Bots draft like the room (rank correlation of their picks with ADP: 0.90,
+up from 0.74); Fit starts from the same board and departs from it only
+for what *this* roster still needs; and the simulations no longer reward
+hoarding the noisy categories the room underpays for (under a single
+uniform noise a team 1st in steals and 10th in points projected as a
+winner — and Fit recommended the 3-and-D specialists that build it).
+Market rank is also what the candidate window is measured in: it is
+where the bots will take a player, so "usually drafted later" means later
+in this league, not just in a consensus ADP list.
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived
@@ -245,3 +270,6 @@ Design notes:
 - Same seed + picks → same bot selections; strategy change → new picks —
   `tests/test_bots.py`
 - Rewind/branch legality and divergence — `tests/test_bots.py`
+- Fit recommends only players expected to go around the current pick,
+  orders them by Fit rather than market, and doesn't chase a category the
+  team has locked up or can't catch — `tests/test_fit.py`

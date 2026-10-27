@@ -1,13 +1,13 @@
 from app.analysis.fit import fit_weights, needed_categories
 from app.analysis.roster_profile import build_roster_profile, rank_teams
 from app.analysis.standings import records
-from app.engine.draft import apply_pick, create_draft, current_team_id
+from app.engine.draft import apply_pick, available_player_ids, create_draft, current_team_id
 from app.engine.bots import choose_bot_pick
 from app.engine.types import CATEGORIES
 from app.suggestions import (
     PUNT_OPTIONS,
-    first_pick_options,
-    second_pick_options,
+    TIE_WINS,
+    build_options,
     sim_seeds,
     simulate,
 )
@@ -26,18 +26,23 @@ def _profiles(state, pool, values):
     return [build_roster_profile([pool[i] for i in r], values) for r in state.rosters]
 
 
-def test_fit_zeroes_punts_and_is_uniform_on_empty_roster(pool, values):
+def test_fit_zeroes_punts_and_is_market_value_on_empty_roster(pool, values):
+    from app.analysis.market import MARKET_WEIGHTS
     state = create_draft(make_config(user_slot=3))
     w = fit_weights(_profiles(state, pool, values), 3, {"FT%"})
     assert w["FT%"] == 0.0
-    assert all(w[c] == 1.0 for c in CATEGORIES if c != "FT%")
+    live = [c for c in CATEGORIES if c != "FT%"]
+    ratio = {c: w[c] / MARKET_WEIGHTS[c] for c in live}
+    assert max(ratio.values()) - min(ratio.values()) < 1e-9
+    assert abs(sum(w[c] for c in live) / len(live) - 1.0) < 1e-9
 
 
-def test_fit_boosts_categories_the_team_trails(pool, values):
+def test_fit_boosts_categories_still_in_play(pool, values):
+    from app.analysis.fit import fit_shape
     state = run_draft(make_config(user_slot=3), pool, values)
-    w = fit_weights(_profiles(state, pool, values), 3, set())
-    for c in needed_categories(w):
-        assert w[c] > 1.0
+    w, swing = fit_shape(_profiles(state, pool, values), 3, set())
+    for c in needed_categories(swing):
+        assert swing[c] >= 1.1 and w[c] > 0
 
 
 def test_records_are_consistent(pool, values):
@@ -62,42 +67,80 @@ def test_simulate_returns_none_when_fixed_player_is_gone(pool, values):
     assert simulate(config, [first_overall], set()) is None
 
 
-def test_first_pick_options(pool, values):
-    state = _advance_to_user(create_draft(make_config(user_slot=3)), pool, values)
-    opts = first_pick_options(state, seeds=sim_seeds("test-seed", 2))
-    assert opts
-    assert [o["wins"] for o in opts] == sorted((o["wins"] for o in opts), reverse=True)
+def _check_options(result, state, pool, values, stage):
+    from app.analysis.fit import candidate_window, market_ranks, window_max_rank
+    ranks = market_ranks(values)
+    pick = len(state.picks) + 1
+    window = candidate_window(available_player_ids(state, pool), values, pick, 12, ranks)
+    opts = result["options"]
+    assert result["pick"] == pick and result["tieWins"] == TIE_WINS
+    assert result["tested"] == len(opts) == result["window"] == len(window)
+    # Every player in range is evaluated, once, with the full sample — nothing
+    # is left for "Browse all players" to find.
+    assert {o["playerId"] for o in opts} == set(window)
+    assert all(ranks[o["playerId"]] <= window_max_rank(pick, 12) for o in opts)
+    assert all(o["runs"] == len(sim_seeds("test-seed", 3)) for o in opts)
+    # Ordered best first, tiered at the sims' resolution.
+    tiers = [o["tier"] for o in opts]
+    assert tiers[0] == 1 and tiers == sorted(tiers)
+    wins = [o["wins"] for o in opts]
+    top = [w for w, t in zip(wins, tiers) if t == 1]
+    assert max(top) - min(top) <= TIE_WINS + 0.05
     for o in opts:
         assert o["punt"] is None or o["punt"] in PUNT_OPTIONS
         assert 0 <= o["wins"] <= 11
-        assert o["playerId"] not in state.rosters[0]
-        assert len(o["finishRanks"]) == 9
+        assert o["winsRange"][0] <= o["wins"] <= o["winsRange"][1]
+        assert o["gone"] is None or 0 <= o["gone"] <= 1
+        assert o["finishRanks"] is None or len(o["finishRanks"]) == 9
         assert o["nextOptions"]
+        why = o["why"]
+        assert set(why) >= {"adds", "patches", "spares", "overlaps", "costs", "availability", "marketRank"}
+        assert not (set(why["adds"]) & set(why["overlaps"]))
+        assert o["punt"] not in why["adds"] + why["overlaps"] + why["costs"]
+    # The build alternatives: the best player under each plan, best first.
+    builds = result["builds"]
+    assert builds
+    assert builds[0]["punt"] == opts[0]["punt"] or abs(builds[0]["wins"] - opts[0]["wins"]) <= 0.15
+    assert len({b["punt"] for b in builds}) == len(builds)
+    assert [b["wins"] for b in builds] == sorted((b["wins"] for b in builds), reverse=True)
+    for b in builds:
+        assert b["playerId"] in {o["playerId"] for o in opts}
+        assert abs((opts[0]["wins"] - b["wins"]) - b["behind"]) < 0.11
+    c = result["consensus"]
+    assert c is None or (c["playerId"] in {o["playerId"] for o in opts} and 0 <= c["wins"] <= 11)
+    if stage == "first":
+        assert all(o["keepsPunt"] == (o["punt"] is None) for o in opts)
+
+
+def test_first_pick_options_cover_everyone_in_range(pool, values):
+    state = _advance_to_user(create_draft(make_config(user_slot=3)), pool, values)
+    result = build_options(state, set(), seeds=sim_seeds("test-seed", 3))
+    _check_options(result, state, pool, values, "first")
+    # Slot 4 picks 4th and 21st: the look-ahead says who is gone by then.
+    assert result["nextPick"] == 21
+    assert any(o["gone"] >= 0.5 for o in result["options"])
 
 
 def test_second_pick_options_flag_punt_switches(pool, values):
     state = _advance_to_user(create_draft(make_config(user_slot=3)), pool, values)
-    first = first_pick_options(state, seeds=sim_seeds("test-seed", 3))[0]
+    first = build_options(state, set(), seeds=sim_seeds("test-seed", 3))["options"][0]
     state = apply_pick(state, pool, first["playerId"])
     state = _advance_to_user(state, pool, values)
     punts = {first["punt"]} if first["punt"] else set()
-    result = second_pick_options(state, punts, seeds=sim_seeds("test-seed", 3))
-    opts = result["options"]
-    assert 0 < len(opts) <= 4
-    assert len({o["playerId"] for o in opts}) == len(opts)
-    assert result["tested"] >= len(opts)
-    assert result["consensus"] is None or 0 <= result["consensus"]["wins"] <= 11
-    for o in opts:
+    result = build_options(state, punts, seeds=sim_seeds("test-seed", 3))
+    _check_options(result, state, pool, values, "second")
+    for o in result["options"]:
         assert o["keepsPunt"] == (o["punt"] == first["punt"])
-        assert o["punt"] is None or o["punt"] in PUNT_OPTIONS
-        assert len(o["ranksAfter"]) == 9
-        assert o["winsRange"][0] <= o["wins"] <= o["winsRange"][1]
-        why = o["why"]
-        assert set(why) >= {"adds", "patches", "spares", "overlaps", "costs", "availability", "marketRank"}
-        assert not (set(why["adds"]) & set(why["overlaps"]))  # a category is one or the other
-        assert o["punt"] not in why["adds"] + why["overlaps"] + why["costs"]
-        assert 0 < why["availability"] <= 1 and why["marketRank"] >= 1
-        assert o["wait"]["runs"] == 3 and 0 <= o["wait"]["stillThere"] <= 3
+    for b in result["builds"]:
+        assert b["keepsPunt"] == (b["punt"] == first["punt"])
+
+
+def test_back_to_back_picks_leave_nobody_gone(pool, values):
+    """The last slot picks twice in a row: the look-ahead has nothing to warn about."""
+    state = _advance_to_user(create_draft(make_config(user_slot=11)), pool, values)
+    result = build_options(state, set(), seeds=sim_seeds("test-seed", 2))
+    assert result["nextPick"] == len(state.picks) + 2
+    assert all(o["gone"] == 0.0 for o in result["options"])
 
 
 def test_pairing_reason_reads_the_roster(pool, values):

@@ -10,12 +10,19 @@ from __future__ import annotations
 from typing import Any
 
 from .analysis.player_values import punt_weights, score_player
-from .analysis.fit import category_stances, fit_score, fit_weights, needed_categories
-from .analysis.market import MARKET_WEIGHTS
+from .analysis.fit import (
+    candidate_window,
+    fit_score,
+    fit_shape,
+    market_ranks,
+    needed_categories,
+    rank_candidates,
+    settled_categories,
+    window_max_rank,
+)
 from .analysis.punt_plan import suggest_punts
 from .analysis.roster_profile import build_roster_profile, rank_teams
 from .analysis.standings import records
-from .analysis.window import draft_window, window_info
 from .engine.draft import (
     DraftState,
     current_pick_in_round,
@@ -26,20 +33,6 @@ from .engine.draft import (
     is_user_turn,
 )
 from .engine.types import CATEGORIES, BotSpec, Player
-
-# The 0-10 Fit scale shown in the draft room: the best candidate at this
-# pick scores 10, the last candidate in the window scores 0 — but never
-# closer than FIT_MIN_SPREAD raw Fit to the top, so near-equal players stay
-# near-equal late in a draft when the whole window is within a point.
-FIT_MIN_SPREAD = 1.5
-
-
-def fit_scale(candidate_fits: list[float]) -> dict[str, float]:
-    """{"best", "floor"} of the 0-10 scale from the candidates' raw Fits."""
-    if not candidate_fits:
-        return {"best": 0.0, "floor": -FIT_MIN_SPREAD}
-    best = max(candidate_fits)
-    return {"best": best, "floor": min(min(candidate_fits), best - FIT_MIN_SPREAD)}
 
 
 def bot_spec_to_json(s: BotSpec) -> dict[str, Any]:
@@ -102,6 +95,7 @@ def draft_view(
     values: dict[str, dict[str, float]],
     punt_mode: str = "auto",
     lookahead: dict[str, Any] | None = None,
+    market_rank: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     profiles = [
         build_roster_profile([pool[i] for i in roster], values)
@@ -112,19 +106,23 @@ def draft_view(
     weights = punt_weights(set(user_punts))
     scores = {pid: score_player(z, weights) for pid, z in values.items()}
     drafted = drafted_set(state)
-    fit_w = fit_weights(
+    fit_w, swing = fit_shape(
         profiles, state.config.user_slot, set(user_punts), state.config.roster_size
     )
     fit = {
         pid: fit_score(z, fit_w) for pid, z in values.items() if pid not in drafted
     }
-    # Candidates: the players in range at the user's upcoming pick (see
-    # analysis/window.py), best Fit first. Everyone else is a later-round target.
-    market = {pid: score_player(z, MARKET_WEIGHTS) for pid, z in values.items()}
-    candidates = sorted(draft_window(state, pool, market), key=lambda pid: -fit[pid])
 
     n = state.config.num_teams
     pick_index = len(state.picks)
+    # Who Fit actually recommends: the players the draft expects to go
+    # around this pick, ordered by Fit. The rest of `fit` is for browsing.
+    if market_rank is None:
+        market_rank = market_ranks(values)
+    candidates = rank_candidates(
+        candidate_window(list(fit), values, pick_index + 1, n, market_rank), values, fit_w
+    )
+    user_ranks = {c: ranks[c][state.config.user_slot] for c in CATEGORIES}
     return {
         "id": draft_id,
         "status": state.status,
@@ -148,14 +146,21 @@ def draft_view(
         "scores": scores,
         "fit": fit,
         "fitWeights": fit_w,
-        "neededCategories": [
-            c for c in needed_categories(fit_w) if c not in user_punts
-        ],
-        # How Fit treats each category: "lean" / "even" / "behind" / "ahead" / "punt".
-        "stances": category_stances(fit_w, profiles, state.config.user_slot, set(user_punts)),
+        # Fit's focus: the categories still up for grabs, which it counts most...
+        "neededCategories": needed_categories(swing),
+        # ...and the ones it counts least, split by why: locked up or out of reach.
+        "settledCategories": {
+            "ahead": [c for c in settled_categories(swing) if user_ranks[c] <= n // 2],
+            "behind": [c for c in settled_categories(swing) if user_ranks[c] > n // 2],
+        },
+        # The players Fit recommends at this pick, best Fit first: market rank
+        # within the window of the current pick (see analysis/fit.py).
         "candidates": candidates,
-        "window": window_info(state),
-        "fitScale": fit_scale([fit[pid] for pid in candidates]),
+        "fitWindow": {
+            "pick": pick_index + 1,
+            "maxRank": window_max_rank(pick_index + 1, n),
+            "size": len(candidates),
+        },
         "profiles": [profile_to_json(p) for p in profiles],
         "ranks": ranks,
         "records": records(ranks),

@@ -1,8 +1,7 @@
 import { useSession, userPickCount } from "./state/useSession";
 import { SetupScreen } from "./components/SetupScreen";
 import { DraftHeader, PickTicker } from "./components/DraftHeader";
-import { FirstPickScreen } from "./components/FirstPickScreen";
-import { SecondPickScreen } from "./components/SecondPickScreen";
+import { BuildScreen } from "./components/BuildScreen";
 import { DraftRoom } from "./components/DraftRoom";
 import { DraftReport } from "./components/DraftReport";
 import { TeamsScreen } from "./components/TeamsScreen";
@@ -66,26 +65,13 @@ export default function App() {
         onRewind={actions.rewind}
       />
     );
-  } else if (buildTurn === 0) {
+  } else if (buildTurn === 0 || buildTurn === 1) {
     body = (
-      <FirstPickScreen
+      <BuildScreen
         key={view.pickIndex}
         view={view}
         playerMap={playerMap}
-        options={ready?.stage === "first" ? ready.options : null}
-        onDraft={actions.draftWithPunt}
-        onBrowse={() => actions.setBrowseAll(true)}
-      />
-    );
-  } else if (buildTurn === 1) {
-    body = (
-      <SecondPickScreen
-        key={view.pickIndex}
-        view={view}
-        playerMap={playerMap}
-        options={ready?.stage === "second" ? ready.options : null}
-        consensus={ready?.stage === "second" ? ready.consensus : null}
-        tested={ready?.stage === "second" ? ready.tested : 0}
+        result={ready?.stage === (buildTurn === 0 ? "first" : "second") ? ready : null}
         onDraft={actions.draftWithPunt}
         onBrowse={() => actions.setBrowseAll(true)}
       />

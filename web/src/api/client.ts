@@ -85,12 +85,13 @@ export interface DraftView {
   draftedIds: string[];
   scores: Record<string, number>; // player id → score under user's punts
   fit: Record<string, number>; // available player id → Fit for the user's team
-  fitWeights: Record<Category, number>; // how much a unit of each category moves the user's expected record (mean 1; punts 0)
-  neededCategories: Category[]; // categories Fit leans toward (weight ≥ 1.1)
-  stances: Record<Category, CategoryStance>; // how Fit treats each category right now
-  candidates: string[]; // players in range at the user's upcoming pick, best Fit first — the recommendations
-  window: DraftWindow; // what "in range" covers at this pick
-  fitScale: FitScale; // the 0–10 scale: best candidate = 10, last candidate = 0
+  fitWeights: Record<Category, number>;
+  neededCategories: Category[]; // categories Fit counts most: still up for grabs
+  settledCategories: { ahead: Category[]; behind: Category[] }; // counted least: locked up / out of reach
+  // The players Fit recommends at this pick, best Fit first: the ones the draft
+  // expects to go around here (market rank within the window). Others are browsable, not recommended.
+  candidates: string[];
+  fitWindow: { pick: number; maxRank: number; size: number };
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
   records: TeamRecord[];
@@ -99,26 +100,6 @@ export interface DraftView {
   puntPlan: PuntPlan;
   nextUserPick: number | null; // overall pick number of the user's next turn (on the user's turn)
   gone: Record<string, number>; // player id → share of look-ahead runs in which he's drafted before then
-}
-
-/**
- * How Fit treats a category: "lean" (a pick moves the record most here), "even",
- * "behind" (too far back to chase — not boosted), "ahead" (already owned — not
- * bought again), "punt" (zeroed).
- */
-export type CategoryStance = "lean" | "even" | "behind" | "ahead" | "punt";
-
-/** The draft window: the top of the board that is in range at the user's upcoming pick. */
-export interface DraftWindow {
-  size: number | null; // how many of the available board's top players are candidates
-  pick: number | null; // the user's upcoming pick number
-  nextPick: number | null; // the one after (null on the last turn: everyone left is in range)
-  reach: number | null; // spots of reach beyond the picks until nextPick
-}
-
-export interface FitScale {
-  best: number; // raw Fit that maps to 10
-  floor: number; // raw Fit that maps to 0
 }
 
 export interface TeamRecord {
@@ -138,29 +119,30 @@ export interface PairingReason {
   marketRank: number | null; // his rank among available players by market value
 }
 
-export interface FirstPickOption {
+/** One candidate at this pick, evaluated by simulation under his best plan. */
+export interface BuildOption {
   playerId: string;
-  punt: Category | null; // null: best with no punt plan
+  punt: Category | null; // null: no punt
+  keepsPunt: boolean; // same plan as the current punt (always true for "no punt" with no punt set)
   wins: number; // expected matchup wins of 11, averaged over runs
   runs: number;
   winsRange: [number, number] | null; // min/max over the runs
-  noPlanWins: number | null;
-  finishRanks: number[] | null;
-  nextOptions: string[];
+  tier: number; // 1 = within tieWins of the best option; the sims can't separate a tier
+  gone: number | null; // share of look-ahead runs in which he's drafted before your next turn
+  finishRanks: number[] | null; // the roster's final category ranks in the draft's own seed
+  nextOptions: string[]; // likely picks at your next turn if you take him
   why: PairingReason;
 }
 
-export interface SecondPickOption {
+/** The best player under each plan — the builds you could choose instead. */
+export interface BuildAlternative {
+  punt: Category | null;
   playerId: string;
-  punt: Category | null; // null: no punt
-  keepsPunt: boolean;
   wins: number;
   runs: number;
   winsRange: [number, number] | null;
-  ranksAfter: number[] | null;
-  nextOptions: string[];
-  why: PairingReason;
-  wait: { runs: number; stillThere: number; pick: number | null }; // if you pass on him now
+  behind: number; // wins given up against the best option overall
+  keepsPunt: boolean;
 }
 
 /** The market's pick at this spot and what it would expect to win — a yardstick for the options. */
@@ -171,6 +153,18 @@ export interface ConsensusPick {
   runs: number;
 }
 
+export interface BuildOptions {
+  stage: "first" | "second";
+  pick: number; // the current pick number
+  nextPick: number | null; // your next turn
+  tieWins: number; // options within this many wins are a toss-up
+  tested: number; // players evaluated (everyone in range at this pick)
+  window: number;
+  consensus: ConsensusPick | null;
+  options: BuildOption[]; // one per player, best first
+  builds: BuildAlternative[];
+}
+
 /** What the roster says to punt right now, and why. */
 export interface PuntPlan {
   punts: Category[];
@@ -179,10 +173,7 @@ export interface PuntPlan {
   reason: string;
 }
 
-export type Suggestions =
-  | { stage: "first"; options: FirstPickOption[] }
-  | { stage: "second"; options: SecondPickOption[]; consensus: ConsensusPick | null; tested: number }
-  | { stage: null; options: [] };
+export type Suggestions = BuildOptions | { stage: null; options: [] };
 
 export interface DraftSummary {
   id: string;
