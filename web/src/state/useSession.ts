@@ -18,6 +18,38 @@ export const SPEED_MS: Record<Speed, number> = {
 };
 
 const LAST_DRAFT_KEY = "fantasy-draft-lab/lastDraftId";
+const BOARD_PREFS_KEY = "fantasy-draft-lab/boardPrefs";
+/** How long the panel stays on the player you just drafted before moving on. */
+export const JUST_DRAFTED_MS = 2500;
+
+/** The draft-room table's controls. Kept here, not in the table, so they
+ *  survive the build screens and the Teams view between your picks. */
+export interface BoardPrefs {
+  mode: "fit" | "numbers";
+  sortBy: "fit" | "value";
+  query: string;
+  pos: string;
+  limit: number;
+  detailOpen: boolean; // the panel's per-category section
+}
+export const DEFAULT_BOARD_PREFS: BoardPrefs = {
+  mode: "fit",
+  sortBy: "fit",
+  query: "",
+  pos: "All",
+  limit: 50,
+  detailOpen: false,
+};
+
+function loadBoardPrefs(draftId: string | null): BoardPrefs {
+  if (!draftId) return DEFAULT_BOARD_PREFS;
+  try {
+    const raw = localStorage.getItem(`${BOARD_PREFS_KEY}/${draftId}`);
+    return raw ? { ...DEFAULT_BOARD_PREFS, ...JSON.parse(raw) } : DEFAULT_BOARD_PREFS;
+  } catch {
+    return DEFAULT_BOARD_PREFS;
+  }
+}
 
 export interface SessionState {
   phase: "setup" | "draft";
@@ -30,6 +62,12 @@ export interface SessionState {
   suggestionsKey: string | null;
   browseAll: boolean; // skip the first/second-pick screens for this turn
   screen: Screen; // draft room vs. all-teams view
+  boardPrefs: BoardPrefs;
+  /** Pick index at which your turn arrived while you were watching — the
+   *  room announces it once; null after a resume or on bot turns. */
+  turnArrivedAt: number | null;
+  /** The player you just drafted: the panel stays on him briefly. */
+  justDrafted: { playerId: string; pickIndex: number } | null;
   savedDrafts: DraftSummary[];
   runs: RunSummary[];
   viewingRun: DraftView | null;
@@ -58,6 +96,9 @@ export function useSession() {
     suggestionsKey: null,
     browseAll: false,
     screen: "draft",
+    boardPrefs: DEFAULT_BOARD_PREFS,
+    turnArrivedAt: null,
+    justDrafted: null,
     savedDrafts: [],
     runs: [],
     viewingRun: null,
@@ -110,7 +151,8 @@ export function useSession() {
     }, SPEED_MS[state.speed]);
     return () => clearTimeout(timer);
     function set0(v: DraftView) {
-      set({ view: v });
+      // The clock just came to you: the room announces it (once per turn).
+      set(v.isUserTurn ? { view: v, turnArrivedAt: v.pickIndex } : { view: v });
     }
   }, [view, state.speed, set, fail]);
 
@@ -136,8 +178,26 @@ export function useSession() {
   }, [suggestionsKey]);
 
   const inspect = useCallback(
-    (playerId: string | null) => set({ inspectedId: playerId }),
+    (playerId: string | null) => set({ inspectedId: playerId, justDrafted: null }),
     [set],
+  );
+
+  const dismissJustDrafted = useCallback(() => set({ justDrafted: null }), [set]);
+
+  const setBoardPrefs = useCallback(
+    (patch: Partial<BoardPrefs>) =>
+      setState((s) => {
+        const boardPrefs = { ...s.boardPrefs, ...patch };
+        if (s.view?.id) {
+          try {
+            localStorage.setItem(`${BOARD_PREFS_KEY}/${s.view.id}`, JSON.stringify(boardPrefs));
+          } catch {
+            /* storage unavailable: prefs still live for the session */
+          }
+        }
+        return { ...s, boardPrefs };
+      }),
+    [],
   );
 
   const enterDraft = useCallback(
@@ -150,6 +210,9 @@ export function useSession() {
         viewingRun: null,
         browseAll: false,
         screen: "draft",
+        boardPrefs: loadBoardPrefs(v.id),
+        turnArrivedAt: null,
+        justDrafted: null,
       });
     },
     [set],
@@ -173,9 +236,17 @@ export function useSession() {
     (playerId: string) => {
       const v = state.view;
       if (!v?.id) return;
+      const pickIndex = v.pickIndex;
       api
         .pick(v.id, playerId)
-        .then((nv) => set({ view: nv, inspectedId: null, browseAll: false }))
+        .then((nv) =>
+          set({
+            view: nv,
+            inspectedId: null,
+            browseAll: false,
+            justDrafted: { playerId, pickIndex },
+          }),
+        )
         .catch(fail);
     },
     [state.view, set, fail],
@@ -188,10 +259,18 @@ export function useSession() {
       const v = state.view;
       if (!v?.id) return;
       const id = v.id;
+      const pickIndex = v.pickIndex;
       api
         .setPunts(id, punt ? [punt] : [], "auto")
         .then(() => api.pick(id, playerId))
-        .then((nv) => set({ view: nv, inspectedId: null, browseAll: false }))
+        .then((nv) =>
+          set({
+            view: nv,
+            inspectedId: null,
+            browseAll: false,
+            justDrafted: { playerId, pickIndex },
+          }),
+        )
         .catch(fail);
     },
     [state.view, set, fail],
@@ -245,7 +324,14 @@ export function useSession() {
       api
         .rewind(v.id, pickIndex)
         .then((nv) => {
-          set({ view: nv, inspectedId: null, viewingRun: null, viewingRunId: null });
+          set({
+            view: nv,
+            inspectedId: null,
+            viewingRun: null,
+            viewingRunId: null,
+            turnArrivedAt: null,
+            justDrafted: null,
+          });
           api.listRuns().then((r) => set({ runs: r })).catch(() => {});
         })
         .catch(fail);
@@ -267,8 +353,40 @@ export function useSession() {
     [set, fail],
   );
 
+  /** Open a saved run straight from setup. Runs are snapshots of finished
+   *  drafts with no draft id, so the report shows them read-only. */
+  const openRun = useCallback(
+    (runId: string) => {
+      api
+        .getRun(runId)
+        .then((v) =>
+          set({
+            view: v,
+            phase: "draft",
+            viewingRun: v,
+            viewingRunId: runId,
+            inspectedId: null,
+            browseAll: false,
+            screen: "draft",
+            turnArrivedAt: null,
+            justDrafted: null,
+          }),
+        )
+        .catch(fail);
+    },
+    [set, fail],
+  );
+
   const reset = useCallback(() => {
-    set({ phase: "setup", view: null, inspectedId: null, viewingRun: null, screen: "draft" });
+    set({
+      phase: "setup",
+      view: null,
+      inspectedId: null,
+      viewingRun: null,
+      screen: "draft",
+      turnArrivedAt: null,
+      justDrafted: null,
+    });
     api.listDrafts().then((d) => set({ savedDrafts: d })).catch(() => {});
     api.listRuns().then((r) => set({ runs: r })).catch(() => {});
   }, [set]);
@@ -291,8 +409,11 @@ export function useSession() {
         setBrowseAll,
         setScreen,
         inspect,
+        dismissJustDrafted,
+        setBoardPrefs,
         rewind,
         viewRun,
+        openRun,
         reset,
         clearError,
       },
@@ -311,8 +432,11 @@ export function useSession() {
       setBrowseAll,
       setScreen,
       inspect,
+      dismissJustDrafted,
+      setBoardPrefs,
       rewind,
       viewRun,
+      openRun,
       reset,
       clearError,
     ],

@@ -3,13 +3,14 @@
  * Headless smoke test: drives the real UI via CDP against the dev server.
  * Requires the playwright chromium headless shell (already cached on this
  * machine) — not part of `npm test`; run manually:
- *   node scripts/smoke.mjs
+ *   node scripts/smoke.mjs            (SMOKE_CHROME=/path/to/chrome to override the binary)
  */
 import { spawn } from "node:child_process";
 
 const BIN =
+  process.env.SMOKE_CHROME ??
   process.env.HOME +
-  "/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell";
+    "/Library/Caches/ms-playwright/chromium_headless_shell-1194/chrome-mac/headless_shell";
 const PORT = 9333;
 const URL = process.env.SMOKE_URL ?? "http://localhost:5173";
 
@@ -54,6 +55,8 @@ const send = (method, params = {}) =>
   });
 await new Promise((r) => (ws.onopen = r));
 await send("Runtime.enable");
+// A laptop-sized window: the build screens and the room are laid out as one fixed screen there.
+await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
 await send("Page.enable");
 
 const evalJs = async (expression) => {
@@ -113,21 +116,34 @@ await setSpeed("instant");
 
 // ---- 2. First pick: build options ----
 log("first-pick screen reached", await waitFor(() => bodyHas("Your first pick sets your build")));
-log("build options load", await waitFor(() => count(".build-row").then((n) => n > 0), 150));
-await evalJs(`document.querySelector('.build-more')?.click()`);
-log("every player in range is listed", await evalJs(`(() => { const t = document.body.innerText.match(/(\\d+) players tested/); const n = document.querySelectorAll('.build-row').length; return !!t && Number(t[1]) === n && n >= 10; })()`));
-await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
+log("build options load", await waitFor(() => count(".build-card").then((n) => n > 0), 150));
+log("every player in range is listed", await evalJs(`(() => { const t = document.body.innerText.match(/(\\d+) players tested/); const n = document.querySelectorAll('.build-card, .build-row').length; return !!t && Number(t[1]) === n && n >= 10; })()`));
+log("build screen fits one screen", await evalJs(`document.documentElement.scrollHeight <= innerHeight + 1`));
+log("feed says it's your turn", await evalJs(`!!document.querySelector('.feed.yours')`));
+await evalJs(`document.querySelector('.build-detail .btn.primary')?.click()`);
+log("panel stays on your pick", await waitFor(() => evalJs(`!!document.querySelector('.player-panel .panel-state.yours')`), 20, 100));
+log("room is watching", await evalJs(`!!document.querySelector('.feed.watching') && !document.querySelector('.player-panel .btn.primary')`));
 
 // ---- 3. Second pick: finish the build ----
 log("second-pick screen reached", await waitFor(() => bodyHas("Finish your build")));
-log("second-pick options load", await waitFor(() => count(".build-row").then((n) => n > 0), 150));
-await evalJs(`document.querySelector('.action-bar .btn.primary')?.click()`);
+log("second-pick options load", await waitFor(() => count(".build-card").then((n) => n > 0), 150));
+await evalJs(`document.querySelector('.build-detail .btn.primary')?.click()`);
 
 // ---- 4. Draft room ----
 log("draft room renders", await waitFor(() => bodyHas("Available players")));
 log("build banner shows punt", await bodyHas("Your build"));
 await waitFor(() => bodyHas("Draft ") && evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
 log("roster has 2 players", (await myRoster()) === 2);
+// Table state survives the bot run and the board holds while they pick.
+await evalJs(`document.querySelector('[aria-label="Sort by Value"]')?.click()`);
+await evalJs(`document.querySelector('.player-panel .btn.primary')?.click()`);
+await sleep(120);
+log("taken rows stay in place during the bot run", await evalJs(`document.querySelectorAll('.fit-table tr.taken').length > 0`));
+log("board held while bots pick", await bodyHas("Board held"));
+await waitFor(() => evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
+log("sort survives the bot run", await evalJs(`document.querySelector('.sort-btn.on')?.innerText.trim() === 'Value'`));
+log("taken rows settle on your turn", await evalJs(`document.querySelectorAll('.fit-table tr.taken').length === 0`));
+await evalJs(`document.querySelector('[aria-label="Sort by Fit"]')?.click()`);
 
 // ---- 5. Autosave + resume after reload ----
 await sleep(500);
@@ -136,7 +152,7 @@ await sleep(1800);
 log("resume offered after reload", await bodyHas("Pick up where you left off"));
 await clickText("Resume draft");
 await waitFor(() => bodyHas("Available players"));
-log("roster restored", (await myRoster()) === 2);
+log("roster restored", (await myRoster()) === 3);
 
 // ---- 6. Pause/resume ----
 await clickText("Pause");
@@ -159,7 +175,7 @@ for (let i = 0; i < 16; i++) {
   await sleep(300);
 }
 await sleep(1200);
-log("remaining 11 user picks made", drafted >= 11);
+log("remaining 10 user picks made", drafted >= 10);
 log("draft completes", await bodyHas("Draft complete"));
 log("record shown", await evalJs(`!!document.querySelector('.record')`));
 log("league table shown", await bodyHas("League table"));

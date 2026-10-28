@@ -2,12 +2,13 @@ import { Fragment, useState } from "react";
 import {
   CATEGORIES,
   type ApiPlayer,
+  type BuildAlternative,
   type BuildOption,
   type BuildOptions,
   type Category,
   type DraftView,
 } from "../api/client";
-import { andList, ordinal, teamName } from "../state/teams";
+import { andList, ordinal } from "../state/teams";
 import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip, Stars, initials, valueTier } from "./common";
 
 
@@ -23,11 +24,6 @@ interface Props {
 const GONE_THRESHOLD = 0.5;
 const GONE_SURE = 0.75;
 const WAIT_SURE = 0.25;
-/** Rows shown before the rest of the range folds behind a toggle (the top tier is never cut). */
-const VISIBLE_ROWS = 10;
-/** Build alternatives further behind the best option than this aren't worth a row. */
-const BUILD_WITHIN = 1.0;
-const TIER_LABELS = ["Toss-up for the top spot", "A step behind", "Further back"];
 /** A top tier wider than this isn't a shortlist; the headline says the sims can't separate it. */
 const WIDE_TIE = 6;
 
@@ -40,105 +36,159 @@ function buildLabel(punt: Category | null, keeps: boolean, current: Category | n
   return keeps ? `Keeps punt ${punt}` : current ? `Switch to punt ${punt}` : `Punt ${punt}`;
 }
 
+/** Cards across the top: the best few options, the rest go in the list below. */
+const CARDS = 4;
+
+/** A filter key per build: "none" for no punt. */
+type BuildKey = string;
+const keyOf = (punt: Category | null): BuildKey => punt ?? "none";
+
+/**
+ * One way to make this pick: a player under a build. Usually his best build
+ * (`option` as the sims returned it); under a build filter it can be his
+ * best player-for-that-build alternative, with that build's wins.
+ */
+interface Entry {
+  option: BuildOption; // what drafting him this way would be
+  best: BuildOption; // his best build, as listed
+  isAlt: boolean;
+}
+
+function altOption(b: BuildAlternative, own: BuildOption): BuildOption {
+  return { ...own, punt: b.punt, keepsPunt: b.keepsPunt, wins: b.wins, runs: b.runs, winsRange: b.winsRange, finishRanks: null };
+}
+
+/** The entries under a build filter: players whose best build it is, plus the best player for it when his best is something else. */
+function entriesFor(result: BuildOptions, filter: BuildKey | "all"): Entry[] {
+  const own = new Map(result.options.map((o) => [o.playerId, o]));
+  if (filter === "all") return result.options.map((o) => ({ option: o, best: o, isAlt: false }));
+  const entries: Entry[] = result.options
+    .filter((o) => keyOf(o.punt) === filter)
+    .map((o) => ({ option: o, best: o, isAlt: false }));
+  for (const b of result.builds) {
+    const o = own.get(b.playerId);
+    if (keyOf(b.punt) !== filter || !o || keyOf(o.punt) === filter) continue;
+    entries.push({ option: altOption(b, o), best: o, isAlt: true });
+  }
+  return entries.sort((a, b) => b.option.wins - a.option.wins);
+}
+
 export function BuildScreen({ view, playerMap, result, onDraft, onBrowse }: Props) {
-  const [selId, setSelId] = useState<string | null>(null);
+  const [sel, setSel] = useState<{ id: string; punt: Category | null } | null>(null);
+  const [filter, setFilter] = useState<BuildKey | "all">("all");
   const slot = view.userSlot;
   const first = view.picks.find((p) => p.teamId === slot) ?? null;
   const firstPlayer = first ? playerMap.get(first.playerId)! : null;
   const stage = firstPlayer ? "second" : "first";
   const current = view.userPunts[0] ?? null;
   const punts = new Set<Category>(view.userPunts);
-  const since = first ? view.picks.filter((p) => p.index > first.index) : view.picks;
 
   const options = result?.options ?? null;
-  const chosen = options
-    ? (selId && options.find((o) => o.playerId === selId)) || options[0]
-    : null;
+  const entries = result ? entriesFor(result, filter) : [];
+  const chosen: BuildOption | null = (() => {
+    if (!result || !options?.length) return null;
+    if (sel) {
+      const o = options.find((x) => x.playerId === sel.id);
+      if (o && o.punt === sel.punt) return o;
+      const b = result.builds.find((x) => x.playerId === sel.id && x.punt === sel.punt);
+      if (o && b) return altOption(b, o);
+    }
+    return entries[0]?.option ?? options[0];
+  })();
   const chosenPlayer = chosen ? playerMap.get(chosen.playerId) : null;
+  const pick = (o: BuildOption) => setSel({ id: o.playerId, punt: o.punt });
 
   return (
-    <main className="screen">
-      {since.length > 0 && (
-        <div className="since" aria-label={first ? "Picks since your last turn" : "Already gone"}>
-          <span className="muted small">{first ? "Since your last pick" : "Already gone"}</span>
-          {since.map((p) => {
-            const pl = playerMap.get(p.playerId)!;
-            return (
-              <span key={p.index} className="gone-chip">
-                <Headshot player={pl} variant="mini" />
-                <span className="muted small">{teamName(view, p.teamId)}</span>
-                <strong>{pl.name}</strong>
-              </span>
-            );
-          })}
-        </div>
-      )}
-
-      <div className="stack-xs">
-        <h1 className="display-md">
-          {stage === "first" ? "Your first pick sets your build" : "Finish your build"}
-        </h1>
-        <p className="lede">
-          {result ? (
-            <Headline result={result} playerMap={playerMap} />
-          ) : stage === "first" ? (
-            "Every player in range at this pick is being tested: each one taken here, the rest of the draft played out against these bots, under no punt and the punts that suit him."
-          ) : (
-            "Every player in range at this pick is being tested next to your first pick, under the punts that suit the pair."
-          )}
-        </p>
-      </div>
-
-      {!result ? (
-        <div className="card loading-card" role="status">
-          <span className="spinner" aria-hidden="true" />
-          Simulating drafts for every player in range…
-        </div>
-      ) : !options || options.length === 0 ? (
-        <div className="card loading-card">
-          <span className="body-text">
-            Couldn't simulate builds for this spot — draft from the full board instead.
+    <main className="room build-room">
+      <div className="build-main">
+        <header className="build-head">
+          <span className="eyebrow-accent">
+            Pick #{view.pickIndex + 1} · Round {view.round} · Step {stage === "first" ? 1 : 2} of 2
+            {current && <span className="chip dark">Punt {current}</span>}
           </span>
-          <button className="btn primary" onClick={onBrowse}>
-            Browse all players
-          </button>
-        </div>
-      ) : (
-        <div className="build-layout">
-          <div className="stack">
+          <h1 className="build-title">{stage === "first" ? "Your first pick sets your build" : "Finish your build"}</h1>
+          <p className="build-headline">
+            {result ? (
+              <Headline result={result} playerMap={playerMap} />
+            ) : stage === "first" ? (
+              "Every player in range at this pick is being tested: each one taken here, the rest of the draft played out against these bots, under no punt and the punts that suit him."
+            ) : (
+              "Every player in range at this pick is being tested next to your first pick, under the punts that suit the pair."
+            )}
+          </p>
+        </header>
+        {!result ? (
+          <div className="card loading-card" role="status">
+            <span className="spinner" aria-hidden="true" />
+            Simulating drafts for every player in range…
+          </div>
+        ) : !options || options.length === 0 ? (
+          <div className="card loading-card">
+            <span className="body-text">
+              Couldn't simulate builds for this spot — draft from the full board instead.
+            </span>
+            <button className="btn primary" onClick={onBrowse}>
+              Browse all players
+            </button>
+          </div>
+        ) : (
+          <>
+            <TopCards
+              result={result}
+              playerMap={playerMap}
+              entries={entries}
+              current={current}
+              chosen={chosen}
+              onSelect={pick}
+            />
+            <BuildFilters result={result} filter={filter} current={current} onFilter={setFilter} />
             <OptionList
               result={result}
               playerMap={playerMap}
+              entries={entries}
               current={current}
-              chosenId={chosen?.playerId ?? null}
-              onSelect={setSelId}
+              chosen={chosen}
+              onSelect={pick}
             />
-            <Builds result={result} playerMap={playerMap} current={current} onSelect={setSelId} />
-            <p className="muted small">
+            <p className="muted small build-foot">
               {result.tested} players tested — everyone the draft expects to go around pick #{result.pick}.
               Looking for someone else?{" "}
               <button className="link-btn inline" onClick={onBrowse}>
                 Browse all players
               </button>
             </p>
-          </div>
-          <aside className="build-side">
-            <TeamSoFar view={view} firstPlayer={firstPlayer} punts={punts} result={result} />
-            {chosen && chosenPlayer && (
-              <OptionDetail
-                o={chosen}
-                p={chosenPlayer}
-                playerMap={playerMap}
-                firstPlayer={firstPlayer}
-                current={current}
-                result={result}
-                onDraft={() => onDraft(chosen.playerId, chosen.punt)}
-              />
-            )}
-            <RankLegend />
-          </aside>
-        </div>
-      )}
+          </>
+        )}
+      </div>
+      <aside className="build-side">
+        {chosen && chosenPlayer && result ? (
+          <OptionDetail
+            o={chosen}
+            p={chosenPlayer}
+            playerMap={playerMap}
+            firstPlayer={firstPlayer}
+            current={current}
+            result={result}
+            onDraft={() => onDraft(chosen.playerId, chosen.punt)}
+          />
+        ) : (
+          <section className="card build-detail skeleton" aria-hidden="true">
+            <div className="team-line">
+              <span className="skel avatar" />
+              <span className="stack-xs grow">
+                <span className="skel line w60" />
+                <span className="skel line w40" />
+              </span>
+            </div>
+            <span className="skel line w30 tall" />
+            <span className="skel line" />
+            <span className="skel line w80" />
+            <span className="skel block" />
+          </section>
+        )}
+        <TeamSoFar view={view} firstPlayer={firstPlayer} punts={punts} result={result} />
+        <RankLegend />
+      </aside>
     </main>
   );
 }
@@ -268,51 +318,192 @@ function goneLabel(gone: number | null, nextPick: number | null, backToBack: boo
   return <span className="chip" title={`Drafted before #${nextPick} in ${pct}% of look-ahead runs — a coin flip`}>{pct}% gone by #{nextPick}</span>;
 }
 
-function OptionList({
+/** Wins on a bar: the bar spans the tested range, so small gaps still show. */
+function winsScale(result: BuildOptions) {
+  const ws = result.options.map((o) => o.wins).concat(result.builds.map((b) => b.wins));
+  const hi = Math.max(...ws);
+  const lo = Math.min(...ws) - 0.3;
+  return (w: number) => `${Math.max(4, ((w - lo) / Math.max(hi - lo, 0.1)) * 100)}%`;
+}
+
+function TopCards({
   result,
   playerMap,
+  entries,
   current,
-  chosenId,
+  chosen,
   onSelect,
 }: {
   result: BuildOptions;
   playerMap: Map<string, ApiPlayer>;
+  entries: Entry[];
   current: Category | null;
-  chosenId: string | null;
-  onSelect: (id: string) => void;
+  chosen: BuildOption | null;
+  onSelect: (o: BuildOption) => void;
 }) {
-  const [showAll, setShowAll] = useState(false);
   const { options, nextPick, pick } = result;
   const backToBack = nextPick != null && nextPick === pick + 1;
-  const maxWins = Math.max(...options.map((o) => o.wins));
-  const cut = Math.max(VISIBLE_ROWS, options.filter((o) => o.tier === 1).length);
-  const hidden = options.slice(cut);
-  const collapsed = !showAll && hidden.length > 0 && !hidden.some((o) => o.playerId === chosenId);
-  const shown = collapsed ? options.slice(0, cut) : options;
+  const bar = winsScale(result);
+  const cards = options.slice(0, CARDS);
+  const topCount = options.filter((o) => o.tier === 1).length;
   return (
-    <div className="card build-list" role="radiogroup" aria-label="Players in range at this pick">
-      {shown.map((o, i) => {
+    <section className="build-cards-wrap" aria-label="Top options">
+      <div className="build-section-head">
+        <strong>{topCount > 1 ? "Toss-up for the top spot" : "The best tested here"}</strong>
+        <span className="muted small">
+          {topCount > CARDS
+            ? `the best ${CARDS} of ${topCount} within ${result.tieWins} wins of each other`
+            : topCount > 1
+              ? `within ${result.tieWins} wins of each other`
+              : "by expected wins"}
+        </span>
+      </div>
+      <div className="build-cards" role="radiogroup" aria-label="Top options at this pick">
+        {cards.map((best) => {
+          const p = playerMap.get(best.playerId)!;
+          // Under a build filter the card shows that build, or fades if he has none.
+          const entry = entries.find((e) => e.option.playerId === best.playerId);
+          const o = entry?.option ?? best;
+          const selected = chosen?.playerId === o.playerId && chosen.punt === o.punt;
+          const tier = valueTier(p.overallRank);
+          return (
+            <button
+              key={best.playerId}
+              role="radio"
+              aria-checked={selected}
+              className={["build-card", selected ? "selected" : "", entry ? "" : "dim"].join(" ").trim()}
+              onClick={() => onSelect(o)}
+            >
+              <span className="build-card-photo">
+                <Headshot player={p} variant="tile" />
+                {p.overallRank != null && <span className="photo-tag">#{p.overallRank} overall</span>}
+                {selected && (
+                  <span className="photo-check" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12l5 5 9-10" /></svg>
+                  </span>
+                )}
+              </span>
+              <span className="build-card-body">
+                <span className="build-card-id">
+                  <strong className="clamp" title={p.name}>{p.name}</strong>
+                  <span className="muted small clamp">
+                    <PlayerMeta player={p} /> · <Stars count={tier.stars} />
+                  </span>
+                </span>
+                <span className="build-card-wins">
+                  <strong>{o.wins.toFixed(1)}</strong>
+                  <span className="muted small">wins of 11</span>
+                </span>
+                <span className="meter dark"><span style={{ width: bar(o.wins) }} /></span>
+                <span className="build-card-chips">
+                  <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+                  {goneLabel(o.gone, nextPick, backToBack)}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/** One chip per build the sims tried, with how many tested players suit it. */
+function BuildFilters({
+  result,
+  filter,
+  current,
+  onFilter,
+}: {
+  result: BuildOptions;
+  filter: BuildKey | "all";
+  current: Category | null;
+  onFilter: (f: BuildKey | "all") => void;
+}) {
+  const builds: { key: BuildKey; punt: Category | null }[] = [];
+  for (const punt of [...result.options.map((o) => o.punt), ...result.builds.map((b) => b.punt)]) {
+    if (!builds.some((b) => b.key === keyOf(punt))) builds.push({ key: keyOf(punt), punt });
+  }
+  // No punt first, then the punts in category order.
+  builds.sort((a, b) => (a.punt === null ? -1 : b.punt === null ? 1 : CATEGORIES.indexOf(a.punt) - CATEGORIES.indexOf(b.punt)));
+  if (builds.length < 2) return null;
+  const chip = (key: BuildKey | "all", label: string, count: number, title?: string) => (
+    <button
+      key={key}
+      className={filter === key ? "filter-chip on" : "filter-chip"}
+      aria-pressed={filter === key}
+      title={title}
+      onClick={() => onFilter(key)}
+    >
+      {label}
+      <span className="filter-count">{count}</span>
+    </button>
+  );
+  return (
+    <div className="build-filters" role="group" aria-label="Filter by build">
+      <span className="build-filters-label">Build</span>
+      {chip("all", "All", result.options.length)}
+      {builds.map((b) => {
+        const es = entriesFor(result, b.key);
+        const top = es[0]?.option.wins;
+        return chip(
+          b.key,
+          buildLabel(b.punt, b.punt === current, current),
+          es.length,
+          top != null ? `Best under this build: ${top.toFixed(1)} wins` : undefined,
+        );
+      })}
+    </div>
+  );
+}
+
+const LIST_TIER_LABELS = ["Also a toss-up", "A step behind", "Further back"];
+
+function OptionList({
+  result,
+  playerMap,
+  entries,
+  current,
+  chosen,
+  onSelect,
+}: {
+  result: BuildOptions;
+  playerMap: Map<string, ApiPlayer>;
+  entries: Entry[];
+  current: Category | null;
+  chosen: BuildOption | null;
+  onSelect: (o: BuildOption) => void;
+}) {
+  const { nextPick, pick } = result;
+  const backToBack = nextPick != null && nextPick === pick + 1;
+  const bar = winsScale(result);
+  const carded = new Set(result.options.slice(0, CARDS).map((o) => o.playerId));
+  const rows = entries.filter((e) => !carded.has(e.option.playerId));
+  return (
+    <div className="card build-list" role="radiogroup" aria-label="Other players in range at this pick">
+      {rows.length === 0 && (
+        <p className="build-empty muted">No other tested player suits this build at #{pick}.</p>
+      )}
+      {rows.map(({ option: o, best, isAlt }, i) => {
         const p = playerMap.get(o.playerId)!;
-        const tierStart = i === 0 || shown[i - 1].tier !== o.tier;
-        const selected = o.playerId === chosenId;
+        const t = Math.min(best.tier, 3);
+        const tierStart = i === 0 || Math.min(rows[i - 1].best.tier, 3) !== t;
+        const selected = chosen?.playerId === o.playerId && chosen.punt === o.punt;
         const tier = valueTier(p.overallRank);
         return (
-          <Fragment key={o.playerId}>
+          <Fragment key={`${o.playerId}|${keyOf(o.punt)}`}>
             {tierStart && (
-              <div className={`build-tier t${Math.min(o.tier, 3)}`} aria-hidden="true">
-                {TIER_LABELS[Math.min(o.tier, 3) - 1]}
-                {o.tier === 1 && options.filter((x) => x.tier === 1).length > 1
-                  ? ` · within ${result.tieWins} wins of each other`
-                  : ""}
+              <div className={`build-tier t${t}`} aria-hidden="true">
+                {LIST_TIER_LABELS[t - 1]}
               </div>
             )}
             <div
               role="radio"
               aria-checked={selected}
               tabIndex={0}
-              className={["build-row", selected ? "selected" : "", o.tier === 1 ? "top" : ""].join(" ").trim()}
-              onClick={() => onSelect(o.playerId)}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(o.playerId); } }}
+              className={["build-row", selected ? "selected" : ""].join(" ").trim()}
+              onClick={() => onSelect(o)}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(o); } }}
             >
               <Headshot player={p} variant="avatar" />
               <span className="build-name">
@@ -324,11 +515,14 @@ function OptionList({
                   {p.overallRank != null && ` #${p.overallRank}`}
                 </span>
               </span>
-              <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+              <span className="build-plan">
+                <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+                {isAlt && (
+                  <span className="muted small">best: {buildLabel(best.punt, best.keepsPunt, current)} {best.wins.toFixed(1)}</span>
+                )}
+              </span>
               <span className="build-wins">
-                <span className="meter">
-                  <span style={{ width: `${(o.wins / Math.max(maxWins, 1)) * 100}%` }} />
-                </span>
+                <span className="meter dark"><span style={{ width: bar(o.wins) }} /></span>
                 <strong>{o.wins.toFixed(1)}</strong>
                 <span className="muted small">
                   {o.winsRange ? `${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)}` : ""}
@@ -339,13 +533,6 @@ function OptionList({
           </Fragment>
         );
       })}
-      {hidden.length > 0 && (
-        <button className="build-more" onClick={() => setShowAll(!collapsed ? false : true)}>
-          {collapsed
-            ? `Show the ${hidden.length} other player${hidden.length > 1 ? "s" : ""} in range`
-            : "Show fewer"}
-        </button>
-      )}
     </div>
   );
 }
@@ -370,13 +557,15 @@ function OptionDetail({
   const punts = new Set<Category>(o.punt ? [o.punt] : []);
   const nextPick = result.nextPick;
   const backToBack = nextPick != null && nextPick === result.pick + 1;
-  const rank = result.options.indexOf(o) + 1;
+  const listed = result.options.find((x) => x.playerId === o.playerId);
+  const isAlt = !!listed && listed.punt !== o.punt;
+  const rank = listed ? result.options.indexOf(listed) + 1 : 0;
   return (
     <section className="card build-detail">
       <div className="team-line">
         <Headshot player={p} variant="avatar" />
         <span className="stack-xs grow">
-          <strong className="title">{p.name}</strong>
+          <strong className="title clamp" title={p.name}>{p.name}</strong>
           <span className="muted small"><PlayerMeta player={p} /></span>
         </span>
         <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
@@ -385,7 +574,9 @@ function OptionDetail({
         <strong className="title-lg">{o.wins.toFixed(1)}</strong>
         <span className="muted small">
           wins of 11{o.winsRange ? ` · ${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)} across ${o.runs} test drafts` : ""}
-          {" · "}{ordinal(rank)} of {result.tested}{o.tier === 1 ? ", in the top tier" : ""}
+          {isAlt
+            ? ` · his best build is ${buildLabel(listed!.punt, listed!.keepsPunt, current).toLowerCase()} (${listed!.wins.toFixed(1)})`
+            : ` · ${ordinal(rank)} of ${result.tested}${o.tier === 1 ? ", in the top tier" : ""}`}
         </span>
       </div>
       <PairingNotes why={o.why} anchor={firstPlayer?.name ?? null} punt={o.punt} />
@@ -431,50 +622,5 @@ function OptionDetail({
         Draft {lastName(p)}
       </button>
     </section>
-  );
-}
-
-/** The best player under each other plan, when a build is a real alternative. */
-function Builds({
-  result,
-  playerMap,
-  current,
-  onSelect,
-}: {
-  result: BuildOptions;
-  playerMap: Map<string, ApiPlayer>;
-  current: Category | null;
-  onSelect: (id: string) => void;
-}) {
-  const best = result.options[0];
-  const alts = result.builds.filter(
-    (b) => b.punt !== best.punt && b.behind <= BUILD_WITHIN,
-  );
-  if (alts.length === 0) return null;
-  return (
-    <div className="card build-alts">
-      <div className="stack-xs">
-        <strong>Other builds</strong>
-        <span className="muted small">
-          The best player under each plan, and what the plan gives up against the top option.
-        </span>
-      </div>
-      {alts.map((b) => {
-        const p = playerMap.get(b.playerId)!;
-        const own = result.options.find((o) => o.playerId === b.playerId);
-        return (
-          <button key={String(b.punt)} className="build-alt" onClick={() => onSelect(b.playerId)}>
-            <span className={b.punt ? "chip dark" : "chip"}>{buildLabel(b.punt, b.keepsPunt, current)}</span>
-            <Headshot player={p} variant="mini" />
-            <strong>{p.name}</strong>
-            <span className="muted small">
-              {b.wins.toFixed(1)} wins
-              {b.behind > 0.05 ? ` · ${b.behind.toFixed(1)} behind` : " · even with the top option"}
-              {own && own.punt !== b.punt ? ` · ${ordinal(result.options.indexOf(own) + 1)} on the list under his best plan` : ""}
-            </span>
-          </button>
-        );
-      })}
-    </div>
   );
 }

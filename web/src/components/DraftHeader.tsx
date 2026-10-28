@@ -1,12 +1,14 @@
+import { useEffect, useRef } from "react";
 import type { ApiPlayer, DraftView } from "../api/client";
 import type { Screen, Speed } from "../state/useSession";
-import { snakeTeam, teamName } from "../state/teams";
-import { Logo } from "./common";
+import { lastUserPick, nextUserPickIndex, snakeTeam, teamName } from "../state/teams";
+import { Headshot, Logo } from "./common";
 
 interface Props {
   view: DraftView;
   speed: Speed;
   screen: Screen;
+  turnArrivedAt: number | null; // pick index your turn arrived at while watching
   onNavigate: (s: Screen) => void;
   onPause: () => void;
   onResume: () => void;
@@ -14,9 +16,11 @@ interface Props {
   onExit: () => void;
 }
 
-export function DraftHeader({ view, speed, screen, onNavigate, onPause, onResume, onSpeed, onExit }: Props) {
+export function DraftHeader({ view, speed, screen, turnArrivedAt, onNavigate, onPause, onResume, onSpeed, onExit }: Props) {
   const pct = (view.pickIndex / view.totalPicks) * 100;
   const yours = view.onClock === view.userSlot;
+  // One ring pulse when the clock comes to you — keyed on the pick so it runs once.
+  const arrived = yours && turnArrivedAt === view.pickIndex;
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -60,7 +64,8 @@ export function DraftHeader({ view, speed, screen, onNavigate, onPause, onResume
         </div>
         {!view.complete && (
           <button
-            className={yours ? "clock-pill yours" : "clock-pill"}
+            key={arrived ? `arrived-${view.pickIndex}` : "clock"}
+            className={["clock-pill", yours ? "yours" : "", arrived ? "arrived" : ""].join(" ").trim()}
             title="Go to the draft room"
             onClick={() => onNavigate("draft")}
           >
@@ -99,39 +104,101 @@ export function DraftHeader({ view, speed, screen, onNavigate, onPause, onResume
   );
 }
 
-/** Last few picks, who's on the clock, and who's next. */
-export function PickTicker({
+/**
+ * The pick feed: the room's running story. Every pick since your last turn
+ * (newest on the right), who's on the clock, who's next — and a status cell
+ * that is the room's state: watching, paused, or you're up. Shared by the
+ * build screens and the draft room, so it carries across the handoff.
+ */
+export function PickFeed({
   view,
   playerMap,
+  turnArrivedAt,
 }: {
   view: DraftView;
   playerMap: Map<string, ApiPlayer>;
+  turnArrivedAt: number | null;
 }) {
+  const scroller = useRef<HTMLDivElement>(null);
+  // Keep the newest pick in view as the feed grows.
+  useEffect(() => {
+    const el = scroller.current;
+    if (el) el.scrollLeft = el.scrollWidth;
+  }, [view.pickIndex]);
+
   if (view.complete) return null;
-  const recent = view.picks.slice(-4);
-  const upcoming = [view.pickIndex + 1, view.pickIndex + 2].filter(
-    (i) => i < view.totalPicks,
-  );
+  const yours = view.isUserTurn;
+  const paused = view.status === "paused";
+  const mine = lastUserPick(view);
+  // Your last pick leads the feed, then everything since. Before your first
+  // pick: everything so far (capped).
+  const since = mine ? view.picks.slice(mine.index) : view.picks.slice(-24);
+  const newest = view.picks[view.picks.length - 1]?.index ?? -1;
+  const nextMine = nextUserPickIndex(view, view.pickIndex);
+  const away = nextMine === null ? null : nextMine - view.pickIndex;
+  const onClock = teamName(view, view.onClock ?? 0);
+  const upcoming = [view.pickIndex + 1, view.pickIndex + 2].filter((i) => i < view.totalPicks);
+  const arrived = yours && turnArrivedAt === view.pickIndex;
+
+  let statusTitle: string;
+  let statusText: string;
+  if (yours) {
+    statusTitle = "You're on the clock";
+    statusText = `Pick #${view.pickIndex + 1} · Round ${view.round}`;
+  } else if (paused) {
+    statusTitle = "Paused";
+    statusText = `${onClock} on the clock`;
+  } else {
+    statusTitle = "Watching";
+    statusText =
+      away === null
+        ? `${onClock} on the clock · your picks are in`
+        : `${onClock} on the clock · you're up in ${away} pick${away === 1 ? "" : "s"}`;
+  }
+
   return (
-    <div className="ticker" aria-label="Recent and upcoming picks">
-      {recent.map((p) => (
-        <span key={p.index} className="tick">
-          <span className="tick-team">{teamName(view, p.teamId)}</span>
-          <span className="tick-player">{playerMap.get(p.playerId)?.name}</span>
+    <div
+      className={["feed", yours ? "yours" : paused ? "paused" : "watching", arrived ? "arrived" : ""].join(" ").trim()}
+      aria-label="Pick feed"
+    >
+      <div className="feed-status" key={arrived ? `arrived-${view.pickIndex}` : "status"}>
+        <span className="feed-dot" aria-hidden="true" />
+        <span className="feed-status-text">
+          <strong>{statusTitle}</strong>
+          <span>{statusText}</span>
         </span>
-      ))}
-      <span className={view.isUserTurn ? "tick now yours" : "tick now"}>
-        <span className="tick-team">{teamName(view, view.onClock ?? 0)}</span>
-        <span className="tick-player">
-          {view.isUserTurn ? "Picking now" : "On the clock"}
-        </span>
+      </div>
+      {/* Announced once per state change, not on every pick. */}
+      <span className="sr-only" aria-live="polite" aria-atomic="true">
+        {yours ? `You're on the clock — pick ${view.pickIndex + 1}, round ${view.round}.` : ""}
       </span>
-      {upcoming.map((i) => (
-        <span key={i} className="tick next">
-          <span className="tick-team">{teamName(view, snakeTeam(i, view.numTeams))}</span>
-          <span className="tick-player">{i === view.pickIndex + 1 ? "next" : "then"}</span>
+      <div className="feed-scroll" ref={scroller}>
+        {since.map((p) => {
+          const pl = playerMap.get(p.playerId);
+          const isMine = p.teamId === view.userSlot;
+          return (
+            <span
+              key={p.index}
+              className={["tick", isMine ? "mine" : "", p.index === newest ? "latest" : ""].join(" ").trim()}
+              title={`#${p.index + 1} · ${teamName(view, p.teamId)}`}
+            >
+              {pl && <Headshot player={pl} variant="mini" />}
+              <span className="tick-team">{isMine ? "You" : teamName(view, p.teamId)}</span>
+              <span className="tick-player">{pl?.name}</span>
+            </span>
+          );
+        })}
+        <span className={yours ? "tick now yours" : "tick now"}>
+          <span className="tick-team">{onClock}</span>
+          <span className="tick-player">{yours ? "Picking now" : "On the clock"}</span>
         </span>
-      ))}
+        {upcoming.map((i) => (
+          <span key={i} className="tick next">
+            <span className="tick-team">{teamName(view, snakeTeam(i, view.numTeams))}</span>
+            <span className="tick-player">{i === view.pickIndex + 1 ? "next" : "then"}</span>
+          </span>
+        ))}
+      </div>
     </div>
   );
 }

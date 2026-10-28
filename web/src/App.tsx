@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import { useSession, userPickCount } from "./state/useSession";
 import { SetupScreen } from "./components/SetupScreen";
-import { DraftHeader, PickTicker } from "./components/DraftHeader";
+import { DraftHeader, PickFeed } from "./components/DraftHeader";
 import { BuildScreen } from "./components/BuildScreen";
 import { DraftRoom } from "./components/DraftRoom";
 import { DraftReport } from "./components/DraftReport";
 import { TeamsScreen } from "./components/TeamsScreen";
+
+const TITLE = "Fantasy Draft Lab — Draft Simulator";
 
 export default function App() {
   const { state, actions } = useSession();
@@ -22,8 +25,37 @@ export default function App() {
     runs,
     viewingRun,
     viewingRunId,
+    boardPrefs,
+    turnArrivedAt,
+    justDrafted,
     error,
   } = state;
+
+  // The tab says so when it's your pick — the draft keeps going while you're elsewhere.
+  const yourTurn = phase === "draft" && !!view && view.isUserTurn && !view.complete;
+  useEffect(() => {
+    document.title = yourTurn ? `● Your pick — ${TITLE}` : TITLE;
+    return () => {
+      document.title = TITLE;
+    };
+  }, [yourTurn]);
+
+  // Which body is showing. A change of phase (build → room, room → report)
+  // fades the body in and starts it at the top; picks inside a phase don't.
+  const buildTurn = view && view.isUserTurn && !browseAll ? userPickCount(view) : null;
+  const phaseKey =
+    phase !== "draft" || !view
+      ? "setup"
+      : screen === "teams"
+        ? "teams"
+        : view.complete
+          ? "report"
+          : buildTurn === 0 || buildTurn === 1
+            ? "build"
+            : "room";
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [phaseKey]);
 
   const errorBanner = error && (
     <button className="error-banner" onClick={actions.clearError}>
@@ -38,25 +70,26 @@ export default function App() {
         <SetupScreen
           playerCount={players?.length ?? 0}
           savedDrafts={savedDrafts}
+          runs={runs}
           onStart={actions.startDraft}
           onResume={actions.resumeDraft}
+          onOpenRun={actions.openRun}
         />
       </>
     );
   }
 
   // The user's first two turns get the build screens unless they chose to browse.
-  const buildTurn = view.isUserTurn && !browseAll ? userPickCount(view) : null;
   const ready = suggestions && suggestions.stage !== null ? suggestions : null;
 
   let body;
-  if (screen === "teams") {
+  if (phaseKey === "teams") {
     body = <TeamsScreen view={viewingRun ?? view} playerMap={playerMap} />;
-  } else if (view.complete) {
+  } else if (phaseKey === "report") {
     body = (
       <DraftReport
         view={viewingRun ?? view}
-        isLive={!viewingRun}
+        isLive={!viewingRun && !!view.id}
         playerMap={playerMap}
         runs={runs}
         selectedRun={viewingRunId}
@@ -65,7 +98,7 @@ export default function App() {
         onRewind={actions.rewind}
       />
     );
-  } else if (buildTurn === 0 || buildTurn === 1) {
+  } else if (phaseKey === "build") {
     body = (
       <BuildScreen
         key={view.pickIndex}
@@ -82,7 +115,11 @@ export default function App() {
         view={view}
         playerMap={playerMap}
         inspectedId={inspectedId}
+        justDrafted={justDrafted}
+        prefs={boardPrefs}
+        onPrefs={actions.setBoardPrefs}
         onInspect={actions.inspect}
+        onDismissJustDrafted={actions.dismissJustDrafted}
         onDraft={actions.userPick}
         onTogglePunt={actions.togglePunt}
         onAutoPunts={actions.autoPunts}
@@ -96,20 +133,23 @@ export default function App() {
   }
 
   return (
-    <div className="page">
+    <div className={phaseKey === "room" || phaseKey === "build" ? "page page-fixed" : "page"}>
       {errorBanner}
       <DraftHeader
         view={view}
         speed={speed}
         screen={screen}
+        turnArrivedAt={turnArrivedAt}
         onNavigate={actions.setScreen}
         onPause={actions.pause}
         onResume={actions.resume}
         onSpeed={actions.setSpeed}
         onExit={actions.reset}
       />
-      <PickTicker view={view} playerMap={playerMap} />
-      {body}
+      <PickFeed view={view} playerMap={playerMap} turnArrivedAt={turnArrivedAt} />
+      <div className="phase" key={phaseKey}>
+        {body}
+      </div>
     </div>
   );
 }

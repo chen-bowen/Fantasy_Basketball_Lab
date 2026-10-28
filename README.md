@@ -69,8 +69,17 @@ backend/
 ```
 
 The frontend (`web/`) keeps only UI state: `src/api/client.ts` is a typed
-HTTP client, `src/state/useSession.ts` drives mutations and spaces out bot
-ticks, and `src/components/` render the DraftView the API returns.
+HTTP client, `src/state/useSession.ts` drives mutations, spaces out bot
+ticks and holds the table's controls across picks, and `src/components/`
+render the DraftView the API returns.
+
+The draft room holds still while the bots pick: `DraftRoom` settles the
+board (order and Fit) on your turn and only marks players as they go —
+taken rows leave at a quiet moment, never under the pointer — and the
+player panel keeps its subject until you change it. The pick feed
+(`DraftHeader.tsx`) is shared by the build screens and the room and
+carries the room's state: watching, paused, or you're up. All motion is
+opt-in under `prefers-reduced-motion: no-preference`.
 
 ## API
 

@@ -47,6 +47,31 @@ export function teamBadgeWithRisk(view: TeamLike, teamId: number): string {
   return risk ? `${teamBadge(view, teamId)} · ${risk}` : teamBadge(view, teamId);
 }
 
+/** "1", "T2"… by wins, ties sharing a place. */
+export function places(wins: number[]): string[] {
+  return wins.map((w) => {
+    const place = wins.filter((x) => x > w).length + 1;
+    const tied = wins.filter((x) => x === w).length > 1;
+    return `${tied ? "T" : ""}${place}`;
+  });
+}
+
+export function recordText(view: DraftView, teamId: number): string {
+  const r = view.records[teamId];
+  return `${r.wins}–${r.losses}${r.ties ? `–${r.ties}` : ""}`;
+}
+
+/** The team's build chip: the user's punts, or the bot's strategy. */
+export function buildBadge(view: TeamLike & { userPunts: Category[] }, teamId: number): { label: string; tone: string } {
+  if (teamId === view.userSlot) {
+    return {
+      label: view.userPunts.length ? `Punt ${view.userPunts.join(", ")}` : "No punt yet",
+      tone: "yours",
+    };
+  }
+  return { label: teamBadge(view, teamId), tone: view.botSpecs[teamId].kind };
+}
+
 /** Categories a team has punted — the user's chosen punts, or a punt bot's category. */
 export function teamPunts(view: TeamLike & { userPunts: Category[] }, teamId: number): Set<Category> {
   if (teamId === view.userSlot) return new Set(view.userPunts);
@@ -76,4 +101,20 @@ export function ordinal(n: number): string {
 
 export function andList(xs: string[]): string {
   return xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs.join("");
+}
+
+/** 0-based index of the user's next pick at or after `from` (null once they're all made). */
+export function nextUserPickIndex(view: { userSlot: number; numTeams: number; totalPicks: number }, from: number): number | null {
+  for (let i = from; i < view.totalPicks; i++) {
+    if (snakeTeam(i, view.numTeams) === view.userSlot) return i;
+  }
+  return null;
+}
+
+/** The user's last pick so far, if any. */
+export function lastUserPick(view: { picks: { teamId: number; index: number }[]; userSlot: number }) {
+  for (let i = view.picks.length - 1; i >= 0; i--) {
+    if (view.picks[i].teamId === view.userSlot) return view.picks[i];
+  }
+  return null;
 }

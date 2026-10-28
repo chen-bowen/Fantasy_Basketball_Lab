@@ -1,12 +1,35 @@
-import { useState } from "react";
-import { CATEGORIES, type ApiPlayer, type Category, type PairingReason } from "../api/client";
-import { andList, ordinal } from "../state/teams";
+import { useState, type CSSProperties, type ReactNode } from "react";
+import { CATEGORIES, type ApiPlayer, type Category, type DraftView, type PairingReason } from "../api/client";
+import { andList, buildBadge, ordinal, places, recordText, teamName, teamPunts, teamRisk } from "../state/teams";
 
-/** NBA CDN headshot (by nbaId) with an initials fallback. */
-export function headshotUrl(nbaId: number | null): string | null {
-  return nbaId
-    ? `https://cdn.nba.com/headshots/nba/latest/260x190/${nbaId}.png`
-    : null;
+/**
+ * NBA CDN headshot (by nbaId). Large frames load the 1040×760 cut so they
+ * stay sharp on retina screens; avatars zoom into the face of the 260×190
+ * cut, which is already more pixels than a 40px circle can show.
+ */
+export function headshotUrl(nbaId: number | null, size: "lg" | "sm" = "sm"): string | null {
+  if (!nbaId) return null;
+  return `https://cdn.nba.com/headshots/nba/latest/${size === "lg" ? "1040x760" : "260x190"}/${nbaId}.png`;
+}
+
+/** Team colours for the headshot backdrop: a light and a deep shade of each team's primary. */
+const TEAM_COLORS: Record<string, [string, string]> = {
+  ATL: ["#e8535a", "#c8102e"], BKN: ["#5b5b5b", "#111111"], BOS: ["#2f9a5a", "#007a33"],
+  CHA: ["#2e8ea8", "#1d1160"], CHI: ["#e0405a", "#ce1141"], CLE: ["#a8355a", "#860038"],
+  DAL: ["#3f86c4", "#00538c"], DEN: ["#3a6a9e", "#0e2240"], DET: ["#e5485f", "#c8102e"],
+  GSW: ["#3f7fd0", "#1d428a"], HOU: ["#e04a63", "#ce1141"], IND: ["#3a5f93", "#002d62"],
+  LAC: ["#e04a63", "#1d428a"], LAL: ["#7a4fb3", "#552583"], MEM: ["#8197c4", "#5d76a9"],
+  MIA: ["#c8364a", "#98002e"], MIL: ["#2f6b3e", "#00471b"], MIN: ["#4f87b8", "#236192"],
+  NOP: ["#3a5e8c", "#0c2340"], NYK: ["#3d8fd6", "#006bb6"], OKC: ["#3fa3e0", "#007ac1"],
+  ORL: ["#3f8fd6", "#0077c0"], PHI: ["#3d7fd0", "#006bb6"], PHX: ["#5a4a9c", "#1d1160"],
+  POR: ["#e0455a", "#c8102e"], SAC: ["#7a5cb8", "#5a2d81"], SAS: ["#8a9399", "#3d4448"],
+  TOR: ["#e0405a", "#ce1141"], UTA: ["#5a4fb0", "#3e2680"], WAS: ["#2f5fa8", "#002b5c"],
+};
+const NO_TEAM: [string, string] = ["#9aa3b0", "#5a6474"];
+
+export function teamBackdrop(team: string): CSSProperties {
+  const [a, b] = TEAM_COLORS[team] ?? NO_TEAM;
+  return { "--team-a": a, "--team-b": b } as CSSProperties;
 }
 
 export function initials(name: string): string {
@@ -18,30 +41,35 @@ export function initials(name: string): string {
     .join("");
 }
 
+/**
+ * A headshot on its team's colours: `tile` fills a photo frame (the frame
+ * sets the size), `avatar` and `mini` are circles cropped to the face. With
+ * no photo, the player's initials sit on the same backdrop.
+ */
 export function Headshot({
   player,
   variant,
 }: {
-  player: Pick<ApiPlayer, "name" | "nbaId">;
-  variant: "card" | "tile" | "avatar" | "mini";
+  player: Pick<ApiPlayer, "name" | "nbaId"> & { team?: string };
+  variant: "tile" | "avatar" | "mini";
 }) {
   const [failed, setFailed] = useState(false);
-  const url = headshotUrl(player.nbaId);
-  if (!url || failed) {
-    return (
-      <span className={`headshot ${variant} fallback`} aria-hidden="true">
-        {initials(player.name)}
-      </span>
-    );
-  }
+  const url = headshotUrl(player.nbaId, variant === "tile" ? "lg" : "sm");
+  const decorative = variant !== "tile";
   return (
-    <img
-      className={`headshot ${variant}`}
-      src={url}
-      alt={variant === "avatar" || variant === "mini" ? "" : player.name}
-      loading="lazy"
-      onError={() => setFailed(true)}
-    />
+    <span
+      className={`headshot ${variant}${!url || failed ? " fallback" : ""}`}
+      style={teamBackdrop(player.team ?? "")}
+      role={decorative ? undefined : "img"}
+      aria-label={decorative ? undefined : player.name}
+      aria-hidden={decorative ? true : undefined}
+    >
+      {url && !failed ? (
+        <img src={url} alt="" loading="lazy" decoding="async" onError={() => setFailed(true)} />
+      ) : (
+        initials(player.name)
+      )}
+    </span>
   );
 }
 
@@ -261,5 +289,124 @@ export function PairingNotes({
       )}
       {tail && <span className="muted">{tail.charAt(0).toUpperCase() + tail.slice(1)}.</span>}
     </span>
+  );
+}
+
+export function RankLegendItems() {
+  return (
+    <>
+      <span><i className="sq top" />Top 3</span>
+      <span><i className="sq good" />4th–6th</span>
+      <span><i className="sq low" />7th–9th</span>
+      <span><i className="sq bottom" />Bottom 3</span>
+      <span><i className="sq punted" />Punted</span>
+    </>
+  );
+}
+
+/** One row per team, one rank cell per category, sorted by projected record. */
+export function Standings({ view, teams }: { view: DraftView; teams: number[] }) {
+  const place = places(view.records.map((r) => r.wins));
+  const order = [...teams].sort(
+    (a, b) => view.records[b].wins - view.records[a].wins || view.records[a].losses - view.records[b].losses,
+  );
+
+  return (
+    <section className="card standings" aria-labelledby="standings-title">
+      <div className="standings-head pad-x">
+        <h2 id="standings-title" className="title">Category standings</h2>
+        <span className="legend push">
+          <RankLegendItems />
+        </span>
+      </div>
+      <div className="table-scroll">
+        <table className="league standings-table">
+          <thead>
+            <tr>
+              <th scope="col" className="left">#</th>
+              <th scope="col" className="left">Team</th>
+              <th scope="col">W–L</th>
+              {CATEGORIES.map((c) => (
+                <th key={c} scope="col" className="cat">{c}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {order.map((t) => {
+              const punts = teamPunts(view, t);
+              const badge = buildBadge(view, t);
+              const risk = teamRisk(view, t);
+              return (
+                <tr key={t} className={t === view.userSlot ? "focused" : ""}>
+                  <td className="left muted">{place[t]}</td>
+                  <th scope="row" className="left team-col">
+                    <span className="team-cell">
+                      <strong>{t === view.userSlot ? "Your team" : teamName(view, t)}</strong>
+                      <span className={`kind ${badge.tone}`}>{badge.label}</span>
+                      {risk && <span className="muted small">{risk}</span>}
+                    </span>
+                  </th>
+                  <td className="ink">{recordText(view, t)}</td>
+                  {CATEGORIES.map((c) => {
+                    const r = view.ranks[c][t];
+                    const punted = punts.has(c);
+                    return (
+                      <td key={c} className="cat">
+                        <span
+                          className={`rank-cell ${punted ? "punted" : rankTone(r)}`}
+                          aria-label={`${c} ${punted ? "punted" : ordinal(r)}`}
+                        >
+                          {punted ? "–" : r}
+                        </span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="muted small pad-x foot-pad standings-foot">
+        Record: each roster against every other, winning a matchup by ranking better in
+        more of the 9 categories. Numbers are category ranks, 1st to {ordinal(view.numTeams)}.
+      </p>
+    </section>
+  );
+}
+
+/**
+ * The card at the top of every draft phase — build screens and the room
+ * alike. Same slot, same shape; only what it says changes at the handoff.
+ */
+export function PhaseBanner({
+  title,
+  chips,
+  text,
+  tone = "muted",
+  actions,
+  children,
+}: {
+  title: ReactNode;
+  chips?: ReactNode;
+  text: ReactNode;
+  tone?: "muted" | "ink"; // ink: the text is the point, not a footnote
+  actions?: ReactNode;
+  children?: ReactNode;
+}) {
+  return (
+    <div className="banner-wrap">
+      <section className="card banner">
+        <div className="banner-text">
+          <span className="banner-title">
+            <strong className="banner-heading">{title}</strong>
+            {chips}
+          </span>
+          <span className={tone === "ink" ? "banner-copy ink-copy" : "banner-copy muted"}>{text}</span>
+        </div>
+        {actions}
+        {children}
+      </section>
+    </div>
   );
 }

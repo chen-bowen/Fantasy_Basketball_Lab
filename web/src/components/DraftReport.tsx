@@ -5,8 +5,8 @@ import {
   type DraftView,
   type RunSummary,
 } from "../api/client";
-import { andList, ordinal, teamBadgeWithRisk, teamName, teamPunts } from "../state/teams";
-import { Headshot, RankLegend, RankStrip } from "./common";
+import { andList, ordinal, places } from "../state/teams";
+import { Headshot, PlayerMeta, RankLegend, RankStrip, Standings } from "./common";
 
 interface Props {
   view: DraftView; // the draft or saved run being viewed
@@ -17,15 +17,6 @@ interface Props {
   onSelectRun: (runId: string | null) => void;
   onNewDraft: () => void;
   onRewind: (pickIndex: number) => void;
-}
-
-/** "1", "T2"… by wins, ties sharing a place. */
-function places(wins: number[]): string[] {
-  return wins.map((w) => {
-    const place = wins.filter((x) => x > w).length + 1;
-    const tied = wins.filter((x) => x === w).length > 1;
-    return `${tied ? "T" : ""}${place}`;
-  });
 }
 
 export function DraftReport({
@@ -44,6 +35,8 @@ export function DraftReport({
   const ranks = CATEGORIES.map((c) => view.ranks[c][slot]);
   const rec = view.records[slot];
   const place = places(view.records.map((r) => r.wins));
+  const tied = place[slot].startsWith("T");
+  const placeText = `${tied ? "Tied " : ""}${ordinal(Number(place[slot].replace("T", "")))}`;
 
   const scored = CATEGORIES.map((c, j) => ({ c, r: ranks[j] })).filter(({ c }) => !punts.has(c));
   const best = [...scored].sort((a, b) => a.r - b.r);
@@ -65,49 +58,58 @@ export function DraftReport({
         .sort((a, b) => a.z - b.z)[0]?.p
     : undefined;
 
-  const order = Array.from({ length: n }, (_, t) => t).sort(
-    (a, b) => view.records[b].wins - view.records[a].wins || a - b,
-  );
+  const teams = Array.from({ length: n }, (_, t) => t);
 
   return (
-    <main className="report">
-      <div className="report-tools">
-        {runs.length > 0 && (
-          <select
-            aria-label="Draft to view"
-            value={selectedRun ?? "live"}
-            onChange={(e) => onSelectRun(e.target.value === "live" ? null : e.target.value)}
-          >
-            <option value="live">This draft</option>
-            {runs.map((r) => (
-              <option key={r.id} value={r.id}>{r.label}</option>
+    <main className="screen">
+      <div className="screen-head">
+        <div className="screen-title">
+          <span className="eyebrow-accent">
+            Draft complete
+            {[...punts].map((c) => (
+              <span key={c} className="chip dark">Punt {c}</span>
             ))}
-          </select>
-        )}
-        <button className="btn primary" onClick={onNewDraft}>New draft</button>
-      </div>
-
-      <section className="hero">
-        <div className="hero-text">
-          <span className="eyebrow">Draft complete</span>
-          <h1 className="display-lg">{headline}</h1>
-          <p>
-            {punts.size > 0 && <>You punted {andList([...punts])}. </>}
+          </span>
+          <h1 className="display-md">{headline}</h1>
+          <p className="lede">
             {centers >= 4 && <>You drafted {centers} centers. </>}
             {strong.length > 0 && <>You finished top 3 in {andList(strong.map(({ c }) => c))}.</>}
           </p>
         </div>
-        <div className="record-box">
-          <span className="record">{rec.wins}–{rec.losses}{rec.ties ? `–${rec.ties}` : ""}</span>
-          <span>vs. the other {n - 1} teams</span>
-          <span>
-            {place[slot].startsWith("T") ? "Tied " : ""}
-            {ordinal(Number(place[slot].replace("T", "")))} of {n}
+        <div className="report-tools">
+          {runs.length > 0 && (
+            <select
+              aria-label="Draft to view"
+              value={selectedRun ?? "live"}
+              onChange={(e) => onSelectRun(e.target.value === "live" ? null : e.target.value)}
+            >
+              <option value="live">This draft</option>
+              {runs.map((r) => (
+                <option key={r.id} value={r.id}>{r.label}</option>
+              ))}
+            </select>
+          )}
+          <button className="btn primary" onClick={onNewDraft}>New draft</button>
+        </div>
+      </div>
+
+      <section className="card pad recap">
+        <div className="recap-record">
+          <strong className="recap-num">
+            {rec.wins}–{rec.losses}{rec.ties ? `–${rec.ties}` : ""}
+          </strong>
+          <span className="muted small">
+            vs. the other {n - 1} teams · {placeText} of {n}
           </span>
         </div>
+        <div className="grow stack-sm">
+          <span className="muted small">Where your team ranks</span>
+          <RankStrip ranks={ranks} punts={punts} />
+        </div>
+        <RankLegend />
       </section>
 
-      <section className="win-lose">
+      <div className="win-lose">
         <div className="card pad stack-sm">
           <strong>Where you win</strong>
           <div className="chips">
@@ -131,7 +133,7 @@ export function DraftReport({
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {isLive && soft && culprit && (
         <section className="hint">
@@ -149,55 +151,9 @@ export function DraftReport({
       )}
 
       <div className="report-grid">
-        <section className="card table-card">
-          <div className="pad-x stack-xs head-pad">
-            <h2 className="title">League table</h2>
-            <span className="muted small">
-              Each team vs. every other team across 9 categories, equal games played
-            </span>
-          </div>
-          <div className="table-scroll">
-            <table className="league">
-              <thead>
-                <tr>
-                  <th scope="col" className="left" />
-                  <th scope="col" className="left">Team</th>
-                  <th scope="col">Record</th>
-                  <th scope="col" className="left">Category ranks</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.map((t) => {
-                  const r = view.records[t];
-                  return (
-                    <tr key={t} className={t === slot ? "focused" : ""}>
-                      <td className="left muted">{place[t]}</td>
-                      <td className="left">
-                        <span className="team-cell">
-                          <strong>{teamName(view, t)}</strong>
-                          <span className="chip">
-                            {t === slot
-                              ? punts.size ? `Punt ${[...punts].join(", ")}` : "No punt"
-                              : teamBadgeWithRisk(view, t)}
-                          </span>
-                        </span>
-                      </td>
-                      <td><strong>{r.wins}–{r.losses}{r.ties ? `–${r.ties}` : ""}</strong></td>
-                      <td className="left">
-                        <RankStrip
-                          ranks={CATEGORIES.map((c) => view.ranks[c][t])}
-                          punts={teamPunts(view, t)}
-                          size="sm"
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <div className="pad-x foot-pad"><RankLegend /></div>
-        </section>
+        <div className="report-standings">
+          <Standings view={view} teams={teams} />
+        </div>
 
         <section className="card pad stack-sm picks-card">
           <h2 className="title">Your picks</h2>
@@ -210,9 +166,7 @@ export function DraftReport({
                   <Headshot player={pl} variant="avatar" />
                   <span className="grow stack-0">
                     <strong>{pl.name}</strong>
-                    <span className="muted small">
-                      {pl.positions.join("/")} · {pl.signed ? pl.team : "Free agent"}
-                    </span>
+                    <PlayerMeta player={pl} />
                   </span>
                   {isLive && (
                     <button

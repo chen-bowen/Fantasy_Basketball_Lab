@@ -5,8 +5,8 @@ import {
   type ApiPlayer,
   type DraftView,
 } from "../api/client";
-import { teamBadge, teamName, teamPunts } from "../state/teams";
-import { Headshot, PlayerMeta, RankLegend, RankStrip } from "./common";
+import { buildBadge, ordinal, places, recordText, teamName, teamPunts } from "../state/teams";
+import { Headshot, PlayerMeta, RankStrip, Standings } from "./common";
 
 interface Props {
   view: DraftView;
@@ -19,31 +19,38 @@ export function TeamsScreen({ view, playerMap }: Props) {
     () => Array.from({ length: view.numTeams }, (_, t) => t),
     [view.numTeams],
   );
+  const started = view.picks.length > 0;
 
   return (
     <main className="screen">
       <div className="screen-head">
         <div className="screen-title">
-          <h1 className="display-md">Every team's picks</h1>
+          <h1 className="display-md">The league so far</h1>
           <p className="lede">
-            Who each team has drafted, the build they're running, and where their
-            roster ranks in each category right now.
+            Where every roster ranks in each category right now, and the record it would
+            post against the other {view.numTeams - 1}.
           </p>
         </div>
-        <div className="seg" role="group" aria-label="Teams view">
-          <button aria-pressed={mode === "rosters"} onClick={() => setMode("rosters")}>Rosters</button>
+        <div className="seg seg-lg" role="group" aria-label="Teams view">
+          <button aria-pressed={mode === "rosters"} onClick={() => setMode("rosters")}>Standings &amp; rosters</button>
           <button aria-pressed={mode === "board"} onClick={() => setMode("board")}>Draft board</button>
         </div>
       </div>
 
       {mode === "rosters" ? (
         <>
-          <div className="team-grid">
-            {teams.map((t) => (
-              <TeamCard key={t} view={view} playerMap={playerMap} team={t} />
-            ))}
-          </div>
-          <RankLegend />
+          {started && <Standings view={view} teams={teams} />}
+          <section className="stack" aria-labelledby="rosters-title">
+            <div className="section-head">
+              <h2 id="rosters-title" className="title">Rosters</h2>
+              <span className="muted">Your team first, then in draft order.</span>
+            </div>
+            <div className="team-grid">
+              {[view.userSlot, ...teams.filter((t) => t !== view.userSlot)].map((t) => (
+                <TeamCard key={t} view={view} playerMap={playerMap} team={t} />
+              ))}
+            </div>
+          </section>
         </>
       ) : (
         <Board view={view} playerMap={playerMap} teams={teams} />
@@ -63,23 +70,25 @@ function TeamCard({
 }) {
   const isYou = t === view.userSlot;
   const punts = teamPunts(view, t);
-  const rec = view.records[t];
   const roster = view.rosters[t].map((id) => playerMap.get(id)!);
-  const badge = isYou
-    ? view.userPunts.length
-      ? `Punt ${view.userPunts.join(", ")}`
-      : "No punt yet"
-    : teamBadge(view, t);
+  const picks = view.picks.filter((p) => p.teamId === t);
+  const badge = buildBadge(view, t);
   const onClock = !view.complete && view.onClock === t;
+  const place = places(view.records.map((r) => r.wins))[t];
 
   return (
-    <section className={isYou ? "card pad stack team-card yours" : "card pad stack team-card"}>
+    <section
+      className={["card pad stack team-card", isYou ? "yours" : "", onClock ? "on-clock" : ""].join(" ").trim()}
+    >
       <div className="team-title">
         <h3 className="title">{isYou ? "Your team" : teamName(view, t)}</h3>
-        <span className="chip">{badge}</span>
+        <span className={`kind ${badge.tone}`}>{badge.label}</span>
         {roster.length > 0 && (
-          <span className="muted small push">
-            {rec.wins}–{rec.losses}{rec.ties ? `–${rec.ties}` : ""}
+          <span className="push team-record">
+            {recordText(view, t)}{" "}
+            <span className="muted small">
+              {place.startsWith("T") ? `T-${ordinal(Number(place.slice(1)))}` : ordinal(Number(place))}
+            </span>
           </span>
         )}
       </div>
@@ -92,7 +101,7 @@ function TeamCard({
         />
       )}
 
-      <ol className="roster">
+      <ol className="roster team-roster">
         {roster.map((p, i) => (
           <li key={p.id}>
             <span className="muted small rd">Rd {i + 1}</span>
@@ -101,12 +110,13 @@ function TeamCard({
               <strong>{p.name}</strong>
               <PlayerMeta player={p} />
             </span>
+            {picks[i] && <span className="muted small">#{picks[i].index + 1}</span>}
           </li>
         ))}
         {onClock && (
           <li className="now">
-            <span className="small rd">Rd {view.round}</span>
-            <strong>On the clock</strong>
+            <span className="dot" />
+            <strong>On the clock · Rd {view.round}</strong>
           </li>
         )}
         {roster.length === 0 && !onClock && (
@@ -139,49 +149,48 @@ function Board({
         <table className="league board">
           <thead>
             <tr>
-              <th scope="col" className="left">Team</th>
+              <th scope="col" className="left board-team">Team</th>
               {rounds.map((r) => (
-                <th key={r} scope="col">Rd {r}</th>
+                <th key={r} scope="col" className="left">
+                  Rd {r} <span aria-hidden="true">{r % 2 ? "→" : "←"}</span>
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {teams.map((t) => (
-              <tr key={t} className={t === view.userSlot ? "focused" : ""}>
-                <td className="left">
-                  <span className="team-cell">
-                    <strong>{teamName(view, t)}</strong>
-                    <span className="chip">
-                      {t === view.userSlot
-                        ? view.userPunts.length
-                          ? `Punt ${view.userPunts.join(", ")}`
-                          : "You"
-                        : teamBadge(view, t)}
+            {teams.map((t) => {
+              const badge = buildBadge(view, t);
+              return (
+                <tr key={t} className={t === view.userSlot ? "focused" : ""}>
+                  <th scope="row" className="left board-team">
+                    <span className="stack-0">
+                      <strong>{t === view.userSlot ? "You" : teamName(view, t)}</strong>
+                      <span className="muted small">{badge.label}</span>
                     </span>
-                  </span>
-                </td>
-                {rounds.map((r) => {
-                  const pick = byCell.get(`${r}:${t}`);
-                  const pl = pick ? playerMap.get(pick.playerId) : undefined;
-                  const clock = !view.complete && view.onClock === t && view.round === r;
-                  return (
-                    <td key={r} className={clock ? "left board-now" : "left"}>
-                      {pl ? (
-                        <span className="board-pick" title={`#${pick!.index + 1} · ${pl.name}`}>
-                          <Headshot player={pl} variant="mini" />
-                          <span className="stack-0 board-text">
-                            <strong className="board-name">{pl.name}</strong>
-                            <span className="muted small">#{pick!.index + 1}</span>
+                  </th>
+                  {rounds.map((r) => {
+                    const pick = byCell.get(`${r}:${t}`);
+                    const pl = pick ? playerMap.get(pick.playerId) : undefined;
+                    const clock = !view.complete && view.onClock === t && view.round === r;
+                    return (
+                      <td key={r} className={clock ? "left board-now" : "left"}>
+                        {pl ? (
+                          <span className="board-pick" title={`#${pick!.index + 1} · ${pl.name}`}>
+                            <Headshot player={pl} variant="mini" />
+                            <span className="stack-0 board-text">
+                              <strong className="board-name">{pl.name}</strong>
+                              <span className="muted small">#{pick!.index + 1}</span>
+                            </span>
                           </span>
-                        </span>
-                      ) : clock ? (
-                        <span className="muted small">On clock</span>
-                      ) : null}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
+                        ) : clock ? (
+                          <span className="small board-clock">On the clock</span>
+                        ) : null}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
