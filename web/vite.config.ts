@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
-        "/api": env.API_URL || "http://localhost:8000",
+        "/api": env.API_URL || "http://localhost:8017",
       },
     },
   };

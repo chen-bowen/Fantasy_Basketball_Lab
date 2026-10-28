@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import type { ApiPlayer, DraftView } from "../api/client";
-import type { Screen, Speed } from "../state/useSession";
-import { lastUserPick, nextUserPickIndex, snakeTeam, teamName } from "../state/teams";
-import { Headshot, Logo } from "./common";
+import type { ApiPlayer, SessionView } from "../api/client";
+import type { Screen, Speed } from "../state/session";
+import { lastPick, nextTurnAt, snakeSquad, squadName } from "../state/squads";
+import { Monogram, Logo } from "./ui";
 
 interface Props {
-  view: DraftView;
+  view: SessionView;
   speed: Speed;
   screen: Screen;
   turnArrivedAt: number | null; // pick index your turn arrived at while watching
@@ -16,11 +16,11 @@ interface Props {
   onExit: () => void;
 }
 
-export function DraftHeader({ view, speed, screen, turnArrivedAt, onNavigate, onPause, onResume, onSpeed, onExit }: Props) {
-  const pct = (view.pickIndex / view.totalPicks) * 100;
-  const yours = view.onClock === view.userSlot;
+export function TopBar({ view, speed, screen, turnArrivedAt, onNavigate, onPause, onResume, onSpeed, onExit }: Props) {
+  const pct = (view.atPick / view.span) * 100;
+  const yours = view.onClock === view.seat;
   // One ring pulse when the clock comes to you — keyed on the pick so it runs once.
-  const arrived = yours && turnArrivedAt === view.pickIndex;
+  const arrived = yours && turnArrivedAt === view.atPick;
   return (
     <header className="topbar">
       <div className="topbar-inner">
@@ -41,9 +41,9 @@ export function DraftHeader({ view, speed, screen, turnArrivedAt, onNavigate, on
             ) : (
               <>
                 <strong>
-                  Round {view.round} of {view.rosterSize} · Pick {view.pickIndex + 1}
+                  Round {view.round} of {view.squadSize} · Pick {view.atPick + 1}
                 </strong>
-                {view.status === "paused" && <span className="chip warn">Paused</span>}
+                {view.phase === "paused" && <span className="chip warn">Paused</span>}
                 {" "}
                 <span
                   className="muted small mono"
@@ -64,33 +64,33 @@ export function DraftHeader({ view, speed, screen, turnArrivedAt, onNavigate, on
         </div>
         {!view.complete && (
           <button
-            key={arrived ? `arrived-${view.pickIndex}` : "clock"}
+            key={arrived ? `arrived-${view.atPick}` : "clock"}
             className={["clock-pill", yours ? "yours" : "", arrived ? "arrived" : ""].join(" ").trim()}
             title="Go to the draft room"
-            onClick={() => onNavigate("draft")}
+            onClick={() => onNavigate("room")}
           >
             <span className="dot" />
             {yours
               ? "Your pick"
-              : `${teamName(view, view.onClock ?? 0)} picking`}
+              : `${squadName(view, view.onClock ?? 0)} picking`}
           </button>
         )}
         <nav className="seg" aria-label="Draft screens">
-          <button aria-pressed={screen === "draft"} onClick={() => onNavigate("draft")}>Draft</button>
-          <button aria-pressed={screen === "teams"} onClick={() => onNavigate("teams")}>Teams</button>
+          <button aria-pressed={screen === "room"} onClick={() => onNavigate("room")}>Draft</button>
+          <button aria-pressed={screen === "league"} onClick={() => onNavigate("league")}>Teams</button>
         </nav>
         <div className="topbar-actions">
           {!view.complete && (
             <>
               <label className="inline-field">
-                Bots
+                Rivals
                 <select value={speed} onChange={(e) => onSpeed(e.target.value as Speed)}>
                   <option value="fast">Fast</option>
                   <option value="instant">Instant</option>
                   <option value="slow">Slow</option>
                 </select>
               </label>
-              {view.status === "paused" ? (
+              {view.phase === "paused" ? (
                 <button className="btn" onClick={onResume}>Resume</button>
               ) : (
                 <button className="btn" onClick={onPause}>Pause</button>
@@ -115,7 +115,7 @@ export function PickFeed({
   playerMap,
   turnArrivedAt,
 }: {
-  view: DraftView;
+  view: SessionView;
   playerMap: Map<string, ApiPlayer>;
   turnArrivedAt: number | null;
 }) {
@@ -124,27 +124,27 @@ export function PickFeed({
   useEffect(() => {
     const el = scroller.current;
     if (el) el.scrollLeft = el.scrollWidth;
-  }, [view.pickIndex]);
+  }, [view.atPick]);
 
   if (view.complete) return null;
-  const yours = view.isUserTurn;
-  const paused = view.status === "paused";
-  const mine = lastUserPick(view);
+  const yours = view.yourPick;
+  const paused = view.phase === "paused";
+  const mine = lastPick(view);
   // Your last pick leads the feed, then everything since. Before your first
   // pick: everything so far (capped).
-  const since = mine ? view.picks.slice(mine.index) : view.picks.slice(-24);
-  const newest = view.picks[view.picks.length - 1]?.index ?? -1;
-  const nextMine = nextUserPickIndex(view, view.pickIndex);
-  const away = nextMine === null ? null : nextMine - view.pickIndex;
-  const onClock = teamName(view, view.onClock ?? 0);
-  const upcoming = [view.pickIndex + 1, view.pickIndex + 2].filter((i) => i < view.totalPicks);
-  const arrived = yours && turnArrivedAt === view.pickIndex;
+  const since = mine ? view.selections.slice(mine.at) : view.selections.slice(-24);
+  const newest = view.selections[view.selections.length - 1]?.at ?? -1;
+  const nextMine = nextTurnAt(view, view.atPick);
+  const away = nextMine === null ? null : nextMine - view.atPick;
+  const onClock = squadName(view, view.onClock ?? 0);
+  const upcoming = [view.atPick + 1, view.atPick + 2].filter((i) => i < view.span);
+  const arrived = yours && turnArrivedAt === view.atPick;
 
   let statusTitle: string;
   let statusText: string;
   if (yours) {
     statusTitle = "You're on the clock";
-    statusText = `Pick #${view.pickIndex + 1} · Round ${view.round}`;
+    statusText = `Pick #${view.atPick + 1} · Round ${view.round}`;
   } else if (paused) {
     statusTitle = "Paused";
     statusText = `${onClock} on the clock`;
@@ -161,7 +161,7 @@ export function PickFeed({
       className={["feed", yours ? "yours" : paused ? "paused" : "watching", arrived ? "arrived" : ""].join(" ").trim()}
       aria-label="Pick feed"
     >
-      <div className="feed-status" key={arrived ? `arrived-${view.pickIndex}` : "status"}>
+      <div className="feed-status" key={arrived ? `arrived-${view.atPick}` : "status"}>
         <span className="feed-dot" aria-hidden="true" />
         <span className="feed-status-text">
           <strong>{statusTitle}</strong>
@@ -170,20 +170,20 @@ export function PickFeed({
       </div>
       {/* Announced once per state change, not on every pick. */}
       <span className="sr-only" aria-live="polite" aria-atomic="true">
-        {yours ? `You're on the clock — pick ${view.pickIndex + 1}, round ${view.round}.` : ""}
+        {yours ? `You're on the clock — pick ${view.atPick + 1}, round ${view.round}.` : ""}
       </span>
       <div className="feed-scroll" ref={scroller}>
         {since.map((p) => {
-          const pl = playerMap.get(p.playerId);
-          const isMine = p.teamId === view.userSlot;
+          const pl = playerMap.get(p.pid);
+          const isMine = p.squad === view.seat;
           return (
             <span
-              key={p.index}
-              className={["tick", isMine ? "mine" : "", p.index === newest ? "latest" : ""].join(" ").trim()}
-              title={`#${p.index + 1} · ${teamName(view, p.teamId)}`}
+              key={p.at}
+              className={["tick", isMine ? "mine" : "", p.at === newest ? "latest" : ""].join(" ").trim()}
+              title={`#${p.at + 1} · ${squadName(view, p.squad)}`}
             >
-              {pl && <Headshot player={pl} variant="mini" />}
-              <span className="tick-team">{isMine ? "You" : teamName(view, p.teamId)}</span>
+              {pl && <Monogram player={pl} variant="mini" />}
+              <span className="tick-team">{isMine ? "You" : squadName(view, p.squad)}</span>
               <span className="tick-player">{pl?.name}</span>
             </span>
           );
@@ -194,8 +194,8 @@ export function PickFeed({
         </span>
         {upcoming.map((i) => (
           <span key={i} className="tick next">
-            <span className="tick-team">{teamName(view, snakeTeam(i, view.numTeams))}</span>
-            <span className="tick-player">{i === view.pickIndex + 1 ? "next" : "then"}</span>
+            <span className="tick-team">{squadName(view, snakeSquad(i, view.teams))}</span>
+            <span className="tick-player">{i === view.atPick + 1 ? "next" : "then"}</span>
           </span>
         ))}
       </div>

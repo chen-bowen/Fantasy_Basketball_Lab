@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { api, type BotSpecView, type DraftSummary, type RunSummary } from "../api/client";
-import { slotPicks, teamBadge, teamName, teamRisk } from "../state/teams";
-import { Logo } from "./common";
+import { api, type RivalView, type SessionSummary, type ResultSummary } from "../api/client";
+import { seatPicks, squadBadge, squadName, squadLean } from "../state/squads";
+import { Logo } from "./ui";
 
 interface Props {
   playerCount: number;
-  savedDrafts: DraftSummary[];
-  runs: RunSummary[];
-  onStart: (seed: string, userSlot: number) => void;
-  onResume: (draftId: string) => void;
-  onOpenRun: (runId: string) => void;
+  savedSessions: SessionSummary[];
+  results: ResultSummary[];
+  onStart: (seed: string, seat: number) => void;
+  onResume: (sessionId: string) => void;
+  onOpenResult: (resultId: string) => void;
 }
 
 const NUM_TEAMS = 12;
@@ -35,35 +35,35 @@ function RoundArrow({ back }: { back: boolean }) {
   );
 }
 
-export function SetupScreen({
+export function Lobby({
   playerCount,
-  savedDrafts,
-  runs,
+  savedSessions,
+  results,
   onStart,
   onResume,
-  onOpenRun,
+  onOpenResult,
 }: Props) {
   const [slot, setSlot] = useState<number | null>(null);
   const [freshSeed, setFreshSeed] = useState(randomSeed); // the league you get with no code
   const [code, setCode] = useState(""); // a pasted replay code, if any
   const seed = code.trim() || freshSeed;
-  const [bots, setBots] = useState<BotSpecView[] | null>(null);
+  const [rivals, setBots] = useState<RivalView[] | null>(null);
 
   const canStart = slot !== null;
-  const resumable = savedDrafts
-    .filter((d) => d.picks > 0 && d.status !== "complete")
+  const resumable = savedSessions
+    .filter((d) => d.selections > 0 && d.status !== "complete")
     .sort((a, b) => b.updatedAt - a.updatedAt);
   const latest = resumable[0];
-  const picks = slot !== null ? slotPicks(slot, NUM_TEAMS, PREVIEW_ROUNDS) : null;
+  const picks = slot !== null ? seatPicks(slot, NUM_TEAMS, PREVIEW_ROUNDS) : null;
 
-  // Opponent preview: bot personalities are a pure function of seed + slot.
+  // Opponent preview: rival personalities are a pure function of seed + slot.
   useEffect(() => {
     if (slot === null || !seed) {
       setBots(null);
       return;
     }
     const t = setTimeout(() => {
-      api.leaguePreview(seed, slot).then((r) => setBots(r.botSpecs)).catch(() => setBots(null));
+      api.league(seed, slot).then((r) => setBots(r.rivals)).catch(() => setBots(null));
     }, 250);
     return () => clearTimeout(t);
   }, [seed, slot]);
@@ -76,17 +76,17 @@ export function SetupScreen({
       <main className="setup">
         <div className="setup-intro">
           <div className="stack">
-            <span className="setup-eyebrow">Category-league mock draft</span>
-            <h1 className="display">Draft against 11 bots. Watch your build take shape.</h1>
+            <span className="setup-eyebrow">Category-league mock session</span>
+            <h1 className="display">Draft against 11 rivals. Watch your build take shape.</h1>
             <p className="lede">
               Pick a slot and a league of opponents. In round 1 you choose a build, a first
-              pick plus the category it lets you punt. After that, every recommendation
+              pick plus the category it lets you concede. After that, every recommendation
               follows what your team still needs.
             </p>
           </div>
 
           <dl className="setup-facts">
-            <div><dt>12</dt><dd>teams, you and 11 bots</dd></div>
+            <div><dt>12</dt><dd>teams, you and 11 rivals</dd></div>
             <div><dt>13</dt><dd>rounds, snake order</dd></div>
             <div><dt>9-cat</dt><dd>head-to-head scoring</dd></div>
             <div><dt>{playerCount || "—"}</dt><dd>players in the pool</dd></div>
@@ -99,7 +99,7 @@ export function SetupScreen({
             </li>
             <li>
               <span className="step-n">2</span>
-              <span><strong>Choose a build.</strong> Your first pick and a category to punt, side by side.</span>
+              <span><strong>Choose a build.</strong> Your first pick and a category to concede, side by side.</span>
             </li>
             <li>
               <span className="step-n">3</span>
@@ -117,7 +117,7 @@ export function SetupScreen({
               <div className="resume-text">
                 <strong>Pick up where you left off</strong>
                 <span className="muted">
-                  {latest.picks} picks made · saved{" "}
+                  {latest.selections} picks made · saved{" "}
                   {new Date(latest.updatedAt).toLocaleTimeString([], {
                     hour: "numeric",
                     minute: "2-digit",
@@ -125,18 +125,18 @@ export function SetupScreen({
                 </span>
               </div>
               <button className="btn outline" onClick={() => onResume(latest.id)}>
-                Resume draft
+                Resume session
               </button>
             </section>
           )}
         </div>
 
-        <section className="card setup-card" aria-label="New draft">
+        <section className="card setup-card" aria-label="New session">
           <div className="setup-section">
             <div className="setup-section-head">
               <div className="stack-xs grow">
                 <span className="step-label">Step 1</span>
-                <h2 className="title">Choose your draft slot</h2>
+                <h2 className="title">Choose your session slot</h2>
               </div>
               <button
                 className="btn soft"
@@ -161,7 +161,7 @@ export function SetupScreen({
                   </span>
                 ))}
                 {Array.from({ length: NUM_TEAMS }, (_, i) => {
-                  const p = slotPicks(i, NUM_TEAMS, PREVIEW_ROUNDS);
+                  const p = seatPicks(i, NUM_TEAMS, PREVIEW_ROUNDS);
                   return (
                     <button
                       key={i}
@@ -191,7 +191,7 @@ export function SetupScreen({
                 </>
               ) : (
                 <span className="muted">
-                  Snake order: round 2 runs backward, so the last slot in round 1 picks
+                  Snake order: round 2 results backward, so the last slot in round 1 picks
                   first in round 2.
                 </span>
               )}
@@ -220,22 +220,22 @@ export function SetupScreen({
 
             {slot === null ? (
               <span className="muted">Choose a slot to see who you're drafting against.</span>
-            ) : bots ? (
+            ) : rivals ? (
               <ul className="opponents">
-                {bots.map((b, t) => {
+                {rivals.map((b, t) => {
                   if (t === slot) return null;
-                  const league = { userSlot: slot, botSpecs: bots };
-                  const risk = teamRisk(league, t);
+                  const league = { seat: slot, rivals: rivals };
+                  const risk = squadLean(league, t);
                   return (
                     <li key={t} className="opponent">
                       <span className="opponent-slot">{t + 1}</span>
-                      <strong className="grow">{teamName(league, t)}</strong>
-                      <span className={`kind ${b.kind}`}>{teamBadge(league, t)}</span>
+                      <strong className="grow">{squadName(league, t)}</strong>
+                      <span className={`badge ${b.style}`}>{squadBadge(league, t)}</span>
                       {risk && (
                         <span
-                          className={`kind risk ${b.risk}`}
+                          className={`kind risk ${b.lean}`}
                           title={
-                            b.risk === "bold"
+                            b.lean === "bold"
                               ? "Shrugs off half of the injury-risk discount — gambles on hurt stars"
                               : "Adds half again to the injury-risk discount — steers clear of hurt players"
                           }
@@ -251,10 +251,10 @@ export function SetupScreen({
               <span className="muted">Loading opponents…</span>
             )}
             <p className="muted small setup-key">
-              <strong className="key-value">Value</strong> bots take the best player left.{" "}
-              <strong className="key-needs">Needs</strong> bots fill their weakest categories.{" "}
-              <strong className="key-punt">Punt</strong> bots ignore one.{" "}
-              <strong>Bold</strong> bots gamble on injured stars; <strong>cautious</strong> ones
+              <strong className="key-value">Value</strong> rivals take the best player left.{" "}
+              <strong className="key-needs">Needs</strong> rivals fill their weakest categories.{" "}
+              <strong className="key-concede">Concede</strong> rivals ignore one.{" "}
+              <strong>Bold</strong> rivals gamble on injured stars; <strong>cautious</strong> ones
               steer clear.
             </p>
           </div>
@@ -265,7 +265,7 @@ export function SetupScreen({
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
                   <path d="M5 3l4 4-4 4" />
                 </svg>
-                Same league again? <span className="muted">Paste a draft code</span>
+                Same league again? <span className="muted">Paste a session code</span>
               </summary>
               <div className="stack-sm replay-body">
                 <label htmlFor="seed" className="small ink">Draft code</label>
@@ -278,8 +278,8 @@ export function SetupScreen({
                   spellCheck={false}
                 />
                 <span className="muted small">
-                  Every draft's code is in its header. Same code and same picks replay the
-                  draft exactly.
+                  Every session's code is in its header. Same code and same picks replay the
+                  session exactly.
                 </span>
               </div>
             </details>
@@ -289,7 +289,7 @@ export function SetupScreen({
               disabled={!canStart}
               onClick={() => canStart && onStart(seed, slot!)}
             >
-              {canStart ? `Start draft from pick ${slot! + 1}` : "Choose a slot to start"}
+              {canStart ? `Start session from pick ${slot! + 1}` : "Choose a slot to start"}
               {canStart && (
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M3 9h12M11 5l4 4-4 4" />
@@ -299,7 +299,7 @@ export function SetupScreen({
           </div>
         </section>
 
-        <PastDrafts drafts={savedDrafts} runs={runs} onResume={onResume} onOpenRun={onOpenRun} />
+        <PastSessions sessions={savedSessions} results={results} onResume={onResume} onOpenResult={onOpenResult} />
       </main>
     </div>
   );
@@ -328,34 +328,34 @@ interface PastRow {
 }
 
 /**
- * Every draft you can go back to: unfinished drafts resume, finished ones
+ * Every session you can go back to: unfinished sessions resume, finished ones
  * open their report, and the branches a rewind left behind open read-only.
- * A finished draft's own run snapshot is the same draft, so it's listed only
- * once its draft is gone.
+ * A finished session's own run snapshot is the same session, so it's listed only
+ * once its session is gone.
  */
-function PastDrafts({
-  drafts,
-  runs,
+function PastSessions({
+  sessions,
+  results,
   onResume,
-  onOpenRun,
+  onOpenResult,
 }: {
-  drafts: DraftSummary[];
-  runs: RunSummary[];
-  onResume: (draftId: string) => void;
-  onOpenRun: (runId: string) => void;
+  sessions: SessionSummary[];
+  results: ResultSummary[];
+  onResume: (sessionId: string) => void;
+  onOpenResult: (resultId: string) => void;
 }) {
   const [all, setAll] = useState(false);
-  const draftIds = new Set(drafts.map((d) => d.id));
+  const sessionIds = new Set(sessions.map((d) => d.id));
 
   const rows: PastRow[] = [
-    ...drafts
-      .filter((d) => d.picks > 0)
+    ...sessions
+      .filter((d) => d.selections > 0)
       .map((d): PastRow => {
         const done = d.status === "complete";
         return {
           key: `d-${d.id}`,
           status: done ? "complete" : "progress",
-          title: done ? "Finished draft" : `${d.picks} picks made`,
+          title: done ? "Finished session" : `${d.selections} picks made`,
           code: d.seed,
           meta: `${done ? "Finished" : "Saved"} ${when(d.updatedAt)}`,
           at: d.updatedAt,
@@ -363,20 +363,20 @@ function PastDrafts({
           open: () => onResume(d.id),
         };
       }),
-    ...runs
-      .filter((r) => r.id.startsWith("branch-") || !draftIds.has(r.id.replace(/^run-/, "")))
+    ...results
+      .filter((r) => r.id.startsWith("branch-") || !sessionIds.has(r.id.replace(/^run-/, "")))
       .map((r): PastRow => {
         const [title, rest = ""] = r.label.split(" — ");
         const branch = r.id.startsWith("branch-");
         return {
           key: `r-${r.id}`,
           status: branch ? "branch" : "complete",
-          title: branch ? title : "Finished draft",
+          title: branch ? title : "Finished session",
           code: rest.replace(/^replay code /, ""),
           meta: `${branch ? "Rewound" : "Finished"} ${when(r.createdAt)}`,
           at: r.createdAt,
           action: "View",
-          open: () => onOpenRun(r.id),
+          open: () => onOpenResult(r.id),
         };
       }),
   ].sort((a, b) => b.at - a.at);
@@ -386,11 +386,11 @@ function PastDrafts({
   const label = { progress: "In progress", complete: "Complete", branch: "Branch" };
 
   return (
-    <section className="past-drafts" aria-labelledby="past-title">
+    <section className="past-sessions" aria-labelledby="past-title">
       <div className="section-head">
-        <h2 id="past-title" className="title">Your drafts</h2>
+        <h2 id="past-title" className="title">Your sessions</h2>
         <span className="muted">
-          Resume an unfinished draft, or reopen a finished one and the branches you rewound from.
+          Resume an unfinished session, or reopen a finished one and the branches you rewound from.
         </span>
       </div>
       <ul className="past-list">

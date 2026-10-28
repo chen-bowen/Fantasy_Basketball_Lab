@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fetch_players — regenerate app/data/players.json from stats.nba.com.
+"""fetch_players — regenerate lab/pool/players.json from stats.nba.com.
 
 Pulls per-game regular-season stats (leaguedashplayerstats) for the last
 completed NBA season, plus current team and positions from ESPN team rosters.
@@ -35,7 +35,7 @@ from pathlib import Path
 import httpx
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT_PATH = ROOT / "app" / "data" / "players.json"
+OUT_PATH = ROOT / "lab" / "pool" / "players.json"
 CACHE_DIR = ROOT / ".cache" / "nba"
 CACHE_MS = 12 * 60 * 60  # seconds
 
@@ -238,7 +238,7 @@ def espn_rosters(client: httpx.Client, no_cache: bool) -> dict[str, dict]:
             out[norm_name(a["displayName"])] = {
                 "team": team,
                 "positions": POSITION_MAP.get(pos, ["F"]) if pos else None,
-                "injury": injuries[0].get("status") if injuries else None,
+                "status": injuries[0].get("status") if injuries else None,
             }
     return out
 
@@ -261,23 +261,23 @@ def to_player(
     return {
         "id": f"nba-{nba_id}",
         "adp": adp_by_name.get(nn),
-        "nbaId": nba_id,
+        "refId": nba_id,
         "name": row["PLAYER_NAME"],
         "team": on_roster["team"] if on_roster else "",
         "lastTeam": last_team,
         "signed": on_roster is not None,
-        "injury": on_roster.get("injury") if on_roster else None,
+        "status": on_roster.get("status") if on_roster else None,
         "positions": (on_roster and on_roster["positions"]) or infer_position(row),
-        "asOfSeason": season,
+        "season": season,
         "gp": row.get("GP") or 0,
-        "gpBySeason": gp_by_season,
-        "min": r1(row.get("MIN")),
+        "seasonGp": gp_by_season,
+        "mpg": r1(row.get("MIN")),
         "pts": r1(row.get("PTS")),
         "reb": r1(row.get("REB")),
         "ast": r1(row.get("AST")),
         "stl": r1(row.get("STL")),
         "blk": r1(row.get("BLK")),
-        "tpm": r1(row.get("FG3M")),
+        "threes": r1(row.get("FG3M")),
         "fgm": r1(row.get("FGM")),
         "fga": r1(row.get("FGA")),
         "ftm": r1(row.get("FTM")),
@@ -391,7 +391,7 @@ def main() -> None:
         for r in fallback
     ]
 
-    players.sort(key=lambda p: (-p["min"], -p["pts"]))
+    players.sort(key=lambda p: (-p["mpg"], -p["pts"]))
     players = players[:MAX_PLAYERS]
     players.sort(key=lambda p: (-p["pts"], p["name"]))
 
@@ -399,7 +399,7 @@ def main() -> None:
     moved = sum(1 for p in players if p["signed"] and p["team"] != p["lastTeam"])
     unsigned = [p["name"] for p in players if not p["signed"]]
     print(f"wrote {len(players)} players ({len(fallback)} from {prev}) → {OUT_PATH}")
-    injured = sum(1 for p in players if p["injury"])
+    injured = sum(1 for p in players if p["status"])
     print(f"  {moved} changed teams since last season; {len(unsigned)} on no current roster; "
           f"{injured} with an injury status")
     if unsigned:

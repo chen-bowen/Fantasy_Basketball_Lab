@@ -4,19 +4,19 @@ import {
   type ApiPlayer,
   type BuildAlternative,
   type BuildOption,
-  type BuildOptions,
+  type Advice,
   type Category,
-  type DraftView,
+  type SessionView,
 } from "../api/client";
-import { andList, ordinal, weekRecord, winRate } from "../state/teams";
-import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip, Stars, initials, valueTier } from "./common";
+import { andList, ordinal, weekRecord, winRate } from "../state/squads";
+import { Monogram, PairingNotes, PlayerMeta, RankLegend, RankStrip, Stars, initials, valueTier } from "./ui";
 
 
 interface Props {
-  view: DraftView;
+  view: SessionView;
   playerMap: Map<string, ApiPlayer>;
-  result: BuildOptions | null; // null while simulations run
-  onDraft: (playerId: string, punt: Category | null) => void;
+  result: Advice | null; // null while simulations run
+  onPick: (pid: string, concede: Category | null) => void;
   onBrowse: () => void;
 }
 
@@ -28,14 +28,14 @@ const WAIT_SURE = 0.25;
 const WIDE_TIE = 6;
 /** A build is scored over one week against each other team. */
 const MATCHUPS = 11;
-/** Expected matchup wins as the share of weekly matchups won — the unit shown everywhere. */
+/** Expected duel wins as the share of weekly matchups won — the unit shown everywhere. */
 const rate = (wins: number) => winRate(wins, MATCHUPS);
 const tiePoints = (tieWins: number) => Math.round((tieWins / MATCHUPS) * 100);
 /** "+4 vs the market's pick" — the option against the yardstick, in points of win rate. */
-function vsMarket(o: BuildOption, result: BuildOptions): { text: string; short: string; tone: "up" | "down" | "even" | "market" } | null {
+function vsMarket(o: BuildOption, result: Advice): { text: string; short: string; tone: "up" | "down" | "even" | "market" } | null {
   const c = result.consensus;
   if (!c) return null;
-  if (c.playerId === o.playerId && c.punt === o.punt) return { text: "the market's pick", short: "market pick", tone: "market" };
+  if (c.pid === o.pid && c.concede === o.concede) return { text: "the market's pick", short: "market pick", tone: "market" };
   const d = rate(o.wins) - rate(c.wins);
   if (d === 0) return { text: "same as the market's pick", short: "= market pick", tone: "even" };
   const sign = d > 0 ? "+" : "−";
@@ -46,17 +46,17 @@ function lastName(p: ApiPlayer): string {
   return p.name.split(" ").slice(1).join(" ") || initials(p.name);
 }
 
-function buildLabel(punt: Category | null, keeps: boolean, current: Category | null): string {
-  if (punt === null) return current ? "Drop the punt" : "No punt";
-  return keeps ? `Keeps punt ${punt}` : current ? `Switch to punt ${punt}` : `Punt ${punt}`;
+function buildLabel(concede: Category | null, keeps: boolean, current: Category | null): string {
+  if (concede === null) return current ? "Drop the concede" : "No concede";
+  return keeps ? `Keeps concede ${concede}` : current ? `Switch to concede ${concede}` : `Concede ${concede}`;
 }
 
 /** Cards across the top: the best few options, the rest go in the list below. */
 const CARDS = 4;
 
-/** A filter key per build: "none" for no punt. */
+/** A filter key per build: "none" for no concede. */
 type BuildKey = string;
-const keyOf = (punt: Category | null): BuildKey => punt ?? "none";
+const keyOf = (concede: Category | null): BuildKey => concede ?? "none";
 
 /**
  * One way to make this pick: a player under a build. Usually his best build
@@ -70,65 +70,65 @@ interface Entry {
 }
 
 function altOption(b: BuildAlternative, own: BuildOption): BuildOption {
-  return { ...own, punt: b.punt, keepsPunt: b.keepsPunt, wins: b.wins, runs: b.runs, winsRange: b.winsRange, finishRanks: null };
+  return { ...own, concede: b.concede, keepsConcede: b.keepsConcede, wins: b.wins, runs: b.runs, winsRange: b.winsRange, finishRanks: null };
 }
 
 /** The entries under a build filter: players whose best build it is, plus the best player for it when his best is something else. */
-function entriesFor(result: BuildOptions, filter: BuildKey | "all"): Entry[] {
-  const own = new Map(result.options.map((o) => [o.playerId, o]));
+function entriesFor(result: Advice, filter: BuildKey | "all"): Entry[] {
+  const own = new Map(result.options.map((o) => [o.pid, o]));
   if (filter === "all") return result.options.map((o) => ({ option: o, best: o, isAlt: false }));
   const entries: Entry[] = result.options
-    .filter((o) => keyOf(o.punt) === filter)
+    .filter((o) => keyOf(o.concede) === filter)
     .map((o) => ({ option: o, best: o, isAlt: false }));
   for (const b of result.builds) {
-    const o = own.get(b.playerId);
-    if (keyOf(b.punt) !== filter || !o || keyOf(o.punt) === filter) continue;
+    const o = own.get(b.pid);
+    if (keyOf(b.concede) !== filter || !o || keyOf(o.concede) === filter) continue;
     entries.push({ option: altOption(b, o), best: o, isAlt: true });
   }
   return entries.sort((a, b) => b.option.wins - a.option.wins);
 }
 
-export function BuildScreen({ view, playerMap, result, onDraft, onBrowse }: Props) {
-  const [sel, setSel] = useState<{ id: string; punt: Category | null } | null>(null);
+export function Builds({ view, playerMap, result, onPick, onBrowse }: Props) {
+  const [sel, setSel] = useState<{ id: string; concede: Category | null } | null>(null);
   const [filter, setFilter] = useState<BuildKey | "all">("all");
-  const slot = view.userSlot;
-  const first = view.picks.find((p) => p.teamId === slot) ?? null;
-  const firstPlayer = first ? playerMap.get(first.playerId)! : null;
+  const slot = view.seat;
+  const first = view.selections.find((p) => p.squad === slot) ?? null;
+  const firstPlayer = first ? playerMap.get(first.pid)! : null;
   const stage = firstPlayer ? "second" : "first";
-  const current = view.userPunts[0] ?? null;
-  const punts = new Set<Category>(view.userPunts);
+  const current = view.concedes[0] ?? null;
+  const concedes = new Set<Category>(view.concedes);
 
   const options = result?.options ?? null;
   const entries = result ? entriesFor(result, filter) : [];
   const chosen: BuildOption | null = (() => {
     if (!result || !options?.length) return null;
     if (sel) {
-      const o = options.find((x) => x.playerId === sel.id);
-      if (o && o.punt === sel.punt) return o;
-      const b = result.builds.find((x) => x.playerId === sel.id && x.punt === sel.punt);
+      const o = options.find((x) => x.pid === sel.id);
+      if (o && o.concede === sel.concede) return o;
+      const b = result.builds.find((x) => x.pid === sel.id && x.concede === sel.concede);
       if (o && b) return altOption(b, o);
     }
     return entries[0]?.option ?? options[0];
   })();
-  const chosenPlayer = chosen ? playerMap.get(chosen.playerId) : null;
-  const pick = (o: BuildOption) => setSel({ id: o.playerId, punt: o.punt });
+  const chosenPlayer = chosen ? playerMap.get(chosen.pid) : null;
+  const pick = (o: BuildOption) => setSel({ id: o.pid, concede: o.concede });
 
   return (
     <main className="room build-room">
       <div className="build-main">
         <header className="build-head">
           <span className="eyebrow-accent">
-            Pick #{view.pickIndex + 1} · Round {view.round} · Step {stage === "first" ? 1 : 2} of 2
-            {current && <span className="chip dark">Punt {current}</span>}
+            Pick #{view.atPick + 1} · Round {view.round} · Step {stage === "first" ? 1 : 2} of 2
+            {current && <span className="chip dark">Concede {current}</span>}
           </span>
           <h1 className="build-title">{stage === "first" ? "Your first pick sets your build" : "Finish your build"}</h1>
           <p className="build-headline">
             {result ? (
               <Headline result={result} playerMap={playerMap} />
             ) : stage === "first" ? (
-              "Every player in range at this pick is being tested: each one taken here, the rest of the draft played out against these bots, under no punt and the punts that suit him."
+              "Every player in range at this pick is being tested: each one taken here, the rest of the session played out against these rivals, under no concede and the concedes that suit him."
             ) : (
-              "Every player in range at this pick is being tested next to your first pick, under the punts that suit the pair."
+              "Every player in range at this pick is being tested next to your first pick, under the concedes that suit the pair."
             )}
           </p>
         </header>
@@ -184,7 +184,7 @@ export function BuildScreen({ view, playerMap, result, onDraft, onBrowse }: Prop
             firstPlayer={firstPlayer}
             current={current}
             result={result}
-            onDraft={() => onDraft(chosen.playerId, chosen.punt)}
+            onPick={() => onPick(chosen.pid, chosen.concede)}
           />
         ) : (
           <section className="card build-detail skeleton" aria-hidden="true">
@@ -201,7 +201,7 @@ export function BuildScreen({ view, playerMap, result, onDraft, onBrowse }: Prop
             <span className="skel block" />
           </section>
         )}
-        <TeamSoFar view={view} firstPlayer={firstPlayer} punts={punts} result={result} />
+        <TeamSoFar view={view} firstPlayer={firstPlayer} concedes={concedes} result={result} />
         <RankLegend />
       </aside>
     </main>
@@ -209,14 +209,14 @@ export function BuildScreen({ view, playerMap, result, onDraft, onBrowse }: Prop
 }
 
 /** One sentence that says what the simulations can and can't tell you here. */
-function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<string, ApiPlayer> }) {
+function Headline({ result, playerMap }: { result: Advice; playerMap: Map<string, ApiPlayer> }) {
   const top = result.options.filter((o) => o.tier === 1);
   if (top.length === 0) return null;
   const best = top[0];
-  const bestP = playerMap.get(best.playerId)!;
+  const bestP = playerMap.get(best.pid)!;
   const backToBack = result.nextPick != null && result.nextPick === result.pick + 1;
   const goneCount = top.filter((o) => (o.gone ?? 0) >= GONE_THRESHOLD).length;
-  const consensus = result.consensus ? playerMap.get(result.consensus.playerId) : null;
+  const consensus = result.consensus ? playerMap.get(result.consensus.pid) : null;
   const lo = Math.min(...top.map((o) => o.wins));
   const hi = Math.max(...top.map((o) => o.wins));
 
@@ -232,10 +232,10 @@ function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<
       </>
     );
   }
-  const names = top.slice(0, 3).map((o) => lastName(playerMap.get(o.playerId)!));
+  const names = top.slice(0, 3).map((o) => lastName(playerMap.get(o.pid)!));
   const listed = top.length > 3 ? `${names.join(", ")} and ${top.length - 3} more` : andList(names);
   const market = consensus
-    ? consensus.id === best.playerId
+    ? consensus.id === best.pid
       ? `${lastName(consensus)} is the market's pick.`
       : `The market's pick is ${lastName(consensus)}.`
     : "";
@@ -275,48 +275,48 @@ function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<
 function TeamSoFar({
   view,
   firstPlayer,
-  punts,
+  concedes,
   result,
 }: {
-  view: DraftView;
+  view: SessionView;
   firstPlayer: ApiPlayer | null;
-  punts: ReadonlySet<Category>;
-  result: BuildOptions | null;
+  concedes: ReadonlySet<Category>;
+  result: Advice | null;
 }) {
-  const slot = view.userSlot;
-  const pick = view.pickIndex + 1;
+  const slot = view.seat;
+  const pick = view.atPick + 1;
   if (!firstPlayer) {
     return (
       <div className="card pad stack-sm">
         <span className="muted small">Your slot</span>
         <strong className="title">
-          Pick #{pick} of {view.totalPicks}
+          Pick #{pick} of {view.span}
           {result?.nextPick != null && <span className="muted"> · then #{result.nextPick}</span>}
         </strong>
         <span className="muted small">
           The percentage on each option is not the player's: it's the team you'd finish with if you
           take him now and draft by Fit from here — the share of its weekly matchups it wins against
-          these {MATCHUPS} bots, averaged over simulated drafts. The market's pick is the yardstick;
+          these {MATCHUPS} rivals, averaged over simulated drafts. The market's pick is the yardstick;
           within {tiePoints(result?.tieWins ?? 0.3)} points of each other is a toss-up.
         </span>
       </div>
     );
   }
   const ranksNow = CATEGORIES.map((c) => view.ranks[c][slot]);
-  const covered = CATEGORIES.filter((c, j) => !punts.has(c) && ranksNow[j] <= 3);
-  const thin = CATEGORIES.filter((c, j) => !punts.has(c) && ranksNow[j] >= view.numTeams - 2);
-  const punt = view.userPunts[0] ?? null;
+  const covered = CATEGORIES.filter((c, j) => !concedes.has(c) && ranksNow[j] <= 3);
+  const thin = CATEGORIES.filter((c, j) => !concedes.has(c) && ranksNow[j] >= view.teams - 2);
+  const concede = view.concedes[0] ?? null;
   return (
     <div className="card pad stack-sm">
       <div className="team-line">
-        <Headshot player={firstPlayer} variant="avatar" />
+        <Monogram player={firstPlayer} variant="avatar" />
         <span className="stack-xs grow">
           <span className="muted small">Your team so far</span>
           <strong>{firstPlayer.name}</strong>
         </span>
-        {punt && <span className="chip dark">Punt {punt}</span>}
+        {concede && <span className="chip dark">Concede {concede}</span>}
       </div>
-      <RankStrip ranks={ranksNow} punts={punts} size="sm" />
+      <RankStrip ranks={ranksNow} concedes={concedes} size="sm" />
       <span className="muted small">
         {covered.length > 0 && <>{lastName(firstPlayer)} covers {andList(covered)}. </>}
         {thin.length > 0 && <>Brings little {andList(thin)} — one pick settles nothing.</>}
@@ -336,7 +336,7 @@ function goneLabel(gone: number | null, nextPick: number | null, backToBack: boo
 }
 
 /** Wins on a bar: the bar spans the tested range, so small gaps still show. */
-function winsScale(result: BuildOptions) {
+function winsScale(result: Advice) {
   const ws = result.options.map((o) => o.wins).concat(result.builds.map((b) => b.wins));
   const hi = Math.max(...ws);
   const lo = Math.min(...ws) - 0.3;
@@ -351,7 +351,7 @@ function TopCards({
   chosen,
   onSelect,
 }: {
-  result: BuildOptions;
+  result: Advice;
   playerMap: Map<string, ApiPlayer>;
   entries: Entry[];
   current: Category | null;
@@ -377,23 +377,23 @@ function TopCards({
       </div>
       <div className="build-cards" role="radiogroup" aria-label="Top options at this pick">
         {cards.map((best) => {
-          const p = playerMap.get(best.playerId)!;
+          const p = playerMap.get(best.pid)!;
           // Under a build filter the card shows that build, or fades if he has none.
-          const entry = entries.find((e) => e.option.playerId === best.playerId);
+          const entry = entries.find((e) => e.option.pid === best.pid);
           const o = entry?.option ?? best;
-          const selected = chosen?.playerId === o.playerId && chosen.punt === o.punt;
-          const tier = valueTier(p.overallRank);
+          const selected = chosen?.pid === o.pid && chosen.concede === o.concede;
+          const tier = valueTier(p.marketRank);
           return (
             <button
-              key={best.playerId}
+              key={best.pid}
               role="radio"
               aria-checked={selected}
               className={["build-card", selected ? "selected" : "", entry ? "" : "dim"].join(" ").trim()}
               onClick={() => onSelect(o)}
             >
               <span className="build-card-photo">
-                <Headshot player={p} variant="tile" />
-                {p.overallRank != null && <span className="photo-tag">#{p.overallRank} overall</span>}
+                <Monogram player={p} variant="tile" />
+                {p.marketRank != null && <span className="photo-tag">#{p.marketRank} overall</span>}
                 {selected && (
                   <span className="photo-check" aria-hidden="true">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M5 12l5 5 9-10" /></svg>
@@ -416,7 +416,7 @@ function TopCards({
                 </span>
                 <span className="meter dark"><span style={{ width: bar(o.wins) }} /></span>
                 <span className="build-card-chips">
-                  <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+                  <span className={o.concede ? "chip dark" : "chip"}>{buildLabel(o.concede, o.keepsConcede, current)}</span>
                   {goneLabel(o.gone, nextPick, backToBack)}
                 </span>
               </span>
@@ -435,17 +435,17 @@ function BuildFilters({
   current,
   onFilter,
 }: {
-  result: BuildOptions;
+  result: Advice;
   filter: BuildKey | "all";
   current: Category | null;
   onFilter: (f: BuildKey | "all") => void;
 }) {
-  const builds: { key: BuildKey; punt: Category | null }[] = [];
-  for (const punt of [...result.options.map((o) => o.punt), ...result.builds.map((b) => b.punt)]) {
-    if (!builds.some((b) => b.key === keyOf(punt))) builds.push({ key: keyOf(punt), punt });
+  const builds: { key: BuildKey; concede: Category | null }[] = [];
+  for (const concede of [...result.options.map((o) => o.concede), ...result.builds.map((b) => b.concede)]) {
+    if (!builds.some((b) => b.key === keyOf(concede))) builds.push({ key: keyOf(concede), concede });
   }
-  // No punt first, then the punts in category order.
-  builds.sort((a, b) => (a.punt === null ? -1 : b.punt === null ? 1 : CATEGORIES.indexOf(a.punt) - CATEGORIES.indexOf(b.punt)));
+  // No concede first, then the concedes in category order.
+  builds.sort((a, b) => (a.concede === null ? -1 : b.concede === null ? 1 : CATEGORIES.indexOf(a.concede) - CATEGORIES.indexOf(b.concede)));
   if (builds.length < 2) return null;
   const chip = (key: BuildKey | "all", label: string, count: number, title?: string) => (
     <button
@@ -468,7 +468,7 @@ function BuildFilters({
         const top = es[0]?.option.wins;
         return chip(
           b.key,
-          buildLabel(b.punt, b.punt === current, current),
+          buildLabel(b.concede, b.concede === current, current),
           es.length,
           top != null ? `Best under this build: wins ${rate(top)}% of matchups` : undefined,
         );
@@ -487,7 +487,7 @@ function OptionList({
   chosen,
   onSelect,
 }: {
-  result: BuildOptions;
+  result: Advice;
   playerMap: Map<string, ApiPlayer>;
   entries: Entry[];
   current: Category | null;
@@ -497,21 +497,21 @@ function OptionList({
   const { nextPick, pick } = result;
   const backToBack = nextPick != null && nextPick === pick + 1;
   const bar = winsScale(result);
-  const carded = new Set(result.options.slice(0, CARDS).map((o) => o.playerId));
-  const rows = entries.filter((e) => !carded.has(e.option.playerId));
+  const carded = new Set(result.options.slice(0, CARDS).map((o) => o.pid));
+  const rows = entries.filter((e) => !carded.has(e.option.pid));
   return (
     <div className="card build-list" role="radiogroup" aria-label="Other players in range at this pick">
       {rows.length === 0 && (
         <p className="build-empty muted">No other tested player suits this build at #{pick}.</p>
       )}
       {rows.map(({ option: o, best, isAlt }, i) => {
-        const p = playerMap.get(o.playerId)!;
+        const p = playerMap.get(o.pid)!;
         const t = Math.min(best.tier, 3);
         const tierStart = i === 0 || Math.min(rows[i - 1].best.tier, 3) !== t;
-        const selected = chosen?.playerId === o.playerId && chosen.punt === o.punt;
-        const tier = valueTier(p.overallRank);
+        const selected = chosen?.pid === o.pid && chosen.concede === o.concede;
+        const tier = valueTier(p.marketRank);
         return (
-          <Fragment key={`${o.playerId}|${keyOf(o.punt)}`}>
+          <Fragment key={`${o.pid}|${keyOf(o.concede)}`}>
             {tierStart && (
               <div className={`build-tier t${t}`} aria-hidden="true">
                 {LIST_TIER_LABELS[t - 1]}
@@ -525,20 +525,20 @@ function OptionList({
               onClick={() => onSelect(o)}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(o); } }}
             >
-              <Headshot player={p} variant="avatar" />
+              <Monogram player={p} variant="avatar" />
               <span className="build-name">
                 <strong>{p.name}</strong>
                 <span className="muted small">
                   <PlayerMeta player={p} />
                   {" · "}
                   <Stars count={tier.stars} />
-                  {p.overallRank != null && ` #${p.overallRank}`}
+                  {p.marketRank != null && ` #${p.marketRank}`}
                 </span>
               </span>
               <span className="build-plan">
-                <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+                <span className={o.concede ? "chip dark" : "chip"}>{buildLabel(o.concede, o.keepsConcede, current)}</span>
                 {isAlt && (
-                  <span className="muted small">best: {buildLabel(best.punt, best.keepsPunt, current)} {rate(best.wins)}%</span>
+                  <span className="muted small">best: {buildLabel(best.concede, best.keepsConcede, current)} {rate(best.wins)}%</span>
                 )}
               </span>
               <span className="build-wins">
@@ -562,31 +562,31 @@ function OptionDetail({
   firstPlayer,
   current,
   result,
-  onDraft,
+  onPick,
 }: {
   o: BuildOption;
   p: ApiPlayer;
   playerMap: Map<string, ApiPlayer>;
   firstPlayer: ApiPlayer | null;
   current: Category | null;
-  result: BuildOptions;
-  onDraft: () => void;
+  result: Advice;
+  onPick: () => void;
 }) {
-  const punts = new Set<Category>(o.punt ? [o.punt] : []);
+  const concedes = new Set<Category>(o.concede ? [o.concede] : []);
   const nextPick = result.nextPick;
   const backToBack = nextPick != null && nextPick === result.pick + 1;
-  const listed = result.options.find((x) => x.playerId === o.playerId);
-  const isAlt = !!listed && listed.punt !== o.punt;
+  const listed = result.options.find((x) => x.pid === o.pid);
+  const isAlt = !!listed && listed.concede !== o.concede;
   const rank = listed ? result.options.indexOf(listed) + 1 : 0;
   return (
     <section className="card build-detail">
       <div className="team-line">
-        <Headshot player={p} variant="avatar" />
+        <Monogram player={p} variant="avatar" />
         <span className="stack-xs grow">
           <strong className="title clamp" title={p.name}>{p.name}</strong>
           <span className="muted small"><PlayerMeta player={p} /></span>
         </span>
-        <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
+        <span className={o.concede ? "chip dark" : "chip"}>{buildLabel(o.concede, o.keepsConcede, current)}</span>
       </div>
       <div className="wins-row">
         <strong className="title-lg">{rate(o.wins)}%</strong>
@@ -599,12 +599,12 @@ function OptionDetail({
             About {weekRecord(rate(o.wins), MATCHUPS)} in a round against the league
             {o.winsRange ? ` · ${rate(o.winsRange[0])}–${rate(o.winsRange[1])}% across ${o.runs} test drafts` : ""}
             {isAlt
-              ? ` · his best build is ${buildLabel(listed!.punt, listed!.keepsPunt, current).toLowerCase()} (${rate(listed!.wins)}%)`
+              ? ` · his best build is ${buildLabel(listed!.concede, listed!.keepsConcede, current).toLowerCase()} (${rate(listed!.wins)}%)`
               : ` · ${ordinal(rank)} of ${result.tested}${o.tier === 1 ? ", in the top tier" : ""}`}
           </span>
         </span>
       </div>
-      <PairingNotes why={o.why} anchor={firstPlayer?.name ?? null} punt={o.punt} />
+      <PairingNotes why={o.why} anchor={firstPlayer?.name ?? null} concede={o.concede} />
       {o.gone != null && nextPick != null && (
         <span className={o.gone >= GONE_THRESHOLD && !backToBack ? "small ink" : "muted small"}>
           {backToBack
@@ -619,7 +619,7 @@ function OptionDetail({
       {o.finishRanks && (
         <div className="stack-sm">
           <span className="muted small">Where the build finishes</span>
-          <RankStrip ranks={o.finishRanks} punts={punts} size="sm" />
+          <RankStrip ranks={o.finishRanks} concedes={concedes} size="sm" />
         </div>
       )}
       {o.nextOptions.length > 0 && nextPick != null && (
@@ -630,7 +630,7 @@ function OptionDetail({
               const n = playerMap.get(id)!;
               return (
                 <span key={id} className="mini-chip">
-                  <Headshot player={n} variant="mini" />
+                  <Monogram player={n} variant="mini" />
                   {n.name}
                 </span>
               );
@@ -639,11 +639,11 @@ function OptionDetail({
         </div>
       )}
       <span className="muted small">
-        {o.punt
-          ? `After this pick, Fit plans around a ${o.punt} punt; the plan keeps following your roster from there.`
-          : "Fit stays balanced; a punt is suggested if your roster develops one."}
+        {o.concede
+          ? `After this pick, Fit plans around a ${o.concede} concede; the plan keeps following your roster from there.`
+          : "Fit stays balanced; a concede is suggested if your roster develops one."}
       </span>
-      <button className="btn primary xl" onClick={onDraft}>
+      <button className="btn primary xl" onClick={onPick}>
         Draft {lastName(p)}
       </button>
     </section>

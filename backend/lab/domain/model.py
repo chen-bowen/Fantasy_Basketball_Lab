@@ -16,8 +16,8 @@ POSITIONS = ["PG", "SG", "SF", "PF", "C", "G", "F"]
 class Player:
     """Per-game projection for a single player.
 
-    tpm = made threes; fgm/fga and ftm/fta carry volume so FG%/FT%
-    aggregate correctly.
+    threes = made three-pointers; fgm/fga and ftm/fta carry volume so
+    FG%/FT% aggregate correctly.
     """
 
     id: str
@@ -29,30 +29,31 @@ class Player:
     ast: float
     stl: float
     blk: float
-    tpm: float
+    threes: float
     fgm: float
     fga: float
     ftm: float
     fta: float
     tov: float
-    nba_id: int | None = None
-    as_of_season: str | None = None
+    ref_id: int | None = None
+    season: str | None = None
     gp: int = 0
-    min: float = 0.0
-    signed: bool = True  # False: on no current NBA roster (free agent / retired)
-    gp_by_season: dict[str, int] = field(default_factory=dict)  # season -> GP, newest first
-    adp: float | None = None  # aggregated draft position (FantasyPros Yahoo/ESPN avg)
-    injury: str | None = None  # current ESPN status ("Out", "Day-To-Day", …); display only
+    mpg: float = 0.0
+    signed: bool = True  # False: on no club roster right now (free agent / retired)
+    season_gp: dict[str, int] = field(default_factory=dict)  # season -> GP, newest first
+    adp: float | None = None  # consensus draft position on the board
+    status: str | None = None  # current availability tag ("Out", "Day-To-Day", …); display only
 
 
 @dataclass(frozen=True)
-class BotSpec:
-    """Bot personality. punt_category and risk are assigned at draft start."""
+class RivalSpec:
+    """Rival personality: draft style and appetite for injury lean,
+    assigned when the session opens."""
 
-    kind: str  # "value" | "needs" | "punt"
-    punt_category: str | None = None
-    risk: str = "neutral"  # "cautious" | "neutral" | "bold" — appetite for injury risk
+    style: str  # "value" | "needs" | "concede"
+    concede_cat: str | None = None
+    lean: str = "neutral"  # "cautious" | "neutral" | "bold"
 
 
-BOT_KIND_LABELS = {"value": "Value", "needs": "Needs", "punt": "Punt"}
-BOT_RISKS = ["cautious", "neutral", "bold"]
+RIVAL_STYLES = {"value": "Value", "needs": "Needs", "concede": "Concede"}
+RIVAL_LEANS = ["cautious", "neutral", "bold"]

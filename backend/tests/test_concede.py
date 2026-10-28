@@ -1,63 +1,64 @@
-"""The punt plan follows the roster; the API applies it in auto mode."""
+"""The concede plan follows the roster; the API applies it in auto mode."""
 
 from fastapi.testclient import TestClient
 
-from app.analysis.punt_plan import WEAK_RANK, suggest_punts
-from app.analysis.roster_profile import build_roster_profile
-from app.data.pool import PLAYERS
-from app.main import app
+from lab.metrics.concede import SOFT_RANK, advise_concedes
+from lab.metrics.profile import roster_line
+from lab.pool.loader import PLAYERS
+from lab.server import app
 
 
 def profiles_with_user(values, user_roster, others=11):
-    user = build_roster_profile(user_roster, values)
-    field = [build_roster_profile(PLAYERS[20 + 13 * i : 20 + 13 * i + len(user_roster)], values) for i in range(others)]
+    user = roster_line(user_roster, values)
+    field = [roster_line(PLAYERS[20 + 13 * i : 20 + 13 * i + len(user_roster)], values) for i in range(others)]
     return [user, *field]
 
 
 def test_no_plan_before_two_players(values):
-    plan = suggest_punts(profiles_with_user(values, PLAYERS[:1]), 0, [])
-    assert plan["punts"] == [] and plan["category"] is None
+    plan = advise_concedes(profiles_with_user(values, PLAYERS[:1]), 0, [])
+    assert plan["concedes"] == [] and plan["category"] is None
 
 
 def test_punts_the_category_the_roster_is_worst_in(values):
-    """A roster of poor free-throw shooters reads as a FT% punt."""
+    """A roster of poor free-throw shooters reads as a FT% concede."""
     bricks = sorted(PLAYERS, key=lambda p: values[p.id]["FT%"])[:4]
     profs = profiles_with_user(values, bricks)
-    plan = suggest_punts(profs, 0, [])
-    assert plan["punts"] == ["FT%"] and plan["rank"] >= WEAK_RANK
+    plan = advise_concedes(profs, 0, [])
+    assert plan["concedes"] == ["FT%"] and plan["rank"] >= SOFT_RANK
     assert "FT%" in plan["reason"]
 
 
 def test_existing_punt_kept_while_still_weak_dropped_once_decent(values):
     bricks = sorted(PLAYERS, key=lambda p: values[p.id]["FT%"])[:4]
-    assert suggest_punts(profiles_with_user(values, bricks), 0, ["FT%"])["punts"] == ["FT%"]
+    assert advise_concedes(profiles_with_user(values, bricks), 0, ["FT%"])["concedes"] == ["FT%"]
     snipers = sorted(PLAYERS, key=lambda p: -values[p.id]["FT%"])[:4]
-    plan = suggest_punts(profiles_with_user(values, snipers), 0, ["FT%"])
-    assert "FT%" not in plan["punts"]  # dropped (or replaced by a real weakness)
-    assert plan["punts"] == [] or plan["rank"] >= WEAK_RANK
+    plan = advise_concedes(profiles_with_user(values, snipers), 0, ["FT%"])
+    assert "FT%" not in plan["concedes"]  # dropped (or replaced by a real weakness)
+    assert plan["concedes"] == [] or plan["rank"] >= SOFT_RANK
 
 
 def test_api_auto_mode_follows_roster_and_manual_opts_out():
     client = TestClient(app)
-    d = client.post("/api/drafts", json={"seed": "punt-plan", "userSlot": 0}).json()
-    assert d["puntMode"] == "auto" and d["userPunts"] == [] and "reason" in d["puntPlan"]
-    assert d["isUserTurn"] and d["nextUserPick"] == 24 and d["gone"]  # look-ahead on the user's turn
-    bricks = [p.id for p in sorted(PLAYERS, key=lambda p: p.ftm - 0.78 * p.fta)[:3]]
-    for pid in bricks:
-        d = client.post(f"/api/drafts/{d['id']}/picks", json={"playerId": pid}).json()
-        while not d["isUserTurn"] and not d["complete"]:
-            d = client.post(f"/api/drafts/{d['id']}/bot-pick").json()
-    followed = d["userPunts"]
-    assert followed and d["puntMode"] == "auto" and d["puntPlan"]["punts"] == followed
+    d = client.post("/api/sessions", json={"seed": "concede-plan", "seat": 0}).json()
+    assert d["concedeMode"] == "auto" and d["concedes"] == [] and "reason" in d["concedePlan"]
+    assert d["yourPick"] and d["nextTurn"] == 24 and d["gone"]  # look-ahead on the user's turn
+    bricks = [p.id for p in sorted(PLAYERS, key=lambda p: p.ftm - 0.78 * p.fta)]
+    for _ in range(3):
+        pid = next(pid for pid in bricks if pid not in d["taken"])
+        d = client.post(f"/api/sessions/{d['id']}/pick", json={"pid": pid}).json()
+        while not d["yourPick"] and not d["complete"]:
+            d = client.post(f"/api/sessions/{d['id']}/autopilot").json()
+    followed = d["concedes"]
+    assert followed and d["concedeMode"] == "auto" and d["concedePlan"]["concedes"] == followed
     # Set by hand: the plan is shown but no longer applied.
-    d = client.put(f"/api/drafts/{d['id']}/punts", json={"punts": ["3PM"]}).json()
-    assert d["puntMode"] == "manual" and d["userPunts"] == ["3PM"]
-    # The plan keeps a hand-set punt only while the roster is weak there too.
-    assert d["puntPlan"]["punts"] in (["3PM"], followed)
+    d = client.put(f"/api/sessions/{d['id']}/concedes", json={"concedes": ["3PM"]}).json()
+    assert d["concedeMode"] == "manual" and d["concedes"] == ["3PM"]
+    # The plan keeps a hand-set concede only while the roster is weak there too.
+    assert d["concedePlan"]["concedes"] in (["3PM"], followed)
     # Hand it back: the roster decides again.
-    d = client.put(f"/api/drafts/{d['id']}/punts", json={"punts": ["3PM"], "mode": "auto"}).json()
-    assert d["puntMode"] == "auto" and d["userPunts"] == d["puntPlan"]["punts"]
+    d = client.put(f"/api/sessions/{d['id']}/concedes", json={"concedes": ["3PM"], "mode": "auto"}).json()
+    assert d["concedeMode"] == "auto" and d["concedes"] == d["concedePlan"]["concedes"]
     # Off the user's turn no look-ahead is computed (slot 1 picks twice in a row, so pick twice).
     for _ in range(2):
-        d = client.post(f"/api/drafts/{d['id']}/picks", json={"playerId": max(d["fit"], key=d["fit"].get)}).json()
-    assert not d["isUserTurn"] and d["gone"] == {} and d["nextUserPick"] is None
+        d = client.post(f"/api/sessions/{d['id']}/pick", json={"pid": max(d["fit"], key=d["fit"].get)}).json()
+    assert not d["yourPick"] and d["gone"] == {} and d["nextTurn"] is None

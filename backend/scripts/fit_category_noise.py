@@ -9,9 +9,9 @@ favourite, and it should come from how many events a week actually holds
 of steals is a few dozen and the same lead is closer to a coin flip.
 
 This script derives the nine numbers from the frozen pool and prints them
-to paste into standings.py as FITTED_NOISE:
+to paste into standings.py as FITTED_VARIANCE:
 
-  1. Draft a few leagues with the bots, so the rosters are typical.
+  1. Draft a few leagues with the rivals, so the rosters are typical.
   2. For every roster, the variance of its weekly total in each category:
      each player plays GAMES_PER_WEEK games (his availability-adjusted
      line, like the model), and his game-to-game variance is
@@ -25,7 +25,7 @@ to paste into standings.py as FITTED_NOISE:
      games and by the pool's per-game standard deviation, is the per-slot z
      gap worth one sigma. Averaged over every pair of rosters.
 
-Refit after `npm run data:fetch`.
+Refit after `npm run data:gen`.
 
 Usage:
     python backend/scripts/fit_category_noise.py [--seeds N]
@@ -41,13 +41,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.analysis.player_values import STREAM_SHARE, compute_player_values  # noqa: E402
-from app.data.pool import PLAYER_POOL, PLAYERS  # noqa: E402
-from app.engine.bots import assign_bot_specs, choose_bot_pick  # noqa: E402
-from app.engine.draft import DraftConfig, apply_pick, create_draft, current_team_id, is_complete  # noqa: E402
-from app.engine.types import CATEGORIES, Player  # noqa: E402
+from lab.metrics.ratings import FILL_SHARE, score_pool  # noqa: E402
+from lab.pool.loader import PLAYER_POOL, PLAYERS  # noqa: E402
+from lab.domain.autopilot import deal_rivals, autopilot_pick  # noqa: E402
+from lab.domain.session import DraftSettings, record_pick, open_session, on_clock, draft_done  # noqa: E402
+from lab.domain.model import CATEGORIES, Player  # noqa: E402
 
-NUM_TEAMS, ROSTER_SIZE = 12, 13
+LEAGUE_SIZE, SQUAD_SIZE = 12, 13
 GAMES_PER_WEEK = 3.5
 # Game-to-game variance as a multiple of the per-game mean (1.0 = Poisson).
 # A 25-point scorer varies by about ±7.5 a night, a 10-rebounder by ±3.6,
@@ -56,7 +56,7 @@ GAMES_PER_WEEK = 3.5
 OVERDISPERSION = {"PTS": 2.2, "REB": 1.3, "AST": 1.2, "STL": 1.0, "BLK": 1.1, "3PM": 1.1, "TO": 1.1}
 # Night-to-night swing in attempts, as a share of the per-game mean.
 ATTEMPT_CV = {"FG%": 0.3, "FT%": 0.6}
-STAT = {"PTS": "pts", "REB": "reb", "AST": "ast", "STL": "stl", "BLK": "blk", "3PM": "tpm", "TO": "tov"}
+STAT = {"PTS": "pts", "REB": "reb", "AST": "ast", "STL": "stl", "BLK": "blk", "3PM": "threes", "TO": "tov"}
 
 
 def weekly_variance(roster: list[Player], availability, replacement, lg_fg, lg_ft) -> dict[str, float]:
@@ -67,7 +67,7 @@ def weekly_variance(roster: list[Player], availability, replacement, lg_fg, lg_f
         for c in OVERDISPERSION:
             own = getattr(p, STAT[c])
             # the model's expected line: his games plus a replacement's share of the rest
-            mean = own if c == "TO" else a * own + (1 - a) * STREAM_SHARE * replacement[c]
+            mean = own if c == "TO" else a * own + (1 - a) * FILL_SHARE * replacement[c]
             var[c] += g * OVERDISPERSION[c] * mean
         for c, makes, att, lg in (("FG%", p.fgm, p.fga, lg_fg), ("FT%", p.ftm, p.fta, lg_ft)):
             if not att:
@@ -82,32 +82,32 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=6)
     args = ap.parse_args()
 
-    values, stats = compute_player_values(PLAYERS)
+    values, stats = score_pool(PLAYERS)
     rosters: list[list[Player]] = []
     for i in range(args.seeds):
         seed = f"noise-{i}"
-        config = DraftConfig(NUM_TEAMS, ROSTER_SIZE, i % NUM_TEAMS, seed, assign_bot_specs(seed, NUM_TEAMS, i % NUM_TEAMS))
-        state = create_draft(config)
-        while not is_complete(state):
-            t = current_team_id(state)
-            state = apply_pick(state, PLAYER_POOL, choose_bot_pick(state, PLAYER_POOL, values, t, stats.healthy_values))
-        rosters += [[PLAYER_POOL[i] for i in r] for r in state.rosters]
+        config = DraftSettings(LEAGUE_SIZE, SQUAD_SIZE, i % LEAGUE_SIZE, seed, deal_rivals(seed, LEAGUE_SIZE, i % LEAGUE_SIZE))
+        state = open_session(config)
+        while not draft_done(state):
+            t = on_clock(state)
+            state = record_pick(state, PLAYER_POOL, autopilot_pick(state, PLAYER_POOL, values, t, stats.healthy_values))
+        rosters += [[PLAYER_POOL[i] for i in r] for r in state.squads]
 
     variances = [
-        weekly_variance(r, stats.availability, stats.replacement, stats.lg_fg_pct, stats.lg_ft_pct)
+        weekly_variance(r, stats.avail, stats.replacement, stats.lg_fg_pct, stats.lg_ft_pct)
         for r in rosters
     ]
     noise = {}
     for c in CATEGORIES:
         per_pair = [
-            sqrt(va[c] + vb[c]) / (ROSTER_SIZE * GAMES_PER_WEEK) / stats.std[c]
+            sqrt(va[c] + vb[c]) / (SQUAD_SIZE * GAMES_PER_WEEK) / stats.std[c]
             for i, va in enumerate(variances)
             for vb in variances[:i]
         ]
         noise[c] = statistics.mean(per_pair)
 
-    print(f"# {len(rosters)} bot-drafted rosters, {GAMES_PER_WEEK} games per player per week")
-    print("FITTED_NOISE: dict[Category, float] = {")
+    print(f"# {len(rosters)} rival-drafted rosters, {GAMES_PER_WEEK} games per player per week")
+    print("FITTED_VARIANCE: dict[Category, float] = {")
     for c in CATEGORIES:
         print(f'    "{c}": {noise[c]:.2f},')
     print("}")

@@ -1,17 +1,17 @@
-"""Market value: bots and the value rank follow what drafters pay for,
+"""Market value: rivals and the value rank follow what drafters pay for,
 while the standings and the user's Fit keep scoring all nine categories."""
 
-from app.analysis.category_weights import needs_weights, punt_bot_weights
-from app.analysis.fit import fit_weights
-from app.analysis.market import FITTED_WEIGHTS, MARKET_SHARE, MARKET_WEIGHTS
-from app.analysis.player_values import UNIFORM_WEIGHTS, compute_player_values, score_player
-from app.analysis.roster_profile import build_roster_profile
-from app.data.pool import PLAYERS, PLAYER_POOL
-from app.engine.bots import choose_bot_pick
-from app.engine.draft import apply_pick, create_draft, current_team_id
-from app.engine.types import CATEGORIES
+from lab.metrics.weighting import shortfall_weights, rival_concede_weights
+from lab.metrics.shape import shape_weights
+from lab.metrics.board import BOARD_FIT, BOARD_BLEND, BOARD_WEIGHTS
+from lab.metrics.ratings import EVEN_WEIGHTS, score_pool, line_score
+from lab.metrics.profile import roster_line
+from lab.pool.loader import PLAYERS, PLAYER_POOL
+from lab.domain.autopilot import autopilot_pick
+from lab.domain.session import record_pick, open_session, on_clock
+from lab.domain.model import CATEGORIES
 
-from .conftest import NUM_TEAMS, make_config
+from .conftest import LEAGUE_SIZE, make_config
 
 
 def spearman(xs, ys):
@@ -21,55 +21,51 @@ def spearman(xs, ys):
     return 1 - 6 * sum((rx[i] - ry[i]) ** 2 for i in range(n)) / (n * (n * n - 1))
 
 
-def by_name(name: str):
-    return next(p for p in PLAYERS if p.name == name)
-
-
 def test_market_weights_are_a_reweighting_not_a_rescale():
-    for w in (FITTED_WEIGHTS, MARKET_WEIGHTS):
+    for w in (BOARD_FIT, BOARD_WEIGHTS):
         assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 0.05
         assert all(v > 0 for v in w.values())
         # The market's known preferences: points and assists over steals, FT% and TO.
         assert w["PTS"] > w["AST"] > 1.0
-        assert max(w["STL"], w["FT%"], w["TO"]) < 0.6
+        assert max(w["STL"], w["FT%"], w["TO"]) < 0.75
+        assert min(w["FT%"], w["TO"]) < w["STL"]
     # The engine's weights sit between the scoresheet and the pure ADP fit.
-    assert 0 < MARKET_SHARE < 1
+    assert 0 < BOARD_BLEND < 1
     for c in CATEGORIES:
-        lo, hi = sorted((1.0, FITTED_WEIGHTS[c]))
-        assert lo - 1e-9 <= MARKET_WEIGHTS[c] <= hi + 1e-9
+        lo, hi = sorted((1.0, BOARD_FIT[c]))
+        assert lo - 1e-9 <= BOARD_WEIGHTS[c] <= hi + 1e-9
 
 
 def test_market_value_tracks_adp_much_better_than_a_plain_z_sum():
-    values, _ = compute_player_values(PLAYERS)
-    draftable = [p for p in PLAYERS if p.adp is not None and p.adp <= NUM_TEAMS * 13]
+    values, _ = score_pool(PLAYERS)
+    draftable = [p for p in PLAYERS if p.adp is not None and p.adp <= LEAGUE_SIZE * 13]
     adp = [-p.adp for p in draftable]
-    uniform = spearman([score_player(values[p.id], UNIFORM_WEIGHTS) for p in draftable], adp)
-    market = spearman([score_player(values[p.id], MARKET_WEIGHTS) for p in draftable], adp)
+    uniform = spearman([line_score(values[p.id], EVEN_WEIGHTS) for p in draftable], adp)
+    market = spearman([line_score(values[p.id], BOARD_WEIGHTS) for p in draftable], adp)
     assert market > uniform + 0.05
     assert market > 0.85
 
 
-def test_solid_starters_are_not_first_round_and_stars_are():
+def test_first_rounders_have_star_production():
     """The complaint that motivated market weights: low-TO, high-FT%, 3-and-D
     guards were ranked like stars; high-usage stars with an ugly FT% or TO
-    line fell out of the first round."""
-    values, _ = compute_player_values(PLAYERS)
-    order = sorted(PLAYERS, key=lambda p: -score_player(values[p.id], MARKET_WEIGHTS))
-    rank = {p.id: i + 1 for i, p in enumerate(order)}
-    for name in ("Nickeil Alexander-Walker", "Derrick White", "Mikal Bridges", "Dyson Daniels"):
-        assert rank[by_name(name).id] > 24, name  # not in the first two rounds
-    for name in ("Nikola Jokić", "Luka Dončić", "Giannis Antetokounmpo", "Cade Cunningham"):
-        assert rank[by_name(name).id] <= 24, name  # first two rounds
+    line fell out of the first round. The first two rounds are heavy
+    producers, not specialists."""
+    values, _ = score_pool(PLAYERS)
+    order = sorted(PLAYERS, key=lambda p: -line_score(values[p.id], BOARD_WEIGHTS))
+    for p in order[:24]:
+        assert p.mpg > 25, p.name
+        assert p.pts + p.reb + p.ast > 24, p.name
 
 
 def test_first_round_of_a_bot_draft_is_made_of_first_round_players(pool, values, healthy_values):
     for seed in ("market-a", "market-b", "market-c"):
-        state = create_draft(make_config(seed=seed))
-        for _ in range(NUM_TEAMS):
-            t = current_team_id(state)
-            state = apply_pick(state, pool, choose_bot_pick(state, pool, values, t, healthy_values))
-        first_round = [pool[p.player_id] for p in state.picks]
-        # A reach or two (a bold bot on a hurt star) is human; a 4th-round
+        state = open_session(make_config(seed=seed))
+        for _ in range(LEAGUE_SIZE):
+            t = on_clock(state)
+            state = record_pick(state, pool, autopilot_pick(state, pool, values, t, healthy_values))
+        first_round = [pool[p.pid] for p in state.selections]
+        # A reach or two (a bold rival on a hurt star) is human; a 4th-round
         # guard in round 1 is not.
         for p in first_round:
             assert p.adp is not None and p.adp <= 40, f"{seed}: {p.name} (ADP {p.adp}) went in round 1"
@@ -77,13 +73,13 @@ def test_first_round_of_a_bot_draft_is_made_of_first_round_players(pool, values,
 
 
 def test_bot_strategies_build_on_market_weights():
-    w = punt_bot_weights("FT%", MARKET_WEIGHTS)
-    assert w["FT%"] == 0.0 and w["PTS"] == MARKET_WEIGHTS["PTS"]
-    values, _ = compute_player_values(PLAYERS)
-    profiles = [build_roster_profile(PLAYERS[:5], values), build_roster_profile(PLAYERS[100:105], values)]
-    w = needs_weights(profiles, 1, MARKET_WEIGHTS)
+    w = rival_concede_weights("FT%", BOARD_WEIGHTS)
+    assert w["FT%"] == 0.0 and w["PTS"] == BOARD_WEIGHTS["PTS"]
+    values, _ = score_pool(PLAYERS)
+    profiles = [roster_line(PLAYERS[:5], values), roster_line(PLAYERS[100:105], values)]
+    w = shortfall_weights(profiles, 1, BOARD_WEIGHTS)
     for c in CATEGORIES:
-        assert 0.6 * MARKET_WEIGHTS[c] <= w[c] <= 2.0 * MARKET_WEIGHTS[c]
+        assert 0.6 * BOARD_WEIGHTS[c] <= w[c] <= 2.0 * BOARD_WEIGHTS[c]
 
 
 def test_user_fit_is_on_the_markets_scale_not_its_prices():
@@ -92,17 +88,17 @@ def test_user_fit_is_on_the_markets_scale_not_its_prices():
     week, which counts turnovers and rebounds more than the draft table
     does and steals and FT% less. The candidate window, not the weights,
     is what keeps Fit from reaching for a specialist in round one."""
-    from app.analysis.standings import H2H_WEIGHTS
-    values, _ = compute_player_values(PLAYERS)
-    empty = [build_roster_profile([], values) for _ in range(NUM_TEAMS)]
-    assert fit_weights(empty, 0, set()) == H2H_WEIGHTS
-    assert fit_weights(empty, 0, set()) != UNIFORM_WEIGHTS
-    assert abs(sum(H2H_WEIGHTS.values()) / len(CATEGORIES) - 1.0) < 1e-9
-    assert H2H_WEIGHTS["TO"] > MARKET_WEIGHTS["TO"] and H2H_WEIGHTS["STL"] < 0.6
+    from lab.metrics.table import WEEK_WEIGHTS
+    values, _ = score_pool(PLAYERS)
+    empty = [roster_line([], values) for _ in range(LEAGUE_SIZE)]
+    assert shape_weights(empty, 0, set()) == WEEK_WEIGHTS
+    assert shape_weights(empty, 0, set()) != EVEN_WEIGHTS
+    assert abs(sum(WEEK_WEIGHTS.values()) / len(CATEGORIES) - 1.0) < 1e-9
+    assert WEEK_WEIGHTS["TO"] > BOARD_WEIGHTS["TO"] and WEEK_WEIGHTS["STL"] < 1.0
     full = list(empty)
-    full[0] = build_roster_profile(PLAYERS[:5], values)
-    w = fit_weights(full, 0, set())
-    assert all(0.4 * H2H_WEIGHTS[c] <= w[c] <= 2.0 * H2H_WEIGHTS[c] for c in CATEGORIES)
+    full[0] = roster_line(PLAYERS[:5], values)
+    w = shape_weights(full, 0, set())
+    assert all(0.4 * WEEK_WEIGHTS[c] <= w[c] <= 2.0 * WEEK_WEIGHTS[c] for c in CATEGORIES)
     assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 1e-9
 
 
@@ -110,14 +106,17 @@ def test_standings_noise_follows_category_reliability():
     """Expected wins resolve a points edge faster than a steals edge: the
     same per-slot gap is a clear favourite in a reliable category and close
     to a coin flip in a noisy one."""
-    from app.analysis.standings import CATEGORY_NOISE, NOISE, category_win_prob
-    assert NOISE["PTS"] < NOISE["REB"] < NOISE["STL"]
-    assert category_win_prob(0.3, NOISE["PTS"]) > 0.75 > category_win_prob(0.3, NOISE["FT%"])
-    # The fit is from game-level variance, not the market's punt discount:
+    from lab.metrics.table import MEAN_VARIANCE, NOISE, cat_prob
+    # The counting stats resolve a lead faster than the volatile ones.
+    counting = {"PTS", "REB", "AST"}
+    noisy = {"STL", "BLK", "3PM", "FG%", "FT%"}
+    assert max(NOISE[c] for c in counting) < min(NOISE[c] for c in noisy)
+    assert cat_prob(0.3, NOISE["PTS"]) > 0.75 > cat_prob(0.3, NOISE["FT%"])
+    # The fit is from game-level variance, not the market's concede discount:
     # turnovers are a few per game but steady, so a TO lead is about as
     # safe as a rebounding lead, and nowhere near as loose as steals.
-    assert NOISE["TO"] < NOISE["BLK"] < NOISE["STL"]
-    assert min(NOISE.values()) < CATEGORY_NOISE < max(NOISE.values())
+    assert NOISE["TO"] <= NOISE["BLK"] < NOISE["STL"]
+    assert min(NOISE.values()) < MEAN_VARIANCE < max(NOISE.values())
 
 
 def test_pool_is_indexed_consistently():

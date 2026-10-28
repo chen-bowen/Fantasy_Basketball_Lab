@@ -12,40 +12,40 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from ..engine.types import CATEGORIES, Category, Player
-from .player_values import CategoryZ
+from ..domain.model import CATEGORIES, Category, Player
+from .ratings import CatScores
 
-TOTAL_KEYS = (
-    "pts", "reb", "ast", "stl", "blk", "tpm", "fgm", "fga", "ftm", "fta", "tov",
+LINE_KEYS = (
+    "pts", "reb", "ast", "stl", "blk", "threes", "fgm", "fga", "ftm", "fta", "tov",
 )
-CountingTotals = dict[str, float]
+Totals = dict[str, float]
 
 
 @dataclass(frozen=True)
-class RosterProfile:
+class RosterLine:
     size: int
-    totals: CountingTotals
+    totals: Totals
     fg_pct: float | None
     ft_pct: float | None
-    z_sum: CategoryZ
-    per_slot_z: CategoryZ
+    z_sum: CatScores
+    per_slot_z: CatScores
 
 
-def build_roster_profile(
-    roster: list[Player], values: dict[str, CategoryZ]
-) -> RosterProfile:
-    totals: CountingTotals = {k: 0.0 for k in TOTAL_KEYS}
-    z_sum: CategoryZ = {c: 0.0 for c in CATEGORIES}
-    zero: CategoryZ = {c: 0.0 for c in CATEGORIES}
+def roster_line(
+    roster: list[Player], values: dict[str, CatScores]
+) -> RosterLine:
+    totals: Totals = {k: 0.0 for k in LINE_KEYS}
+    z_sum: CatScores = {c: 0.0 for c in CATEGORIES}
+    zero: CatScores = {c: 0.0 for c in CATEGORIES}
     for p in roster:
-        for k in TOTAL_KEYS:
+        for k in LINE_KEYS:
             totals[k] += getattr(p, k)
         z = values.get(p.id, zero)
         for c in CATEGORIES:
             z_sum[c] += z[c]
     denom = max(len(roster), 1)
-    per_slot_z: CategoryZ = {c: z_sum[c] / denom for c in CATEGORIES}
-    return RosterProfile(
+    per_slot_z: CatScores = {c: z_sum[c] / denom for c in CATEGORIES}
+    return RosterLine(
         size=len(roster),
         totals=totals,
         fg_pct=totals["fgm"] / totals["fga"] if totals["fga"] else None,
@@ -55,7 +55,7 @@ def build_roster_profile(
     )
 
 
-def rank_teams(profiles: list[RosterProfile]) -> dict[Category, list[int]]:
+def cat_ranks(profiles: list[RosterLine]) -> dict[Category, list[int]]:
     """Rank every team within each category by per-slot z (1 = strongest).
     TO z is already sign-flipped upstream, so higher is always better."""
     ranks: dict[Category, list[int]] = {}

@@ -5,37 +5,37 @@ import {
   type ApiPick,
   type ApiPlayer,
   type Category,
-  type DraftView,
-  type PreviewView,
+  type SessionView,
+  type InspectView,
 } from "../api/client";
-import { JUST_DRAFTED_MS, type BoardPrefs } from "../state/useSession";
-import { andList, nextUserPickIndex, ordinal, teamBadgeWithRisk, teamName, teamPunts } from "../state/teams";
+import { JUST_DRAFTED_MS, type BoardPrefs } from "../state/session";
+import { andList, nextTurnAt, ordinal, squadBadgeFull, squadName, squadConcedes } from "../state/squads";
 import {
-  Headshot,
+  Monogram,
   PlayerMeta,
   Stars,
   ZStrip,
   fitScale,
   fitScore,
   rankTone,
-  teamBackdrop,
+  clubTint,
   valueTier,
   type FitScale,
-} from "./common";
+} from "./ui";
 
 interface Props {
-  view: DraftView;
+  view: SessionView;
   playerMap: Map<string, ApiPlayer>;
   inspectedId: string | null;
-  justDrafted: { playerId: string; pickIndex: number } | null;
+  justPicked: { pid: string; at: number } | null;
   prefs: BoardPrefs;
   onPrefs: (patch: Partial<BoardPrefs>) => void;
   onInspect: (id: string | null) => void;
-  onDismissJustDrafted: () => void;
-  onDraft: (id: string) => void;
-  onTogglePunt: (c: Category) => void;
-  onAutoPunts: () => void;
-  onBackToBuild: (() => void) | null; // back to the build screens, on the first two turns
+  onDismiss: () => void;
+  onPick: (id: string) => void;
+  onConcede: (c: Category) => void;
+  onAuto: () => void;
+  onBack: (() => void) | null; // back to the build screens, on the first two turns
 }
 
 const HELPS_Z = 0.4;
@@ -49,28 +49,28 @@ const WAIT_SURE = 0.25;
 const PRUNE_MS = 600;
 
 /**
- * The board as the table shows it. While the bots pick, the room holds the
+ * The board as the table shows it. While the rivals pick, the room holds the
  * board it settled on — order and Fit alike — and only marks players as
  * they go; it resettles when the clock comes back to you (or when you change
- * punts). Rows never reorder while you're reading them.
+ * concedes). Rows never reorder while you're reading them.
  */
 interface Board {
-  draftId: string | null;
-  pickIndex: number; // picks from here on were made after the board settled
-  puntsKey: string;
+  sessionId: string | null;
+  atPick: number; // picks from here on were made after the board settled
+  concedeKey: string;
   rows: ApiPlayer[];
   fit: Record<string, number>;
   scale: FitScale;
   canWait: ReadonlySet<string>;
   candidates: ReadonlySet<string>;
   needed: ReadonlySet<Category>;
-  nextUserPick: number | null;
+  nextTurn: number | null;
   gone: Record<string, number>;
-  fitWindow: DraftView["fitWindow"];
+  window: SessionView["window"];
 }
 
-function computeBoard(view: DraftView, playerMap: Map<string, ApiPlayer>): Board {
-  const lookahead = view.nextUserPick != null && Object.keys(view.gone).length > 0;
+function computeBoard(view: SessionView, playerMap: Map<string, ApiPlayer>): Board {
+  const lookahead = view.nextTurn != null && Object.keys(view.gone).length > 0;
   const canWait = new Set(
     lookahead ? Object.keys(view.gone).filter((id) => view.gone[id] < GONE_THRESHOLD) : [],
   );
@@ -93,48 +93,48 @@ function computeBoard(view: DraftView, playerMap: Map<string, ApiPlayer>): Board
     .filter((id) => !candidates.has(id))
     .map((id) => playerMap.get(id)!)
     .filter(Boolean)
-    .sort((a, b) => (b.overall ?? 0) - (a.overall ?? 0));
+    .sort((a, b) => (b.market ?? 0) - (a.market ?? 0));
   // The 0–10 scale is set by the candidates alone, sorted by raw Fit (the
   // display order is can't-wait first): 10 is the best recommendation at
   // this pick, not the best raw Fit on the whole board.
   const scale = fitScale(view.candidates.map((id) => view.fit[id]).sort((a, b) => b - a));
   return {
-    draftId: view.id,
-    pickIndex: view.pickIndex,
-    puntsKey: view.userPunts.join(","),
+    sessionId: view.id,
+    atPick: view.atPick,
+    concedeKey: view.concedes.join(","),
     rows: [...picks, ...later],
     fit: view.fit,
     scale,
     canWait,
     candidates,
-    needed: new Set(view.neededCategories),
-    nextUserPick: view.nextUserPick,
+    needed: new Set(view.inPlay),
+    nextTurn: view.nextTurn,
     gone: view.gone,
-    fitWindow: view.fitWindow,
+    window: view.window,
   };
 }
 
 /** The panel's subject: on the board, gone to another team, or just yours. */
 type SubjectStatus =
-  | { kind: "live" }
-  | { kind: "taken"; team: string; pick: number; round: number }
-  | { kind: "yours"; pick: number; round: number };
+  | { style: "live" }
+  | { style: "taken"; team: string; pick: number; round: number }
+  | { style: "yours"; pick: number; round: number };
 
-export function DraftRoom({
-  view, playerMap, inspectedId, justDrafted, prefs, onPrefs, onInspect, onDismissJustDrafted,
-  onDraft, onTogglePunt, onAutoPunts, onBackToBuild,
+export function Room({
+  view, playerMap, inspectedId, justPicked, prefs, onPrefs, onInspect, onDismiss,
+  onPick, onConcede, onAuto, onBack,
 }: Props) {
-  const punts = useMemo(() => new Set<Category>(view.userPunts), [view.userPunts]);
+  const concedes = useMemo(() => new Set<Category>(view.concedes), [view.concedes]);
 
   // --- the settled board (see Board) ---
   const live = useMemo(() => computeBoard(view, playerMap), [view, playerMap]);
   const [settled, setSettled] = useState(live);
   const frozen =
-    !view.isUserTurn &&
+    !view.yourPick &&
     !view.complete &&
-    settled.draftId === live.draftId &&
-    settled.puntsKey === live.puntsKey &&
-    live.pickIndex >= settled.pickIndex; // a rewind resettles
+    settled.sessionId === live.sessionId &&
+    settled.concedeKey === live.concedeKey &&
+    live.atPick >= settled.atPick; // a rewind resettles
   const board = frozen ? settled : live;
   useEffect(() => {
     if (board !== settled) setSettled(board);
@@ -144,12 +144,12 @@ export function DraftRoom({
   // taken, until a quiet moment prunes them.
   const taken = useMemo(() => {
     const m = new Map<string, ApiPick>();
-    for (const p of view.picks) if (p.index >= board.pickIndex) m.set(p.playerId, p);
+    for (const p of view.selections) if (p.at >= board.atPick) m.set(p.pid, p);
     return m;
-  }, [view.picks, board.pickIndex]);
+  }, [view.selections, board.atPick]);
   const [prunedBefore, setPrunedBefore] = useState(0);
   const rows = useMemo(
-    () => board.rows.filter((p) => (taken.get(p.id)?.index ?? Infinity) >= prunedBefore),
+    () => board.rows.filter((p) => (taken.get(p.id)?.at ?? Infinity) >= prunedBefore),
     [board.rows, taken, prunedBefore],
   );
   const unpruned = rows.some((p) => taken.has(p.id));
@@ -165,7 +165,7 @@ export function DraftRoom({
   }, [engaged]);
   const scrollFix = useRef(0);
   useEffect(() => {
-    if (!unpruned || engaged || view.isUserTurn) return;
+    if (!unpruned || engaged || view.yourPick) return;
     const t = setTimeout(() => {
       if (engagedRef.current) return;
       // Rows leaving above the viewport would shift what's in it: measure and compensate.
@@ -175,10 +175,10 @@ export function DraftRoom({
         if (r.bottom <= 0) above += r.height;
       });
       scrollFix.current = above;
-      setPrunedBefore(view.pickIndex);
+      setPrunedBefore(view.atPick);
     }, PRUNE_MS);
     return () => clearTimeout(t);
-  }, [unpruned, engaged, view.isUserTurn, view.pickIndex]);
+  }, [unpruned, engaged, view.yourPick, view.atPick]);
   useLayoutEffect(() => {
     if (scrollFix.current) {
       window.scrollBy(0, -scrollFix.current);
@@ -188,24 +188,24 @@ export function DraftRoom({
 
   // The player you just drafted stays in the panel for a moment.
   useEffect(() => {
-    if (!justDrafted) return;
-    const t = setTimeout(onDismissJustDrafted, JUST_DRAFTED_MS);
+    if (!justPicked) return;
+    const t = setTimeout(onDismiss, JUST_DRAFTED_MS);
     return () => clearTimeout(t);
-  }, [justDrafted, onDismissJustDrafted]);
+  }, [justPicked, onDismiss]);
 
   // --- the panel's subject: changes only by your action or at a settle point ---
-  const pickOf = (id: string) => view.picks.find((p) => p.playerId === id);
+  const pickOf = (id: string) => view.selections.find((p) => p.pid === id);
   const statusFor = (pk: ApiPick | undefined): SubjectStatus =>
     !pk
-      ? { kind: "live" }
-      : pk.teamId === view.userSlot
-        ? { kind: "yours", pick: pk.index + 1, round: pk.round }
-        : { kind: "taken", team: teamName(view, pk.teamId), pick: pk.index + 1, round: pk.round };
+      ? { style: "live" }
+      : pk.squad === view.seat
+        ? { style: "yours", pick: pk.at + 1, round: pk.round }
+        : { style: "taken", team: squadName(view, pk.squad), pick: pk.at + 1, round: pk.round };
   let subject: ApiPlayer | undefined;
-  let status: SubjectStatus = { kind: "live" };
-  if (justDrafted && !inspectedId && playerMap.has(justDrafted.playerId)) {
-    subject = playerMap.get(justDrafted.playerId);
-    status = statusFor(pickOf(justDrafted.playerId));
+  let status: SubjectStatus = { style: "live" };
+  if (justPicked && !inspectedId && playerMap.has(justPicked.pid)) {
+    subject = playerMap.get(justPicked.pid);
+    status = statusFor(pickOf(justPicked.pid));
   } else if (inspectedId && playerMap.has(inspectedId)) {
     subject = playerMap.get(inspectedId);
     status = statusFor(pickOf(inspectedId));
@@ -215,24 +215,24 @@ export function DraftRoom({
   }
   const topId = rows.find((p) => !taken.has(p.id))?.id ?? null;
 
-  const nextMine = nextUserPickIndex(view, view.pickIndex);
+  const nextMine = nextTurnAt(view, view.atPick);
   const watching =
-    view.isUserTurn || view.complete
+    view.yourPick || view.complete
       ? null
       : {
-          team: teamName(view, view.onClock ?? 0),
-          away: nextMine === null ? null : nextMine - view.pickIndex,
-          paused: view.status === "paused",
+          team: squadName(view, view.onClock ?? 0),
+          away: nextMine === null ? null : nextMine - view.atPick,
+          paused: view.phase === "paused",
         };
 
   return (
     <>
-      <BuildBanner
+      <BuildBar
         view={view}
-        punts={punts}
-        onTogglePunt={onTogglePunt}
-        onAutoPunts={onAutoPunts}
-        onBackToBuild={onBackToBuild}
+        concedes={concedes}
+        onConcede={onConcede}
+        onAuto={onAuto}
+        onBack={onBack}
       />
       <main
         className="room"
@@ -253,7 +253,7 @@ export function DraftRoom({
           board={board}
           rows={rows}
           taken={taken}
-          punts={punts}
+          concedes={concedes}
           prefs={prefs}
           onPrefs={onPrefs}
           watching={watching !== null}
@@ -267,65 +267,65 @@ export function DraftRoom({
             player={subject}
             status={status}
             watching={watching}
-            isTop={status.kind === "live" && subject.id === topId}
+            isTop={status.style === "live" && subject.id === topId}
             topId={topId}
-            punts={punts}
+            concedes={concedes}
             detailOpen={prefs.detailOpen}
             onToggleDetail={(detailOpen) => onPrefs({ detailOpen })}
             onInspect={onInspect}
-            onDraft={() => onDraft(subject!.id)}
+            onPick={() => onPick(subject!.id)}
             onClose={
-              inspectedId || justDrafted
+              inspectedId || justPicked
                 ? () => {
                     onInspect(null);
-                    onDismissJustDrafted();
+                    onDismiss();
                   }
                 : null
             }
           />
         )}
-        <TeamPanel view={view} playerMap={playerMap} justDraftedId={justDrafted?.playerId ?? null} />
+        <SquadPanel view={view} playerMap={playerMap} justPickedId={justPicked?.pid ?? null} />
       </main>
     </>
   );
 }
 
 /**
- * The build, on one line above the room: the punt, who's steering it, why,
+ * The build, on one line above the room: the concede, who's steering it, why,
  * and the controls to change it. The full explanation is the line's tooltip.
  */
-function BuildBanner({
+function BuildBar({
   view,
-  punts,
-  onTogglePunt,
-  onAutoPunts,
-  onBackToBuild,
+  concedes,
+  onConcede,
+  onAuto,
+  onBack,
 }: {
-  view: DraftView;
-  punts: ReadonlySet<Category>;
-  onTogglePunt: (c: Category) => void;
-  onAutoPunts: () => void;
-  onBackToBuild: (() => void) | null;
+  view: SessionView;
+  concedes: ReadonlySet<Category>;
+  onConcede: (c: Category) => void;
+  onAuto: () => void;
+  onBack: (() => void) | null;
 }) {
   const [editing, setEditing] = useState(false);
-  const needs = view.neededCategories;
-  const hasRoster = view.rosters[view.userSlot].length > 0;
-  const auto = view.puntMode === "auto";
-  const plan = view.puntPlan;
+  const needs = view.inPlay;
+  const hasRoster = view.squads[view.seat].length > 0;
+  const auto = view.concedeMode === "auto";
+  const plan = view.concedePlan;
   const planDiffers =
-    !auto && (plan.punts.length !== punts.size || plan.punts.some((c) => !punts.has(c)));
+    !auto && (plan.concedes.length !== concedes.size || plan.concedes.some((c) => !concedes.has(c)));
   const why = [
     auto
       ? plan.reason
       : planDiffers
-        ? `${plan.reason} (You're on manual — ${plan.punts.length ? `the roster would punt ${andList(plan.punts)}.` : "the roster would punt nothing."})`
+        ? `${plan.reason} (You're on manual — ${plan.concedes.length ? `the roster would concede ${andList(plan.concedes)}.` : "the roster would concede nothing."})`
         : plan.reason,
     needs.length
       ? `Fit counts ${andList(needs)} most — the categories you're still in the fight for.`
       : hasRoster
         ? "Nothing is settled yet, so Fit is close to draft value."
         : "Fit is draft value until your team has a shape.",
-    hasRoster ? settledNote(view.settledCategories) : "",
+    hasRoster ? settledNote(view.settled) : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -334,16 +334,16 @@ function BuildBanner({
       <section className="room-bar" aria-label="Your build">
         <span className="room-bar-build">
           <span className="room-bar-label">Your build</span>
-          {punts.size ? (
-            [...punts].map((c) => (
+          {concedes.size ? (
+            [...concedes].map((c) => (
               <span key={c} className="chip dark">
-                Punt {c}
+                Concede {c}
               </span>
             ))
           ) : (
-            <span className="chip dark">No punt</span>
+            <span className="chip dark">No concede</span>
           )}
-          <span className="chip" title={auto ? "The punt follows your roster after every pick" : "Punts set by hand"}>
+          <span className="chip" title={auto ? "The concede follows your roster after every pick" : "Concedes set by hand"}>
             {auto ? "follows your roster" : "set by hand"}
           </span>
         </span>
@@ -356,28 +356,28 @@ function BuildBanner({
           {why}
         </span>
         <span className="room-bar-actions">
-          {onBackToBuild && (
-            <button className="btn" onClick={onBackToBuild}>
+          {onBack && (
+            <button className="btn" onClick={onBack}>
               Back to build options
             </button>
           )}
           {!auto && (
-            <button className="btn" onClick={onAutoPunts} title="Let the roster decide the punt from here">
+            <button className="btn" onClick={onAuto} title="Let the roster decide the concede from here">
               Let the roster decide
             </button>
           )}
           <button className="btn" aria-expanded={editing} onClick={() => setEditing(!editing)}>
-            {editing ? "Done" : "Change punts"}
+            {editing ? "Done" : "Change concedes"}
           </button>
         </span>
         {editing && (
-          <div className="punt-toggles" role="group" aria-label="Punted categories">
+          <div className="concede-toggles" role="group" aria-label="Conceded categories">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
-                className={punts.has(c) ? "toggle on" : "toggle"}
-                aria-pressed={punts.has(c)}
-                onClick={() => onTogglePunt(c)}
+                className={concedes.has(c) ? "toggle on" : "toggle"}
+                aria-pressed={concedes.has(c)}
+                onClick={() => onConcede(c)}
               >
                 {c}
               </button>
@@ -391,7 +391,7 @@ function BuildBanner({
 
 /** The categories Fit counts least, and why: a pick can't move a category
  * you've locked up, and shouldn't chase one you can't catch. */
-function settledNote({ ahead, behind }: DraftView["settledCategories"]): string {
+function settledNote({ ahead, behind }: SessionView["settled"]): string {
   if (!ahead.length && !behind.length) return "";
   const parts: string[] = [];
   if (ahead.length) parts.push(`${andList(ahead)} ${ahead.length > 1 ? "are" : "is"} locked up`);
@@ -408,7 +408,7 @@ function FitTable({
   board,
   rows: boardRows,
   taken,
-  punts,
+  concedes,
   prefs,
   onPrefs,
   watching,
@@ -416,14 +416,14 @@ function FitTable({
   onInspect,
   onHover,
 }: {
-  view: DraftView;
+  view: SessionView;
   board: Board;
   rows: ApiPlayer[]; // the board, minus pruned rows
   taken: ReadonlyMap<string, ApiPick>; // drafted since the board settled: shown in place, marked
-  punts: ReadonlySet<Category>;
+  concedes: ReadonlySet<Category>;
   prefs: BoardPrefs;
   onPrefs: (patch: Partial<BoardPrefs>) => void;
-  watching: boolean; // a bot is on the clock: the board is held
+  watching: boolean; // a rival is on the clock: the board is held
   focusId: string | null;
   onInspect: (id: string) => void;
   onHover: (over: boolean) => void; // pointer over the table: the board holds still
@@ -441,7 +441,7 @@ function FitTable({
     // The board arrives in Fit order; re-sort only when sorting by value.
     return sortBy === "fit"
       ? shown
-      : [...shown].sort((a, b) => (b.overall ?? 0) - (a.overall ?? 0));
+      : [...shown].sort((a, b) => (b.market ?? 0) - (a.market ?? 0));
   }, [boardRows, query, pos, sortBy]);
   const sortHeader = (key: "fit" | "value", label: string) => (
     <button
@@ -458,7 +458,7 @@ function FitTable({
     </button>
   );
   const colClass = (c: Category) =>
-    punts.has(c) ? "cat-col punted" : needed.has(c) ? "cat-col needed" : "cat-col";
+    concedes.has(c) ? "cat-col conceded" : needed.has(c) ? "cat-col needed" : "cat-col";
 
   return (
     <section
@@ -499,13 +499,13 @@ function FitTable({
           <div className="popover">
             <p>
               <strong>Fit</strong> (0–10) is how much a player helps your team at this pick, among the{" "}
-              {board.fitWindow.size} players the draft expects to go around pick #{board.fitWindow.pick}{" "}
-              (market rank up to #{board.fitWindow.maxRank}): the best of them scores 10, and it updates
+              {board.window.size} players the draft expects to go around pick #{board.window.pick}{" "}
+              (market rank up to #{board.window.maxRank}): the best of them scores 10, and it updates
               after every pick. The rest of the board is listed underneath — those players usually go
               later, so taking one now means passing up someone you can't get back.
-              {board.nextUserPick != null && canWait.size > 0 && sortBy === "fit" && (
+              {board.nextTurn != null && canWait.size > 0 && sortBy === "fit" && (
                 <>
-                  {" "}Players likely still there at your next pick (#{board.nextUserPick}) are listed
+                  {" "}Players likely still there at your next pick (#{board.nextTurn}) are listed
                   below the ones who won't be — take those first.
                 </>
               )}
@@ -516,12 +516,12 @@ function FitTable({
               steals or free throws): five stars is first-round quality. Fit starts from Value
               and moves with your roster: above it, he does more for the categories you're still
               fighting for; below it, his strengths are ones you've already settled.
-              {punts.size > 0 && ` Fit leaves out ${andList([...punts])} because you punt ${punts.size > 1 ? "them" : "it"}.`}
+              {concedes.size > 0 && ` Fit leaves out ${andList([...concedes])} because you concede ${concedes.size > 1 ? "them" : "it"}.`}
             </p>
           </div>
         </details>
         {watching && (
-          <span className="chip hold" title="Order and Fit are held while the bots pick; players are marked as they go">
+          <span className="chip hold" title="Order and Fit are held while the rivals pick; players are marked as they go">
             Board held — refreshes when you're up
           </span>
         )}
@@ -559,7 +559,7 @@ function FitTable({
           <tbody>
             {rows.slice(0, limit).map((p, i, arr) => {
               const score = fitScore(board.fit[p.id], scale);
-              const tier = valueTier(p.overallRank);
+              const tier = valueTier(p.marketRank);
               const waits = canWait.has(p.id);
               const later = !candidates.has(p.id);
               const gone = taken.get(p.id);
@@ -582,18 +582,18 @@ function FitTable({
                       <td colSpan={cols}>
                         {group === "now" ? (
                           <>
-                            <strong>{board.nextUserPick != null && canWait.size > 0 ? "Take now" : "Recommended at this pick"}</strong>
-                            {board.nextUserPick != null && canWait.size > 0 && <span>won't last to your next pick (#{board.nextUserPick})</span>}
+                            <strong>{board.nextTurn != null && canWait.size > 0 ? "Take now" : "Recommended at this pick"}</strong>
+                            {board.nextTurn != null && canWait.size > 0 && <span>won't last to your next pick (#{board.nextTurn})</span>}
                           </>
                         ) : group === "wait" ? (
                           <>
                             <strong>Can wait</strong>
-                            <span>likely still there at #{board.nextUserPick}</span>
+                            <span>likely still there at #{board.nextTurn}</span>
                           </>
                         ) : (
                           <>
                             <strong>Later</strong>
-                            <span>usually drafted after pick #{board.fitWindow.pick} — they'll be there in a round or two</span>
+                            <span>usually drafted after pick #{board.window.pick} — they'll be there in a round or two</span>
                           </>
                         )}
                       </td>
@@ -605,13 +605,13 @@ function FitTable({
                 >
                   <td className="left">
                     <button className="row-btn">
-                      <Headshot player={p} variant="avatar" />
+                      <Monogram player={p} variant="avatar" />
                       <span className="row-name">
                         <strong>{p.name}</strong>
                         <PlayerMeta player={p} />
-                        {!gone && !later && lookaheadChip(board.gone[p.id], board.nextUserPick, sortBy === "fit")}
+                        {!gone && !later && lookaheadChip(board.gone[p.id], board.nextTurn, sortBy === "fit")}
                         {!gone && later && sortBy !== "fit" && (
-                          <span className="chip wait" title={`Usually drafted later than pick #${board.fitWindow.pick} — Fit isn't recommending him yet`}>later</span>
+                          <span className="chip wait" title={`Usually drafted later than pick #${board.window.pick} — Fit isn't recommending him yet`}>later</span>
                         )}
                       </span>
                     </button>
@@ -620,9 +620,9 @@ function FitTable({
                     {gone ? (
                       <span
                         className="chip taken-chip"
-                        title={`Drafted by ${teamName(view, gone.teamId)} at #${gone.index + 1}`}
+                        title={`Drafted by ${squadName(view, gone.squad)} at #${gone.at + 1}`}
                       >
-                        Taken · {gone.teamId === view.userSlot ? "you" : teamName(view, gone.teamId)} · #{gone.index + 1}
+                        Taken · {gone.squad === view.seat ? "you" : squadName(view, gone.squad)} · #{gone.at + 1}
                       </span>
                     ) : (
                       <span className={later ? "fit-cell later" : "fit-cell"}>
@@ -638,20 +638,20 @@ function FitTable({
                   <td className="left">
                     <span
                       className="value-cell"
-                      title={`${tier.label} · value ${(p.overall ?? 0).toFixed(1)}`}
+                      title={`${tier.label} · value ${(p.market ?? 0).toFixed(1)}`}
                     >
                       <Stars count={tier.stars} />
-                      {p.overallRank != null && <span className="muted small">#{p.overallRank}</span>}
+                      {p.marketRank != null && <span className="muted small">#{p.marketRank}</span>}
                     </span>
                   </td>
                   {mode === "fit" ? (
-                    <td className="left">{p.z && <ZStrip z={p.z} punts={punts} />}</td>
+                    <td className="left">{p.z && <ZStrip z={p.z} concedes={concedes} />}</td>
                   ) : (
                     <>
                       <td className="muted">{p.adp != null ? p.adp.toFixed(1) : "—"}</td>
-                      <td className="muted">{p.min.toFixed(1)}</td>
+                      <td className="muted">{p.mpg.toFixed(1)}</td>
                       {CATEGORIES.map((c) => (
-                        <td key={c} className={punts.has(c) ? "muted" : ""}>
+                        <td key={c} className={concedes.has(c) ? "muted" : ""}>
                           {statText(p, c)}
                         </td>
                       ))}
@@ -730,7 +730,7 @@ function statText(p: ApiPlayer, c: Category): string {
     case "AST": return p.ast.toFixed(1);
     case "STL": return p.stl.toFixed(1);
     case "BLK": return p.blk.toFixed(1);
-    case "3PM": return p.tpm.toFixed(1);
+    case "3PM": return p.threes.toFixed(1);
     case "FG%": return p.fga > 0 ? ((p.fgm / p.fga) * 100).toFixed(1) : "—";
     case "FT%": return p.fta > 0 ? ((p.ftm / p.fta) * 100).toFixed(1) : "—";
     case "TO": return p.tov.toFixed(1);
@@ -749,7 +749,7 @@ interface Verdict {
  * lists them. `detail` is the full explanation, kept as the tooltip.
  */
 function verdictFor(args: {
-  view: DraftView;
+  view: SessionView;
   player: ApiPlayer;
   isTop: boolean;
   isCandidate: boolean;
@@ -759,18 +759,18 @@ function verdictFor(args: {
   outOfReach: Category[];
 }): Verdict {
   const { view, player, isTop, isCandidate, helps, strong, locked, outOfReach } = args;
-  const emptyRoster = view.rosters[view.userSlot].length === 0;
-  const noShape = !emptyRoster && view.neededCategories.length === 0;
+  const emptyRoster = view.squads[view.seat].length === 0;
+  const noShape = !emptyRoster && view.inPlay.length === 0;
   const topLong = isTop ? "The pick Fit recommends right now. " : "";
   // "Fit's pick: moves …" on the top row, "Moves …" elsewhere.
   const lead = (text: string) =>
     isTop ? `Fit's pick: ${text}` : text.charAt(0).toUpperCase() + text.slice(1);
   if (!isCandidate) {
-    const rank = player.overallRank != null ? `~#${player.overallRank}` : "later";
+    const rank = player.marketRank != null ? `~#${player.marketRank}` : "later";
     return {
       line: `Usually goes ${rank} — he'll be there later; take someone who won't.`,
       detail:
-        `Usually drafted around #${player.overallRank ?? "—"}, later than this pick (#${view.fitWindow.pick}), so Fit isn't recommending him yet: take a player who won't last, and come back for him.` +
+        `Usually drafted around #${player.marketRank ?? "—"}, later than this pick (#${view.window.pick}), so Fit isn't recommending him yet: take a player who won't last, and come back for him.` +
         (helps.length ? ` He would add ${andList(helps)}.` : ""),
     };
   }
@@ -829,60 +829,59 @@ function PlayerPanel({
   watching,
   isTop,
   topId,
-  punts,
+  concedes,
   detailOpen,
   onToggleDetail,
   onInspect,
-  onDraft,
+  onPick,
   onClose,
 }: {
-  view: DraftView;
+  view: SessionView;
   board: Board;
   player: ApiPlayer;
   status: SubjectStatus;
-  watching: { team: string; away: number | null; paused: boolean } | null; // a bot is on the clock
+  watching: { team: string; away: number | null; paused: boolean } | null; // a rival is on the clock
   isTop: boolean; // the top row of the table: the pick Fit recommends right now
   topId: string | null; // Fit's pick right now, for the hand-off link when he's gone
-  punts: ReadonlySet<Category>;
+  concedes: ReadonlySet<Category>;
   detailOpen: boolean; // the per-category section; remembered across players
   onToggleDetail: (open: boolean) => void;
   onInspect: (id: string) => void;
-  onDraft: () => void;
+  onPick: () => void;
   onClose: (() => void) | null;
 }) {
   const z = player.z ?? ({} as Record<Category, number>);
-  const tier = valueTier(player.overallRank);
-  const onBoard = status.kind === "live";
+  const tier = valueTier(player.marketRank);
+  const onBoard = status.style === "live";
   const isCandidate = board.candidates.has(player.id);
   const [preview, setPreview] = useState<{
-    playerId: string;
-    pickIndex: number;
-    data: PreviewView;
+    pid: string;
+    at: number;
+    data: InspectView;
   } | null>(null);
   useEffect(() => {
     // No preview for a player who's gone: the panel keeps his last one.
     if (!view.id || !onBoard) return;
     let cancelled = false;
-    api
-      .preview(view.id, player.id)
+    api.inspect(view.id, player.id)
       .then((data) => {
         if (!cancelled)
-          setPreview({ playerId: player.id, pickIndex: view.pickIndex, data });
+          setPreview({ pid: player.id, at: view.atPick, data });
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [view.id, view.pickIndex, player.id, onBoard]);
+  }, [view.id, view.atPick, player.id, onBoard]);
 
-  const helps = view.neededCategories.filter((c) => z[c] > HELPS_Z);
-  const strong = CATEGORIES.filter((c) => !punts.has(c) && !helps.includes(c) && z[c] >= 1.5);
-  const locked = strong.filter((c) => view.settledCategories.ahead.includes(c));
-  const outOfReach = strong.filter((c) => view.settledCategories.behind.includes(c));
-  const hurts = CATEGORIES.filter((c) => !punts.has(c) && z[c] <= HURTS_Z);
+  const helps = view.inPlay.filter((c) => z[c] > HELPS_Z);
+  const strong = CATEGORIES.filter((c) => !concedes.has(c) && !helps.includes(c) && z[c] >= 1.5);
+  const locked = strong.filter((c) => view.settled.ahead.includes(c));
+  const outOfReach = strong.filter((c) => view.settled.behind.includes(c));
+  const hurts = CATEGORIES.filter((c) => !concedes.has(c) && z[c] <= HURTS_Z);
   const fit = board.fit[player.id];
   const hasFit = fit !== undefined;
-  const value = player.overall ?? 0;
+  const value = player.market ?? 0;
   const last = lastNameOf(player);
   const verdict = verdictFor({ view, player, isTop, isCandidate, helps, strong, locked, outOfReach });
   const topPlayer = topId && topId !== player.id ? board.rows.find((p) => p.id === topId) : null;
@@ -894,15 +893,15 @@ function PlayerPanel({
     (fitGap === "above"
       ? " Fit is above his draft value: your roster makes him worth more than his price — he moves categories you're still in the fight for."
       : fitGap === "below"
-        ? " Fit is below his draft value: his strengths are in categories you've locked up, written off, or punt."
+        ? " Fit is below his draft value: his strengths are in categories you've locked up, written off, or concede."
         : "");
 
   // Price: value, and where drafters take him relative to this pick.
   let adpNote = "";
   if (player.adp != null) {
     adpNote = `ADP ${player.adp.toFixed(1)}`;
-    if (view.isUserTurn) {
-      const gap = Math.round(view.pickIndex + 1 - player.adp);
+    if (view.yourPick) {
+      const gap = Math.round(view.atPick + 1 - player.adp);
       adpNote +=
         Math.abs(gap) <= 3
           ? " — goes right around this pick"
@@ -914,17 +913,17 @@ function PlayerPanel({
   const valueTitle = [`${tier.label} · value ${value.toFixed(1)}`, adpNote].filter(Boolean).join(" · ");
 
   // Look-ahead, in the table's chip language.
-  const backToBack = board.nextUserPick != null && board.nextUserPick === view.pickIndex + 2;
+  const backToBack = board.nextTurn != null && board.nextTurn === view.atPick + 2;
   const lookahead = backToBack ? (
-    <span className="chip wait" title={`You pick again right after this one (#${board.nextUserPick})`}>
+    <span className="chip wait" title={`You pick again right after this one (#${board.nextTurn})`}>
       you pick next
     </span>
   ) : (
-    lookaheadChip(board.gone[player.id], board.nextUserPick, false, true)
+    lookaheadChip(board.gone[player.id], board.nextTurn, false, true)
   );
 
   // Availability and games played, on one line; the full story on hover.
-  const seasons = Object.entries(player.gpBySeason ?? {});
+  const seasons = Object.entries(player.seasonGp ?? {});
   const avail = player.availability;
   const availPct = avail != null ? Math.round(avail * 100) : null;
   const availLine = [
@@ -936,9 +935,9 @@ function PlayerPanel({
   const availTitle =
     (seasons.length
       ? `Games played: ${seasons.map(([s, g]) => `'${s.slice(2)} ${g}`).join(" · ")}`
-      : `${player.gp} games in ${player.asOfSeason}`) +
+      : `${player.gp} games in ${player.season}`) +
     (avail != null
-      ? ` — ${player.injury ? `listed ${player.injury}, ` : ""}expected to play about ${availPct}% of games` +
+      ? ` — ${player.status ? `listed ${player.status}, ` : ""}expected to play about ${availPct}% of games` +
         (avail < 0.65
           ? ", which lowers his value a lot"
           : avail < 0.8
@@ -950,21 +949,21 @@ function PlayerPanel({
   // The action slot: the draft button on your turn, otherwise the room's
   // state in its place — never a disabled button.
   let action;
-  if (status.kind === "taken" && !watching && onClose) {
+  if (status.style === "taken" && !watching && onClose) {
     // It's your pick and he's gone: the slot hands you back to the board.
     action = (
       <button className="btn outline-accent xl" onClick={onClose}>
         Back to the board{topPlayer ? ` · Fit's pick: ${lastNameOf(topPlayer)}` : ""}
       </button>
     );
-  } else if (status.kind === "taken") {
+  } else if (status.style === "taken") {
     action = (
       <div className="panel-state taken" role="status">
         <strong>Drafted by {status.team} at #{status.pick}</strong>
         <span>Round {status.round} · no longer on the board</span>
       </div>
     );
-  } else if (status.kind === "yours") {
+  } else if (status.style === "yours") {
     action = (
       <div className="panel-state yours" role="status">
         <strong>Yours at #{status.pick}</strong>
@@ -986,23 +985,23 @@ function PlayerPanel({
     );
   } else {
     action = (
-      <button className="btn primary xl" onClick={onDraft}>
+      <button className="btn primary xl" onClick={onPick}>
         Draft {last}
       </button>
     );
   }
 
   const livePreview =
-    onBoard && preview?.playerId === player.id && preview.pickIndex === view.pickIndex ? preview.data : null;
+    onBoard && preview?.pid === player.id && preview.at === view.atPick ? preview.data : null;
 
   return (
-    <section className={`card player-panel ${status.kind}`}>
+    <section className={`card player-panel ${status.style}`}>
       <div className="panel-scroll">
-        <div className="panel-photo" style={teamBackdrop(player.team)}>
-          <Headshot player={player} variant="tile" />
-          {status.kind !== "live" ? (
-            <span className={`panel-tag ${status.kind}`}>
-              {status.kind === "taken" ? `Taken · ${status.team}` : "Yours"}
+        <div className="panel-photo" style={clubTint(player.team)}>
+          <Monogram player={player} variant="tile" />
+          {status.style !== "live" ? (
+            <span className={`panel-tag ${status.style}`}>
+              {status.style === "taken" ? `Taken · ${status.team}` : "Yours"}
             </span>
           ) : (
             onBoard && lookahead && <span className="panel-tag look">{lookahead}</span>
@@ -1047,12 +1046,12 @@ function PlayerPanel({
               <Stars count={tier.stars} />
               <span className="muted small">
                 {tier.label}
-                {player.overallRank != null ? ` · #${player.overallRank}` : ""}
+                {player.marketRank != null ? ` · #${player.marketRank}` : ""}
               </span>
             </span>
             <span className={`small clamp ${availTone}`} title={availTitle}>{availLine}</span>
           </div>
-          {status.kind === "taken" ? (
+          {status.style === "taken" ? (
             <p className="verdict">
               Off the board — {status.team} took him at #{status.pick}.{" "}
               {topPlayer && (
@@ -1061,7 +1060,7 @@ function PlayerPanel({
                 </button>
               )}
             </p>
-          ) : status.kind === "yours" ? (
+          ) : status.style === "yours" ? (
             <p className="verdict">
               On your team as your round-{status.round} pick.{" "}
               {helps.length ? `He brings ${andList(helps)}.` : strong.length ? `Strong in ${andList(strong)}.` : ""}
@@ -1089,7 +1088,7 @@ function PlayerPanel({
               <span className="muted small">Nothing major</span>
             )}
           </div>
-          {onBoard && <RankMoves preview={livePreview} punts={punts} />}
+          {onBoard && <RankMoves preview={livePreview} concedes={concedes} />}
           <details
             className="panel-detail"
             open={detailOpen}
@@ -1103,8 +1102,8 @@ function PlayerPanel({
               <CategoryDetail
                 z={player.z}
                 value={value}
-                punts={punts}
-                needed={new Set(view.neededCategories)}
+                concedes={concedes}
+                needed={new Set(view.inPlay)}
                 preview={livePreview}
                 inert={!onBoard}
               />
@@ -1118,19 +1117,19 @@ function PlayerPanel({
 }
 
 /** Your category ranks before → after drafting him, as a 3×3 grid of tiles. */
-function RankMoves({ preview, punts }: { preview: PreviewView | null; punts: ReadonlySet<Category> }) {
+function RankMoves({ preview, concedes }: { preview: InspectView | null; concedes: ReadonlySet<Category> }) {
   const hasBefore = (preview?.before.size ?? 0) > 0;
   return (
     <div className="rank-moves-wrap">
       <div className="rank-moves" aria-label="Your category ranks with him">
         {CATEGORIES.map((c) => {
           const r = preview?.ranks?.[c];
-          const punted = punts.has(c);
+          const conceded = concedes.has(c);
           const moved = r && hasBefore ? r.before - r.after : 0;
-          const tone = punted ? "punted" : moved > 0 ? "up" : moved < 0 ? "down" : "flat";
+          const tone = conceded ? "conceded" : moved > 0 ? "up" : moved < 0 ? "down" : "flat";
           return (
             <span key={c} className={`rank-move ${tone}`}>
-              <span className="rank-move-cat">{c}{punted ? " · punt" : ""}</span>
+              <span className="rank-move-cat">{c}{conceded ? " · concede" : ""}</span>
               <span className="rank-move-val">
                 {r ? (
                   hasBefore ? (
@@ -1170,16 +1169,16 @@ const BAR_MAX_Z = 3; // bars are scaled to ±3; larger scores fill the bar
 function CategoryDetail({
   z,
   value,
-  punts,
+  concedes,
   needed,
   preview,
   inert = false,
 }: {
   z: Record<Category, number>;
   value: number;
-  punts: ReadonlySet<Category>;
+  concedes: ReadonlySet<Category>;
   needed: ReadonlySet<Category>;
-  preview: PreviewView | null;
+  preview: InspectView | null;
   inert?: boolean; // he's off the board: no "your rank with him"
 }) {
   const hasBefore = (preview?.before.size ?? 0) > 0;
@@ -1194,7 +1193,7 @@ function CategoryDetail({
         const width = (Math.min(Math.abs(v), BAR_MAX_Z) / BAR_MAX_Z) * 50;
         const r = preview?.ranks?.[c];
         const moved = r && hasBefore ? r.before - r.after : 0;
-        const cls = punts.has(c) ? "catdetail-row punted" : needed.has(c) ? "catdetail-row needed" : "catdetail-row";
+        const cls = concedes.has(c) ? "catdetail-row conceded" : needed.has(c) ? "catdetail-row needed" : "catdetail-row";
         return (
           <div key={c} className={cls}>
             <span className="rank-cat">{c}</span>
@@ -1226,23 +1225,23 @@ function CategoryDetail({
   );
 }
 
-function TeamPanel({
+function SquadPanel({
   view,
   playerMap,
-  justDraftedId,
+  justPickedId,
 }: {
-  view: DraftView;
+  view: SessionView;
   playerMap: Map<string, ApiPlayer>;
-  justDraftedId: string | null; // your newest pick: his roster row is lit for a moment
+  justPickedId: string | null; // your newest pick: his roster row is lit for a moment
 }) {
-  const [team, setTeam] = useState(view.userSlot);
-  const n = view.numTeams;
-  const isYou = team === view.userSlot;
-  const punts = teamPunts(view, team);
+  const [team, setTeam] = useState(view.seat);
+  const n = view.teams;
+  const isYou = team === view.seat;
+  const concedes = squadConcedes(view, team);
   const badge = isYou
-    ? view.userPunts.length ? `Punt ${view.userPunts.join(", ")}` : "No punt yet"
-    : teamBadgeWithRisk(view, team);
-  const roster = view.rosters[team].map((id) => playerMap.get(id)!);
+    ? view.concedes.length ? `Concede ${view.concedes.join(", ")}` : "No concede yet"
+    : squadBadgeFull(view, team);
+  const roster = view.squads[team].map((id) => playerMap.get(id)!);
   const rec = view.records[team];
   const go = (t: number) => setTeam((t + n) % n);
 
@@ -1255,7 +1254,7 @@ function TeamPanel({
         <select aria-label="Team to view" value={team} onChange={(e) => setTeam(Number(e.target.value))}>
           {Array.from({ length: n }, (_, t) => (
             <option key={t} value={t}>
-              {t === view.userSlot ? "You" : `${teamName(view, t)} · ${teamBadgeWithRisk(view, t)}`}
+              {t === view.seat ? "You" : `${squadName(view, t)} · ${squadBadgeFull(view, t)}`}
             </option>
           ))}
         </select>
@@ -1265,7 +1264,7 @@ function TeamPanel({
       </div>
 
       <div className="team-title">
-        <h3 className="title">{isYou ? "Your team" : teamName(view, team)}</h3>
+        <h3 className="title">{isYou ? "Your team" : squadName(view, team)}</h3>
         <span className="chip">{badge}</span>
         {roster.length > 0 && (
           <span className="muted small push">
@@ -1276,20 +1275,20 @@ function TeamPanel({
 
       <ol className="roster">
         {roster.map((p, i) => (
-          <li key={p.id} className={isYou && p.id === justDraftedId ? "just-drafted" : undefined}>
+          <li key={p.id} className={isYou && p.id === justPickedId ? "just-picked" : undefined}>
             <span className="muted small rd">Rd {i + 1}</span>
-            <Headshot player={p} variant="avatar" />
+            <Monogram player={p} variant="avatar" />
             <strong className="grow">{p.name}</strong>
             <span className="muted small">{p.positions.join("/")}</span>
           </li>
         ))}
-        {isYou && view.isUserTurn && (
+        {isYou && view.yourPick && (
           <li className="now">
             <span className="small rd">Rd {view.round}</span>
             <strong>Your pick now</strong>
           </li>
         )}
-        {roster.length === 0 && !(isYou && view.isUserTurn) && (
+        {roster.length === 0 && !(isYou && view.yourPick) && (
           <li className="empty muted">No picks yet</li>
         )}
       </ol>
@@ -1302,14 +1301,14 @@ function TeamPanel({
           </div>
           {CATEGORIES.map((c) => {
             const r = view.ranks[c][team];
-            const p = punts.has(c);
+            const p = concedes.has(c);
             return (
-              <div key={c} className={p ? "rank-row punted" : "rank-row"}>
+              <div key={c} className={p ? "rank-row conceded" : "rank-row"}>
                 <span className="rank-cat">{c}</span>
                 <span className="meter">
-                  <span className={p ? "punted" : rankTone(r)} style={{ width: `${((n + 1 - r) / n) * 100}%` }} />
+                  <span className={p ? "conceded" : rankTone(r)} style={{ width: `${((n + 1 - r) / n) * 100}%` }} />
                 </span>
-                <span className="rank-val">{p ? "punted" : ordinal(r)}</span>
+                <span className="rank-val">{p ? "conceded" : ordinal(r)}</span>
               </div>
             );
           })}

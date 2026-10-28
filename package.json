@@ -5,13 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "API_URL=http://localhost:8017 npm --prefix web run dev",
-    "dev:backend": "uv --directory backend run uvicorn app.main:app --port 8017",
+    "dev:backend": "uv --directory backend run uvicorn lab.server:app --port 8017",
     "build": "npm --prefix web run build",
     "test": "uv --directory backend run pytest tests/ -q",
     "smoke": "npm --prefix web run smoke",
-    "data:fetch": "uv --directory backend run python -m scripts.fetch_players",
     "setup:web": "npm --prefix web install",
-    "setup:backend": "uv --directory backend sync"
+    "setup:backend": "uv --directory backend sync",
+    "data:fetch": "uv --directory backend run python -m scripts.fetch_players"
   },
   "devDependencies": {}
 }

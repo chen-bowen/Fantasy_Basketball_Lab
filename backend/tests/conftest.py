@@ -5,30 +5,30 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.analysis.player_values import compute_player_values  # noqa: E402
-from app.data.pool import PLAYERS, PLAYER_POOL  # noqa: E402
-from app.engine.bots import assign_bot_specs, choose_bot_pick  # noqa: E402
-from app.engine.draft import (  # noqa: E402
-    DraftConfig,
-    DraftState,
-    apply_pick,
-    create_draft,
-    current_team_id,
-    is_complete,
+from lab.metrics.ratings import score_pool  # noqa: E402
+from lab.pool.loader import PLAYERS, PLAYER_POOL  # noqa: E402
+from lab.domain.autopilot import deal_rivals, autopilot_pick  # noqa: E402
+from lab.domain.session import (  # noqa: E402
+    DraftSettings,
+    Session,
+    record_pick,
+    open_session,
+    on_clock,
+    draft_done,
 )
 
-NUM_TEAMS = 12
-ROSTER_SIZE = 13
+LEAGUE_SIZE = 12
+SQUAD_SIZE = 13
 
 
 @pytest.fixture(autouse=True)
 def _isolated_store(tmp_path, monkeypatch):
     """API tests write drafts/runs through the real store module; point it
     at a temp dir so test sessions never appear in the app's draft list."""
-    import app.store as store
+    import lab.archive as store
 
-    monkeypatch.setattr(store, "DRAFTS_DIR", tmp_path / "drafts")
-    monkeypatch.setattr(store, "RUNS_DIR", tmp_path / "runs")
+    monkeypatch.setattr(store, "SESSIONS_DIR", tmp_path / "drafts")
+    monkeypatch.setattr(store, "RESULTS_DIR", tmp_path / "runs")
 
 
 @pytest.fixture(scope="session")
@@ -43,34 +43,34 @@ def pool():
 
 @pytest.fixture(scope="session")
 def values():
-    vals, _ = compute_player_values(PLAYERS)
+    vals, _ = score_pool(PLAYERS)
     return vals
 
 
 @pytest.fixture(scope="session")
 def healthy_values():
-    _, stats = compute_player_values(PLAYERS)
+    _, stats = score_pool(PLAYERS)
     return stats.healthy_values
 
 
-def make_config(user_slot=0, seed="test-seed", bot_specs=None) -> DraftConfig:
-    return DraftConfig(
-        num_teams=NUM_TEAMS,
-        roster_size=ROSTER_SIZE,
-        user_slot=user_slot,
+def make_config(seat=0, seed="test-seed", rivals=None) -> DraftSettings:
+    return DraftSettings(
+        teams=LEAGUE_SIZE,
+        squad_size=SQUAD_SIZE,
+        seat=seat,
         seed=seed,
-        bot_specs=bot_specs or assign_bot_specs(seed, NUM_TEAMS, user_slot),
+        rivals=rivals or deal_rivals(seed, LEAGUE_SIZE, seat),
     )
 
 
-def run_draft(config, pool, values, user_pick=None, healthy_values=None) -> DraftState:
-    """Run a full draft; the user slot picks via user_pick(state) or bots."""
-    state = create_draft(config)
-    while not is_complete(state):
-        t = current_team_id(state)
-        if t == config.user_slot and user_pick:
+def run_draft(config, pool, values, user_pick=None, healthy_values=None) -> Session:
+    """Run a full draft; the user slot picks via user_pick(state) or rivals."""
+    state = open_session(config)
+    while not draft_done(state):
+        t = on_clock(state)
+        if t == config.seat and user_pick:
             pid = user_pick(state)
         else:
-            pid = choose_bot_pick(state, pool, values, t, healthy_values)
-        state = apply_pick(state, pool, pid)
+            pid = autopilot_pick(state, pool, values, t, healthy_values)
+        state = record_pick(state, pool, pid)
     return state

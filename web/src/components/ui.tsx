@@ -1,35 +1,20 @@
-import { useState, type CSSProperties, type ReactNode } from "react";
-import { CATEGORIES, type ApiPlayer, type Category, type DraftView, type PairingReason } from "../api/client";
-import { andList, buildBadge, ordinal, places, recordText, teamName, teamPunts, teamRisk } from "../state/teams";
+import type { CSSProperties, ReactNode } from "react";
+import { CATEGORIES, type ApiPlayer, type Category, type SessionView, type PairingReason } from "../api/client";
+import { andList, buildChip, ordinal, places, recordText, squadName, squadConcedes, squadLean } from "../state/squads";
 
 /**
- * NBA CDN headshot (by nbaId). Large frames load the 1040×760 cut so they
- * stay sharp on retina screens; avatars zoom into the face of the 260×190
- * cut, which is already more pixels than a 40px circle can show.
+ * Avatar backdrop colours derived from the team code itself: a short hash
+ * picks the hue pair, so every club gets a stable, distinct gradient.
  */
-export function headshotUrl(nbaId: number | null, size: "lg" | "sm" = "sm"): string | null {
-  if (!nbaId) return null;
-  return `https://cdn.nba.com/headshots/nba/latest/${size === "lg" ? "1040x760" : "260x190"}/${nbaId}.png`;
-}
-
-/** Team colours for the headshot backdrop: a light and a deep shade of each team's primary. */
-const TEAM_COLORS: Record<string, [string, string]> = {
-  ATL: ["#e8535a", "#c8102e"], BKN: ["#5b5b5b", "#111111"], BOS: ["#2f9a5a", "#007a33"],
-  CHA: ["#2e8ea8", "#1d1160"], CHI: ["#e0405a", "#ce1141"], CLE: ["#a8355a", "#860038"],
-  DAL: ["#3f86c4", "#00538c"], DEN: ["#3a6a9e", "#0e2240"], DET: ["#e5485f", "#c8102e"],
-  GSW: ["#3f7fd0", "#1d428a"], HOU: ["#e04a63", "#ce1141"], IND: ["#3a5f93", "#002d62"],
-  LAC: ["#e04a63", "#1d428a"], LAL: ["#7a4fb3", "#552583"], MEM: ["#8197c4", "#5d76a9"],
-  MIA: ["#c8364a", "#98002e"], MIL: ["#2f6b3e", "#00471b"], MIN: ["#4f87b8", "#236192"],
-  NOP: ["#3a5e8c", "#0c2340"], NYK: ["#3d8fd6", "#006bb6"], OKC: ["#3fa3e0", "#007ac1"],
-  ORL: ["#3f8fd6", "#0077c0"], PHI: ["#3d7fd0", "#006bb6"], PHX: ["#5a4a9c", "#1d1160"],
-  POR: ["#e0455a", "#c8102e"], SAC: ["#7a5cb8", "#5a2d81"], SAS: ["#8a9399", "#3d4448"],
-  TOR: ["#e0405a", "#ce1141"], UTA: ["#5a4fb0", "#3e2680"], WAS: ["#2f5fa8", "#002b5c"],
-};
-const NO_TEAM: [string, string] = ["#9aa3b0", "#5a6474"];
-
-export function teamBackdrop(team: string): CSSProperties {
-  const [a, b] = TEAM_COLORS[team] ?? NO_TEAM;
-  return { "--team-a": a, "--team-b": b } as CSSProperties;
+export function clubTint(team: string): CSSProperties {
+  let h = 0;
+  for (const ch of team) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  const hue = ((h % 360) + 360) % 360;
+  if (!team) return { "--team-a": "#9aa3b0", "--team-b": "#5a6474" } as CSSProperties;
+  return {
+    "--team-a": `hsl(${hue} 55% 55%)`,
+    "--team-b": `hsl(${hue} 60% 28%)`,
+  } as CSSProperties;
 }
 
 export function initials(name: string): string {
@@ -42,38 +27,31 @@ export function initials(name: string): string {
 }
 
 /**
- * A headshot on its team's colours: `tile` fills a photo frame (the frame
- * sets the size), `avatar` and `mini` are circles cropped to the face. With
- * no photo, the player's initials sit on the same backdrop.
+ * The player's monogram on his club's colours: `tile` fills a large frame
+ * (the frame sets the size), `avatar` and `mini` are small circles.
  */
-export function Headshot({
+export function Monogram({
   player,
   variant,
 }: {
-  player: Pick<ApiPlayer, "name" | "nbaId"> & { team?: string };
+  player: Pick<ApiPlayer, "name"> & { team?: string };
   variant: "tile" | "avatar" | "mini";
 }) {
-  const [failed, setFailed] = useState(false);
-  const url = headshotUrl(player.nbaId, variant === "tile" ? "lg" : "sm");
   const decorative = variant !== "tile";
   return (
     <span
-      className={`headshot ${variant}${!url || failed ? " fallback" : ""}`}
-      style={teamBackdrop(player.team ?? "")}
+      className={`monogram ${variant}`}
+      style={clubTint(player.team ?? "")}
       role={decorative ? undefined : "img"}
       aria-label={decorative ? undefined : player.name}
       aria-hidden={decorative ? true : undefined}
     >
-      {url && !failed ? (
-        <img src={url} alt="" loading="lazy" decoding="async" onError={() => setFailed(true)} />
-      ) : (
-        initials(player.name)
-      )}
+      {initials(player.name)}
     </span>
   );
 }
 
-/** "C · NYK", or a free-agent tag when the player is on no current roster. */
+/** "C · NYE", or a free-agent tag when the player is unsigned. */
 export function PlayerMeta({ player }: { player: ApiPlayer }) {
   return (
     <span className="player-meta">
@@ -82,18 +60,18 @@ export function PlayerMeta({ player }: { player: ApiPlayer }) {
       {player.signed ? (
         player.team
       ) : (
-        <span className="fa-tag" title="On no current NBA roster">
+        <span className="fa-tag" title="On no club roster">
           Free agent
         </span>
       )}
-      {player.injury && (
+      {player.status && (
         <>
           {" "}
           <span
-            className={player.injury === "Out" ? "injury-tag out" : "injury-tag"}
-            title="Current injury status from ESPN; lowers the share of games he's expected to play, and with it his value"
+            className={player.status === "Out" ? "status-tag out" : "status-tag"}
+            title="Current status tag; lowers the share of games he's expected to play, and with it his value"
           >
-            {player.injury}
+            {player.status}
           </span>
         </>
       )}
@@ -172,29 +150,29 @@ const Z_WORDS: Record<string, string> = {
 };
 
 /**
- * Nine category squares coloured by league rank (1 = best). A punted
- * category keeps its rank and colour and gets a dashed punt mark — you
+ * Nine category squares coloured by league rank (1 = best). A conceded
+ * category keeps its rank and colour and gets a dashed concede mark — you
  * still finish somewhere in it. With `showRanks` the rank is printed too.
  */
 export function RankStrip({
   ranks,
-  punts,
+  concedes,
   size = "md",
   showRanks = false,
 }: {
   ranks: number[];
-  punts: ReadonlySet<Category>;
+  concedes: ReadonlySet<Category>;
   size?: "sm" | "md";
   showRanks?: boolean;
 }) {
   const label = CATEGORIES.map((c, j) =>
-    `${c} ${ordinal(ranks[j])}${punts.has(c) ? " (punted)" : ""}`,
+    `${c} ${ordinal(ranks[j])}${concedes.has(c) ? " (conceded)" : ""}`,
   ).join(", ");
   return (
     <span className={`strip ${size}${showRanks ? " ranked" : ""}`} role="img" aria-label={label}>
       {CATEGORIES.map((c, j) => (
         <span key={c} className="strip-cell">
-          <span className={`sq ${rankTone(ranks[j])}${punts.has(c) ? " punted" : ""}`}>
+          <span className={`sq ${rankTone(ranks[j])}${concedes.has(c) ? " conceded" : ""}`}>
             {showRanks && ranks[j]}
           </span>
           <span className="strip-label">{c}</span>
@@ -207,18 +185,18 @@ export function RankStrip({
 /** Nine squares for one player: how much he helps each category. */
 export function ZStrip({
   z,
-  punts,
+  concedes,
 }: {
   z: Record<Category, number>;
-  punts: ReadonlySet<Category>;
+  concedes: ReadonlySet<Category>;
 }) {
   const label = CATEGORIES.map((c) =>
-    `${c} ${punts.has(c) ? "punted" : Z_WORDS[zTone(z[c])]}`,
+    `${c} ${concedes.has(c) ? "conceded" : Z_WORDS[zTone(z[c])]}`,
   ).join(", ");
   return (
     <span className="zstrip" role="img" aria-label={label}>
       {CATEGORIES.map((c) => (
-        <span key={c} className={`sq ${punts.has(c) ? "punted" : zTone(z[c])}`} />
+        <span key={c} className={`sq ${concedes.has(c) ? "conceded" : zTone(z[c])}`} />
       ))}
     </span>
   );
@@ -231,7 +209,7 @@ export function RankLegend() {
       <span><i className="sq good" />4th–6th</span>
       <span><i className="sq low" />7th–9th</span>
       <span><i className="sq bottom" />Bottom 3</span>
-      <span><i className="sq avg punted" />Punted (rank still counts)</span>
+      <span><i className="sq avg conceded" />Conceded (rank still counts)</span>
     </span>
   );
 }
@@ -252,11 +230,11 @@ export function Logo() {
 export function PairingNotes({
   why,
   anchor,
-  punt,
+  concede,
 }: {
   why: PairingReason;
   anchor: string | null; // the player already on the roster, or null before the first pick
-  punt: Category | null;
+  concede: Category | null;
 }) {
   const last = anchor ? anchor.split(" ").slice(-1)[0] : null;
   const parts: string[] = [];
@@ -264,7 +242,7 @@ export function PairingNotes({
   if (why.patches.length) parts.push(`offsets ${last}'s ${andList(why.patches)}`);
   if (why.spares.length) parts.push(`doesn't deepen ${last}'s ${andList(why.spares)} problem`);
   if (why.overlaps.length) parts.push(`doubles up on ${andList(why.overlaps)}`);
-  const costs = why.costs.filter((c) => c !== punt);
+  const costs = why.costs.filter((c) => c !== concede);
   if (costs.length) parts.push(`costs you ${andList(costs)}`);
   const games = Math.round(why.availability * 100);
   const durability =
@@ -308,7 +286,7 @@ export function RankLegendItems() {
       <span><i className="sq good" />4th–6th</span>
       <span><i className="sq low" />7th–9th</span>
       <span><i className="sq bottom" />Bottom 3</span>
-      <span><i className="sq avg punted" />Punted (rank still counts)</span>
+      <span><i className="sq avg conceded" />Conceded (rank still counts)</span>
     </>
   );
 }
@@ -319,7 +297,7 @@ export function RankLegendItems() {
  * roster wins in a typical equal-games week, which counts how close each
  * category is rather than who ranks higher.
  */
-export function Standings({ view, teams }: { view: DraftView; teams: number[] }) {
+export function Standings({ view, teams }: { view: SessionView; teams: number[] }) {
   const place = places(view.records.map((r) => r.wins));
   const weekPlace = places(view.weekPct);
   const order = [...teams].sort(
@@ -349,16 +327,16 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
           </thead>
           <tbody>
             {order.map((t) => {
-              const punts = teamPunts(view, t);
-              const badge = buildBadge(view, t);
-              const risk = teamRisk(view, t);
+              const concedes = squadConcedes(view, t);
+              const badge = buildChip(view, t);
+              const risk = squadLean(view, t);
               return (
-                <tr key={t} className={t === view.userSlot ? "focused" : ""}>
+                <tr key={t} className={t === view.seat ? "focused" : ""}>
                   <td className="left muted">{place[t]}</td>
                   <th scope="row" className="left team-col">
                     <span className="team-cell">
-                      <strong>{t === view.userSlot ? "Your team" : teamName(view, t)}</strong>
-                      <span className={`kind ${badge.tone}`}>{badge.label}</span>
+                      <strong>{t === view.seat ? "Your team" : squadName(view, t)}</strong>
+                      <span className={`badge ${badge.tone}`}>{badge.label}</span>
                       {risk && <span className="muted small">{risk}</span>}
                     </span>
                   </th>
@@ -369,13 +347,13 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
                   </td>
                   {CATEGORIES.map((c) => {
                     const r = view.ranks[c][t];
-                    const punted = punts.has(c);
+                    const conceded = concedes.has(c);
                     return (
                       <td key={c} className="cat">
                         <span
-                          className={`rank-cell ${rankTone(r)}${punted ? " punted" : ""}`}
-                          aria-label={`${c} ${ordinal(r)}${punted ? ", punted" : ""}`}
-                          title={punted ? `${c}: punted, still ${ordinal(r)} of ${view.numTeams}` : undefined}
+                          className={`rank-cell ${rankTone(r)}${conceded ? " conceded" : ""}`}
+                          aria-label={`${c} ${ordinal(r)}${conceded ? ", conceded" : ""}`}
+                          title={conceded ? `${c}: conceded, still ${ordinal(r)} of ${view.teams}` : undefined}
                         >
                           {r}
                         </span>
@@ -392,8 +370,8 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
         On paper: each roster against every other, beating a team by ranking higher in more of
         the 9 categories — every lead counts, however small. Week to week: the share of those
         matchups it wins in a typical week when both sides play the same number of games, which
-        counts how close each category is. Numbers are category ranks, 1st to {ordinal(view.numTeams)};
-        a punted category still has one.
+        counts how close each category is. Numbers are category ranks, 1st to {ordinal(view.teams)};
+        a conceded category still has one.
       </p>
     </section>
   );

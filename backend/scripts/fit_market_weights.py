@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""fit_market_weights — calibrate the draft-table category weights to ADP.
+"""fit_market_weights — calibrate the draft-table category weights to the board.
 
 The engine's z-scores say what a player produces per category. How much
-drafters *pay* for each category is a different thing: real ADP rewards
-points and assists far above steals, free-throw percentage or turnovers.
-This script recovers those preferences from the frozen pool's ADP column
-and prints the weight vector to paste into app/analysis/market.py as
-FITTED_WEIGHTS (the engine blends them with uniform weights there).
+drafters *pay* for each category is a different thing: the consensus board
+rewards points and assists far above steals, free-throw percentage or
+turnovers. This script recovers those preferences from the frozen pool's
+`adp` column and prints the weight vector to paste into
+app/analysis/market.py as BOARD_FIT (the engine blends them with
+uniform weights there).
 
 Method: ridge regression of -log(ADP) on the nine availability-adjusted
 category z's over the draftable pool (ADP <= 156), shrunk toward uniform
@@ -30,9 +31,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.analysis.player_values import compute_player_values  # noqa: E402
-from app.data.pool import PLAYERS  # noqa: E402
-from app.engine.types import CATEGORIES, Player  # noqa: E402
+from lab.metrics.ratings import score_pool  # noqa: E402
+from lab.pool.loader import PLAYERS  # noqa: E402
+from lab.domain.model import CATEGORIES, Player  # noqa: E402
 
 DRAFTABLE_ADP = 12 * 13
 LAMBDAS = (0.3, 1, 3, 10, 30, 100)
@@ -110,7 +111,7 @@ def main() -> None:
     ap.add_argument("--splits", type=int, default=40)
     args = ap.parse_args()
 
-    values, _ = compute_player_values(PLAYERS)
+    values, _ = score_pool(PLAYERS)
     draftable = [p for p in PLAYERS if p.adp is not None and p.adp <= DRAFTABLE_ADP]
     print(f"{len(draftable)} players with ADP <= {DRAFTABLE_ADP}")
 

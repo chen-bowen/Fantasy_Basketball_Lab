@@ -1,50 +1,50 @@
-import type { Category, DraftView } from "../api/client";
+import type { Category, SessionView } from "../api/client";
 
-const BOT_NAMES = [
+const RIVAL_NAMES = [
   "Reapers", "Spiders", "Kings", "Aces", "Wolves", "Tigers",
   "Bears", "Hawks", "Sharks", "Titans", "Comets", "Foxes",
 ];
 
-const KIND_LABELS: Record<string, string> = {
+const STYLE_LABELS: Record<string, string> = {
   value: "Value",
   needs: "Needs",
-  punt: "Punt",
+  concede: "Concede",
 };
 
-const RISK_LABELS: Record<string, string> = {
+const LEAN_LABELS: Record<string, string> = {
   cautious: "cautious",
   neutral: "",
   bold: "bold",
 };
 
 interface TeamLike {
-  userSlot: number;
-  botSpecs: DraftView["botSpecs"];
+  seat: number;
+  rivals: SessionView["rivals"];
 }
 
-export function teamName(view: TeamLike, teamId: number): string {
-  return teamId === view.userSlot ? "You" : BOT_NAMES[teamId];
+export function squadName(view: TeamLike, squad: number): string {
+  return squad === view.seat ? "You" : RIVAL_NAMES[squad];
 }
 
-/** Strategy badge shown in the UI — bot personalities are visible. */
-export function teamBadge(view: TeamLike, teamId: number): string {
-  if (teamId === view.userSlot) return "You";
-  const spec = view.botSpecs[teamId];
-  return spec.kind === "punt"
-    ? `${KIND_LABELS.punt} ${spec.puntCategory}`
-    : KIND_LABELS[spec.kind];
+/** Strategy badge shown in the UI — rival personalities are visible. */
+export function squadBadge(view: TeamLike, squad: number): string {
+  if (squad === view.seat) return "You";
+  const spec = view.rivals[squad];
+  return spec.style === "concede"
+    ? `${STYLE_LABELS.concede} ${spec.concede}`
+    : STYLE_LABELS[spec.style];
 }
 
-/** "bold" / "cautious" for bots with an appetite either way; "" for neutral. */
-export function teamRisk(view: TeamLike, teamId: number): string {
-  if (teamId === view.userSlot) return "";
-  return RISK_LABELS[view.botSpecs[teamId].risk ?? "neutral"] ?? "";
+/** "bold" / "cautious" for rivals with an appetite either way; "" for neutral. */
+export function squadLean(view: TeamLike, squad: number): string {
+  if (squad === view.seat) return "";
+  return LEAN_LABELS[view.rivals[squad].lean ?? "neutral"] ?? "";
 }
 
 /** Badge plus risk appetite, for places that show one line per team. */
-export function teamBadgeWithRisk(view: TeamLike, teamId: number): string {
-  const risk = teamRisk(view, teamId);
-  return risk ? `${teamBadge(view, teamId)} · ${risk}` : teamBadge(view, teamId);
+export function squadBadgeFull(view: TeamLike, squad: number): string {
+  const lean = squadLean(view, squad);
+  return lean ? `${squadBadge(view, squad)} · ${lean}` : squadBadge(view, squad);
 }
 
 /** "1", "T2"… by wins, ties sharing a place. */
@@ -62,45 +62,45 @@ export function weekRecord(pct: number, games: number): string {
   return `${w}–${games - w}`;
 }
 
-/** Expected matchup wins out of `games` as a win rate, 0–100 — the unit the report uses. */
+/** Expected duel wins out of `games` as a win rate, 0–100 — the unit the report uses. */
 export function winRate(wins: number, games: number): number {
   return Math.round((wins / games) * 100);
 }
 
-export function recordText(view: DraftView, teamId: number): string {
-  const r = view.records[teamId];
+export function recordText(view: SessionView, squad: number): string {
+  const r = view.records[squad];
   return `${r.wins}–${r.losses}${r.ties ? `–${r.ties}` : ""}`;
 }
 
-/** The team's build chip: the user's punts, or the bot's strategy. */
-export function buildBadge(view: TeamLike & { userPunts: Category[] }, teamId: number): { label: string; tone: string } {
-  if (teamId === view.userSlot) {
+/** The team's build chip: the user's concedes, or the rival's strategy. */
+export function buildChip(view: TeamLike & { concedes: Category[] }, squad: number): { label: string; tone: string } {
+  if (squad === view.seat) {
     return {
-      label: view.userPunts.length ? `Punt ${view.userPunts.join(", ")}` : "No punt yet",
+      label: view.concedes.length ? `Concede ${view.concedes.join(", ")}` : "No concede yet",
       tone: "yours",
     };
   }
-  return { label: teamBadge(view, teamId), tone: view.botSpecs[teamId].kind };
+  return { label: squadBadge(view, squad), tone: view.rivals[squad].style };
 }
 
-/** Categories a team has punted — the user's chosen punts, or a punt bot's category. */
-export function teamPunts(view: TeamLike & { userPunts: Category[] }, teamId: number): Set<Category> {
-  if (teamId === view.userSlot) return new Set(view.userPunts);
-  const s = view.botSpecs[teamId];
-  return new Set(s.kind === "punt" && s.puntCategory ? [s.puntCategory] : []);
+/** Categories a team has conceded — the user's chosen concedes, or a concede rival's category. */
+export function squadConcedes(view: TeamLike & { concedes: Category[] }, squad: number): Set<Category> {
+  if (squad === view.seat) return new Set(view.concedes);
+  const s = view.rivals[squad];
+  return new Set(s.style === "concede" && s.concede ? [s.concede] : []);
 }
 
 /** Team on the clock at overall pick index `i` (0-based) in a snake draft. */
-export function snakeTeam(i: number, numTeams: number): number {
-  const round = Math.floor(i / numTeams);
-  const pos = i % numTeams;
-  return round % 2 === 0 ? pos : numTeams - 1 - pos;
+export function snakeSquad(i: number, teams: number): number {
+  const round = Math.floor(i / teams);
+  const pos = i % teams;
+  return round % 2 === 0 ? pos : teams - 1 - pos;
 }
 
-/** Overall pick numbers (1-based) a slot gets in its first `rounds` rounds. */
-export function slotPicks(slot: number, numTeams: number, rounds: number): number[] {
+/** Overall pick numbers (1-based) a seat gets in its first `rounds` rounds. */
+export function seatPicks(seat: number, teams: number, rounds: number): number[] {
   return Array.from({ length: rounds }, (_, r) =>
-    r * numTeams + (r % 2 === 0 ? slot : numTeams - 1 - slot) + 1,
+    r * teams + (r % 2 === 0 ? seat : teams - 1 - seat) + 1,
   );
 }
 
@@ -115,17 +115,17 @@ export function andList(xs: string[]): string {
 }
 
 /** 0-based index of the user's next pick at or after `from` (null once they're all made). */
-export function nextUserPickIndex(view: { userSlot: number; numTeams: number; totalPicks: number }, from: number): number | null {
-  for (let i = from; i < view.totalPicks; i++) {
-    if (snakeTeam(i, view.numTeams) === view.userSlot) return i;
+export function nextTurnAt(view: { seat: number; teams: number; span: number }, from: number): number | null {
+  for (let i = from; i < view.span; i++) {
+    if (snakeSquad(i, view.teams) === view.seat) return i;
   }
   return null;
 }
 
 /** The user's last pick so far, if any. */
-export function lastUserPick(view: { picks: { teamId: number; index: number }[]; userSlot: number }) {
-  for (let i = view.picks.length - 1; i >= 0; i--) {
-    if (view.picks[i].teamId === view.userSlot) return view.picks[i];
+export function lastPick(view: { selections: { squad: number; at: number }[]; seat: number }) {
+  for (let i = view.selections.length - 1; i >= 0; i--) {
+    if (view.selections[i].squad === view.seat) return view.selections[i];
   }
   return null;
 }

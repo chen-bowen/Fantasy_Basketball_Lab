@@ -11,41 +11,41 @@ from dataclasses import dataclass, field, replace
 from typing import Any
 
 from .snake import build_snake_order, pick_in_round_of_pick, round_of_pick
-from .types import BotSpec, Player
+from .model import RivalSpec, Player
 
 
 @dataclass(frozen=True)
-class DraftConfig:
-    num_teams: int
-    roster_size: int
-    user_slot: int  # 0-based
+class DraftSettings:
+    teams: int
+    squad_size: int
+    seat: int  # 0-based index of the user's team in the snake order
     seed: str
-    bot_specs: tuple[BotSpec, ...]  # len == num_teams; user slot is placeholder
+    rivals: tuple[RivalSpec, ...]  # len == teams; the seat's entry is a placeholder
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "numTeams": self.num_teams,
-            "rosterSize": self.roster_size,
-            "userSlot": self.user_slot,
+            "numTeams": self.teams,
+            "rosterSize": self.squad_size,
+            "userSlot": self.seat,
             "seed": self.seed,
             "botSpecs": [
-                {"kind": s.kind, "puntCategory": s.punt_category, "risk": s.risk}
-                for s in self.bot_specs
+                {"style": s.style, "puntCategory": s.concede_cat, "lean": s.lean}
+                for s in self.rivals
             ],
         }
 
     @staticmethod
-    def from_dict(d: dict[str, Any]) -> "DraftConfig":
-        return DraftConfig(
-            num_teams=d["numTeams"],
-            roster_size=d["rosterSize"],
-            user_slot=d["userSlot"],
+    def from_dict(d: dict[str, Any]) -> "DraftSettings":
+        return DraftSettings(
+            teams=d["numTeams"],
+            squad_size=d["rosterSize"],
+            seat=d["userSlot"],
             seed=d["seed"],
-            bot_specs=tuple(
-                BotSpec(
-                    kind=s["kind"],
-                    punt_category=s.get("puntCategory"),
-                    risk=s.get("risk", "neutral"),  # saves before risk existed
+            rivals=tuple(
+                RivalSpec(
+                    style="concede" if s.get("style", s.get("kind")) == "punt" else s.get("style", s.get("kind")),
+                    concede_cat=s.get("puntCategory"),
+                    lean=s.get("lean", s.get("risk", "neutral")),  # saves before lean existed
                 )
                 for s in d["botSpecs"]
             ),
@@ -53,126 +53,126 @@ class DraftConfig:
 
 
 @dataclass(frozen=True)
-class PickRecord:
+class Selection:
     index: int  # overall pick index (0-based)
     round: int  # 1-based
-    team_id: int
-    player_id: str
+    squad: int
+    pid: str
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "index": self.index,
+            "at": self.index,
             "round": self.round,
-            "teamId": self.team_id,
-            "playerId": self.player_id,
+            "squad": self.squad,
+            "pid": self.pid,
         }
 
 
 @dataclass(frozen=True)
-class DraftState:
-    config: DraftConfig
-    status: str  # "in_progress" | "paused" | "complete"
-    order: tuple[int, ...]  # order[i] = teamId at pick i
-    picks: tuple[PickRecord, ...]
-    rosters: tuple[tuple[str, ...], ...]
+class Session:
+    config: DraftSettings
+    phase: str  # "in_progress" | "paused" | "complete"
+    order: tuple[int, ...]  # order[i] = squad id picking at selection i
+    selections: tuple[Selection, ...]
+    squads: tuple[tuple[str, ...], ...]
 
 
-def create_draft(config: DraftConfig) -> DraftState:
-    if not 0 <= config.user_slot < config.num_teams:
-        raise ValueError(f"user_slot {config.user_slot} out of range")
-    if len(config.bot_specs) != config.num_teams:
-        raise ValueError("bot_specs must have one entry per team")
-    return DraftState(
+def open_session(config: DraftSettings) -> Session:
+    if not 0 <= config.seat < config.teams:
+        raise ValueError(f"seat {config.seat} out of range")
+    if len(config.rivals) != config.teams:
+        raise ValueError("rivals must have one entry per team")
+    return Session(
         config=config,
-        status="in_progress",
-        order=tuple(build_snake_order(config.num_teams, config.roster_size)),
-        picks=(),
-        rosters=tuple(() for _ in range(config.num_teams)),
+        phase="in_progress",
+        order=tuple(build_snake_order(config.teams, config.squad_size)),
+        selections=(),
+        squads=tuple(() for _ in range(config.teams)),
     )
 
 
-def is_complete(state: DraftState) -> bool:
-    return len(state.picks) >= len(state.order)
+def draft_done(state: Session) -> bool:
+    return len(state.selections) >= len(state.order)
 
 
-def current_team_id(state: DraftState) -> int | None:
-    if is_complete(state):
+def on_clock(state: Session) -> int | None:
+    if draft_done(state):
         return None
-    return state.order[len(state.picks)]
+    return state.order[len(state.selections)]
 
 
-def is_user_turn(state: DraftState) -> bool:
-    return current_team_id(state) == state.config.user_slot
+def user_turn(state: Session) -> bool:
+    return on_clock(state) == state.config.seat
 
 
-def current_round(state: DraftState) -> int:
-    return round_of_pick(state.config.num_teams, len(state.picks))
+def round_now(state: Session) -> int:
+    return round_of_pick(state.config.teams, len(state.selections))
 
 
-def current_pick_in_round(state: DraftState) -> int:
-    return pick_in_round_of_pick(state.config.num_teams, len(state.picks))
+def slot_now(state: Session) -> int:
+    return pick_in_round_of_pick(state.config.teams, len(state.selections))
 
 
-def drafted_set(state: DraftState) -> set[str]:
-    return {p.player_id for p in state.picks}
+def taken_ids(state: Session) -> set[str]:
+    return {p.pid for p in state.selections}
 
 
-def available_player_ids(
-    state: DraftState, pool: dict[str, Player]
+def undrafted_ids(
+    state: Session, pool: dict[str, Player]
 ) -> list[str]:
-    taken = drafted_set(state)
+    taken = taken_ids(state)
     return [pid for pid in pool if pid not in taken]
 
 
-def available_players(state: DraftState, pool: dict[str, Player]) -> list[Player]:
-    return [pool[pid] for pid in available_player_ids(state, pool)]
+def undrafted_players(state: Session, pool: dict[str, Player]) -> list[Player]:
+    return [pool[pid] for pid in undrafted_ids(state, pool)]
 
 
-def apply_pick(
-    state: DraftState, pool: dict[str, Player], player_id: str
-) -> DraftState:
+def record_pick(
+    state: Session, pool: dict[str, Player], pid: str
+) -> Session:
     """The only way a player enters a roster. Validates legality and
-    applies to whichever team is on the clock — bot or user."""
-    if state.status != "in_progress":
-        raise ValueError(f"Cannot pick while status is {state.status}")
-    if is_complete(state):
+    applies to whichever team is on the clock — rival or user."""
+    if state.phase != "in_progress":
+        raise ValueError(f"Cannot pick while status is {state.phase}")
+    if draft_done(state):
         raise ValueError("Draft is complete")
-    if player_id not in pool:
-        raise ValueError(f"Unknown player: {player_id}")
-    if player_id in drafted_set(state):
-        raise ValueError(f"Player already drafted: {player_id}")
-    index = len(state.picks)
-    team_id = state.order[index]
-    pick = PickRecord(
+    if pid not in pool:
+        raise ValueError(f"Unknown player: {pid}")
+    if pid in taken_ids(state):
+        raise ValueError(f"Player already drafted: {pid}")
+    index = len(state.selections)
+    squad = state.order[index]
+    pick = Selection(
         index=index,
-        round=round_of_pick(state.config.num_teams, index),
-        team_id=team_id,
-        player_id=player_id,
+        round=round_of_pick(state.config.teams, index),
+        squad=squad,
+        pid=pid,
     )
-    rosters = [
-        tuple(r) + (player_id,) if i == team_id else r
-        for i, r in enumerate(state.rosters)
+    squads = [
+        tuple(r) + (pid,) if i == squad else r
+        for i, r in enumerate(state.squads)
     ]
     next_state = replace(
-        state, rosters=tuple(rosters), picks=state.picks + (pick,)
+        state, squads=tuple(squads), selections=state.selections + (pick,)
     )
-    if is_complete(next_state):
-        next_state = replace(next_state, status="complete")
+    if draft_done(next_state):
+        next_state = replace(next_state, phase="complete")
     return next_state
 
 
-def pause_draft(state: DraftState) -> DraftState:
+def pause(state: Session) -> Session:
     return (
-        replace(state, status="paused")
-        if state.status == "in_progress"
+        replace(state, phase="paused")
+        if state.phase == "in_progress"
         else state
     )
 
 
-def resume_draft(state: DraftState) -> DraftState:
+def resume(state: Session) -> Session:
     return (
-        replace(state, status="in_progress")
-        if state.status == "paused"
+        replace(state, phase="in_progress")
+        if state.phase == "paused"
         else state
     )
 
@@ -180,43 +180,43 @@ def resume_draft(state: DraftState) -> DraftState:
 # ---------- Serialization ----------
 
 
-def serialize_draft(state: DraftState) -> dict[str, Any]:
+def session_dict(state: Session) -> dict[str, Any]:
     return {
         "version": 1,
         "config": state.config.to_dict(),
-        "picks": [p.player_id for p in state.picks],
-        "status": state.status,
+        "picks": [p.pid for p in state.selections],
+        "status": state.phase,
     }
 
 
-def replay_draft(
-    config: DraftConfig,
+def rebuild(
+    config: DraftSettings,
     pool: dict[str, Player],
     pick_ids: list[str],
-    status: str = "in_progress",
-) -> DraftState:
-    """Rebuild state by replaying the pick log. Bot choices are
+    phase: str = "in_progress",
+) -> Session:
+    """Rebuild state by replaying the pick log. Rival choices are
     deterministic, so replaying recorded picks reproduces the draft."""
-    state = create_draft(config)
+    state = open_session(config)
     for pid in pick_ids:
-        state = apply_pick(state, pool, pid)
-    if status == "paused" and state.status == "in_progress":
-        state = replace(state, status="paused")
+        state = record_pick(state, pool, pid)
+    if phase == "paused" and state.phase == "in_progress":
+        state = replace(state, phase="paused")
     return state
 
 
-def deserialize_draft(data: dict[str, Any], pool: dict[str, Player]) -> DraftState:
+def session_from(data: dict[str, Any], pool: dict[str, Player]) -> Session:
     if data.get("version") != 1:
         raise ValueError("Unknown save version")
-    return replay_draft(
-        DraftConfig.from_dict(data["config"]), pool, data["picks"], data["status"]
+    return rebuild(
+        DraftSettings.from_dict(data["config"]), pool, data["picks"], data["status"]
     )
 
 
-def rewind_to_pick(
-    state: DraftState, pool: dict[str, Player], pick_index: int
-) -> DraftState:
+def rewind(
+    state: Session, pool: dict[str, Player], pick_index: int
+) -> Session:
     """Restore the state as it was just before pick `pick_index`.
-    Faithful restore — bot decisions are pure functions of seed + state."""
-    keep = [p.player_id for p in state.picks[: max(0, pick_index)]]
-    return replay_draft(state.config, pool, keep, "in_progress")
+    Faithful restore — rival decisions are pure functions of seed + state."""
+    keep = [p.pid for p in state.selections[: max(0, pick_index)]]
+    return rebuild(state.config, pool, keep, "in_progress")

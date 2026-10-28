@@ -3,22 +3,22 @@ import {
   type ApiPlayer,
   type Category,
   type CategorySummary,
-  type DraftView,
-  type MatchupBreakdown,
-  type RunSummary,
+  type SessionView,
+  type DuelBoard,
+  type ResultSummary,
 } from "../api/client";
-import { andList, ordinal, places, weekRecord } from "../state/teams";
-import { Headshot, PlayerMeta, RankLegend, RankStrip, Standings } from "./common";
-import { MatchupsSection, driverStat, formatTotal, lastName } from "./Matchups";
+import { andList, ordinal, places, weekRecord } from "../state/squads";
+import { Monogram, PlayerMeta, RankLegend, RankStrip, Standings } from "./ui";
+import { DuelsSection, deciderStat, formatTotal, lastName } from "./Duels";
 
 interface Props {
-  view: DraftView; // the draft or saved run being viewed
+  view: SessionView; // the session or saved run being viewed
   isLive: boolean; // false when viewing a saved run
   playerMap: Map<string, ApiPlayer>;
-  runs: RunSummary[];
-  selectedRun: string | null;
-  onSelectRun: (runId: string | null) => void;
-  onNewDraft: () => void;
+  results: ResultSummary[];
+  selectedResult: string | null;
+  onSelectResult: (resultId: string | null) => void;
+  onNew: () => void;
   onRewind: (pickIndex: number) => void;
 }
 
@@ -34,41 +34,41 @@ function side(s: CategorySummary, n: number): "win" | "loss" | "close" {
   return "close";
 }
 
-export function DraftReport({
+export function Report({
   view,
   isLive,
   playerMap,
-  runs,
-  selectedRun,
-  onSelectRun,
-  onNewDraft,
+  results,
+  selectedResult,
+  onSelectResult,
+  onNew,
   onRewind,
 }: Props) {
-  const slot = view.userSlot;
-  const n = view.numTeams;
-  const punts = new Set<Category>(view.userPunts);
+  const slot = view.seat;
+  const n = view.teams;
+  const concedes = new Set<Category>(view.concedes);
   const ranks = CATEGORIES.map((c) => view.ranks[c][slot]);
   const rec = view.records[slot];
   const paperPlace = places(view.records.map((r) => r.wins));
   const weekPlace = places(view.weekPct);
-  const bd = view.matchups;
+  const bd = view.board;
 
-  const scored = CATEGORIES.map((c, j) => ({ c, r: ranks[j] })).filter(({ c }) => !punts.has(c));
+  const scored = CATEGORIES.map((c, j) => ({ c, r: ranks[j] })).filter(({ c }) => !concedes.has(c));
   const best = [...scored].sort((a, b) => a.r - b.r);
   const strong = best.filter(({ r }) => r <= 3);
   const headline = strong.length
     ? `Built on ${andList(strong.slice(0, 3).map(({ c }) => c))}.`
     : `A balanced team, best in ${andList(best.slice(0, 2).map(({ c }) => c))}.`;
 
-  const userPicks = view.picks.filter((p) => p.teamId === slot);
-  const centers = userPicks.filter((p) => playerMap.get(p.playerId)?.positions.includes("C")).length;
+  const userPicks = view.selections.filter((p) => p.squad === slot);
+  const centers = userPicks.filter((p) => playerMap.get(p.pid)?.positions.includes("C")).length;
 
-  // Soft spot: the category you lose to most of the league (not a punt —
+  // Soft spot: the category you lose to most of the league (not a concede —
   // that one is on purpose), else the worst rank; and the pick from round 3
   // on that helped it least.
   const soft = (() => {
     if (bd) {
-      const losing = CATEGORIES.filter((c) => !punts.has(c) && bd.categories[c].loss > (n - 1) / 2)
+      const losing = CATEGORIES.filter((c) => !concedes.has(c) && bd.categories[c].loss > (n - 1) / 2)
         .sort((a, b) => bd.categories[b].loss - bd.categories[a].loss || view.ranks[b][slot] - view.ranks[a][slot]);
       if (losing.length) return { c: losing[0], r: view.ranks[losing[0]][slot], lost: bd.categories[losing[0]].loss };
     }
@@ -78,7 +78,7 @@ export function DraftReport({
   const culprit = soft
     ? userPicks
         .filter((p) => p.round >= 3)
-        .map((p) => ({ p, z: playerMap.get(p.playerId)?.z?.[soft.c] ?? 0 }))
+        .map((p) => ({ p, z: playerMap.get(p.pid)?.z?.[soft.c] ?? 0 }))
         .sort((a, b) => a.z - b.z)[0]?.p
     : undefined;
 
@@ -90,8 +90,8 @@ export function DraftReport({
         <div className="screen-title">
           <span className="eyebrow-accent">
             Draft complete
-            {[...punts].map((c) => (
-              <span key={c} className="chip dark">Punt {c}</span>
+            {[...concedes].map((c) => (
+              <span key={c} className="chip dark">Concede {c}</span>
             ))}
           </span>
           <h1 className="display-md">{headline}</h1>
@@ -102,19 +102,19 @@ export function DraftReport({
           </p>
         </div>
         <div className="report-tools">
-          {runs.length > 0 && (
+          {results.length > 0 && (
             <select
               aria-label="Draft to view"
-              value={selectedRun ?? "live"}
-              onChange={(e) => onSelectRun(e.target.value === "live" ? null : e.target.value)}
+              value={selectedResult ?? "live"}
+              onChange={(e) => onSelectResult(e.target.value === "live" ? null : e.target.value)}
             >
-              <option value="live">This draft</option>
-              {runs.map((r) => (
+              <option value="live">This session</option>
+              {results.map((r) => (
                 <option key={r.id} value={r.id}>{r.label}</option>
               ))}
             </select>
           )}
-          <button className="btn primary" onClick={onNewDraft}>New draft</button>
+          <button className="btn primary" onClick={onNew}>New session</button>
         </div>
       </div>
 
@@ -142,8 +142,8 @@ export function DraftReport({
         </div>
         {bd && <RecapStory view={view} bd={bd} />}
         <div className="grow stack-sm recap-ranks">
-          <span className="muted small">Where your team ranks (a punted category still has a rank)</span>
-          <RankStrip ranks={ranks} punts={punts} showRanks />
+          <span className="muted small">Where your team ranks (a conceded category still has a rank)</span>
+          <RankStrip ranks={ranks} concedes={concedes} showRanks />
         </div>
         <RankLegend />
       </section>
@@ -158,17 +158,17 @@ export function DraftReport({
               {soft.lost != null
                 ? `You'd lose ${soft.c} to ${soft.lost} of the ${n - 1} other teams most weeks (${ordinal(soft.r)} of ${n}).`
                 : `You're ${ordinal(soft.r)} in ${soft.c}.`}{" "}
-              Rewind to round {culprit.round}, where you took {playerMap.get(culprit.playerId)?.name}, and try a
+              Rewind to round {culprit.round}, where you took {playerMap.get(culprit.pid)?.name}, and try a
               player who helps {soft.c}.
             </span>
           </div>
-          <button className="btn outline-accent" onClick={() => onRewind(culprit.index)}>
-            Rewind to pick #{culprit.index + 1}
+          <button className="btn outline-accent" onClick={() => onRewind(culprit.at)}>
+            Rewind to pick #{culprit.at + 1}
           </button>
         </section>
       )}
 
-      <MatchupsSection view={view} playerMap={playerMap} />
+      <DuelsSection view={view} playerMap={playerMap} />
 
       <div className="report-grid">
         <div className="report-standings">
@@ -179,11 +179,11 @@ export function DraftReport({
           <h2 className="title">Your picks</h2>
           <ol className="roster">
             {userPicks.map((p) => {
-              const pl = playerMap.get(p.playerId)!;
+              const pl = playerMap.get(p.pid)!;
               return (
-                <li key={p.index}>
+                <li key={p.at}>
                   <span className="muted small rd">Rd {p.round}</span>
-                  <Headshot player={pl} variant="avatar" />
+                  <Monogram player={pl} variant="avatar" />
                   <span className="grow stack-0">
                     <strong>{pl.name}</strong>
                     <PlayerMeta player={pl} />
@@ -192,7 +192,7 @@ export function DraftReport({
                     <button
                       className="link-btn small"
                       title="Rewind to this pick and try someone else"
-                      onClick={() => onRewind(p.index)}
+                      onClick={() => onRewind(p.at)}
                     >
                       Rewind
                     </button>
@@ -202,7 +202,7 @@ export function DraftReport({
             })}
           </ol>
           {!isLive && (
-            <p className="muted small">Viewing a saved run. Switch back to “This draft” to rewind.</p>
+            <p className="muted small">Viewing a saved run. Switch back to “This session” to rewind.</p>
           )}
         </section>
       </div>
@@ -215,9 +215,9 @@ export function DraftReport({
  * league place, not by the raw gap: every paper record overstates, so what
  * matters is whether yours overstates more than the others'.
  */
-function RecapStory({ view, bd }: { view: DraftView; bd: MatchupBreakdown }) {
-  const slot = view.userSlot;
-  const n = view.numTeams;
+function RecapStory({ view, bd }: { view: SessionView; bd: DuelBoard }) {
+  const slot = view.seat;
+  const n = view.teams;
   const rec = view.records[slot];
   const paperPlace = Number(places(view.records.map((r) => r.wins))[slot].replace("T", ""));
   const weekPlace = Number(places(view.weekPct)[slot].replace("T", ""));
@@ -245,14 +245,14 @@ function RecapStory({ view, bd }: { view: DraftView; bd: MatchupBreakdown }) {
   }
 
   const losing = CATEGORIES.filter((c) => bd.categories[c].loss > (n - 1) / 2);
-  const punted = losing.filter((c) => bd.categories[c].punted);
-  const other = losing.filter((c) => !bd.categories[c].punted);
+  const conceded = losing.filter((c) => bd.categories[c].conceded);
+  const other = losing.filter((c) => !bd.categories[c].conceded);
   if (losing.length) {
     const left = CATEGORIES.length - losing.length;
     const need = left > 5 ? `you need 5 of the other ${left} every week` : left === 5 ? "you need all 5 of the others every week" : "you can't reach 5 without an upset";
     lines.push(
-      (punted.length ? `With ${andList(punted)} punted` : "") +
-        (other.length ? `${punted.length ? " and" : "With"} ${andList(other)} against you most weeks` : "") +
+      (conceded.length ? `With ${andList(conceded)} conceded` : "") +
+        (other.length ? `${conceded.length ? " and" : "With"} ${andList(other)} against you most weeks` : "") +
         `, ${need}.`,
     );
   }
@@ -268,7 +268,7 @@ function RecapStory({ view, bd }: { view: DraftView; bd: MatchupBreakdown }) {
         <p key={l} className="body-text lg">▸ {l}</p>
       ))}
       <p className="muted small">
-        Both are equal-games comparisons of the drafted rosters, not forecasts: no NBA schedule, no later
+        Both are equal-games comparisons of the drafted rosters, not forecasts: no schedule, no later
         injuries, no lineup moves.
       </p>
     </div>
@@ -276,8 +276,8 @@ function RecapStory({ view, bd }: { view: DraftView; bd: MatchupBreakdown }) {
 }
 
 /** Where you win / it's close / where you lose, with the player behind each. */
-function CategoryCards({ view, bd, playerMap }: { view: DraftView; bd: MatchupBreakdown; playerMap: Map<string, ApiPlayer> }) {
-  const n = view.numTeams - 1;
+function CategoryCards({ view, bd, playerMap }: { view: SessionView; bd: DuelBoard; playerMap: Map<string, ApiPlayer> }) {
+  const n = view.teams - 1;
   const groups = { win: [] as Category[], close: [] as Category[], loss: [] as Category[] };
   for (const c of CATEGORIES) groups[side(bd.categories[c], n)].push(c);
   groups.win.sort((a, b) => bd.categories[b].win - bd.categories[a].win);
@@ -286,8 +286,8 @@ function CategoryCards({ view, bd, playerMap }: { view: DraftView; bd: MatchupBr
 
   const line = (c: Category) => {
     const s = bd.categories[c];
-    const p = s.best ? playerMap.get(s.best.playerId) : null;
-    const who = p && s.best ? `${lastName(p)} ${driverStat(c, s.best)}` : null;
+    const p = s.best ? playerMap.get(s.best.pid) : null;
+    const who = p && s.best ? `${lastName(p)} ${deciderStat(c, s.best)}` : null;
     const totals = `you ${formatTotal(c, s.you, null)} vs a typical ${formatTotal(c, s.leagueMedian, null)}`;
     const kind = side(s, n);
     const count =
@@ -300,7 +300,7 @@ function CategoryCards({ view, bd, playerMap }: { view: DraftView; bd: MatchupBr
           : who ? `${who} carries it` : "";
     return (
       <li key={c} className="cat-line">
-        <span className={`look ${kind === "close" ? "tossup" : kind}`}>{c}{s.punted ? " · punted" : ""}</span>
+        <span className={`look ${kind === "close" ? "tossup" : kind}`}>{c}{s.conceded ? " · conceded" : ""}</span>
         <span className="small">
           <strong className="ink">{count}</strong> — {totals}{why ? `; ${why}` : ""}.
         </span>

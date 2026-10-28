@@ -13,28 +13,28 @@ import time
 from pathlib import Path
 from typing import Any
 
-STORE_DIR = Path(__file__).resolve().parent / "store"
-DRAFTS_DIR = STORE_DIR / "drafts"
-RUNS_DIR = STORE_DIR / "runs"
+ARCHIVE_DIR = Path(__file__).resolve().parent / "store"
+SESSIONS_DIR = ARCHIVE_DIR / "drafts"
+RESULTS_DIR = ARCHIVE_DIR / "runs"
 
 
 def _ensure() -> None:
-    DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
-    RUNS_DIR.mkdir(parents=True, exist_ok=True)
+    SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def new_id(prefix: str) -> str:
+def mint_id(prefix: str) -> str:
     return f"{prefix}-{secrets.token_hex(4)}"
 
 
-def save_draft(draft_id: str, payload: dict[str, Any]) -> None:
+def put_session(session_id: str, payload: dict[str, Any]) -> None:
     _ensure()
     payload = {**payload, "updatedAt": int(time.time() * 1000)}
-    (DRAFTS_DIR / f"{draft_id}.json").write_text(json.dumps(payload))
+    (SESSIONS_DIR / f"{session_id}.json").write_text(json.dumps(payload))
 
 
-def load_draft(draft_id: str) -> dict[str, Any] | None:
-    path = DRAFTS_DIR / f"{draft_id}.json"
+def get_session(session_id: str) -> dict[str, Any] | None:
+    path = SESSIONS_DIR / f"{session_id}.json"
     if not path.exists():
         return None
     try:
@@ -43,10 +43,10 @@ def load_draft(draft_id: str) -> dict[str, Any] | None:
         return None
 
 
-def list_drafts() -> list[dict[str, Any]]:
+def session_index() -> list[dict[str, Any]]:
     _ensure()
     out = []
-    for p in DRAFTS_DIR.glob("*.json"):
+    for p in SESSIONS_DIR.glob("*.json"):
         try:
             d = json.loads(p.read_text())
             draft = d["draft"]
@@ -54,7 +54,7 @@ def list_drafts() -> list[dict[str, Any]]:
                 {
                     "id": p.stem,
                     "seed": draft["config"]["seed"],
-                    "picks": len(draft.get("picks", [])),
+                    "selections": len(draft.get("picks", [])),
                     "status": draft.get("status"),
                     "updatedAt": d.get("updatedAt", 0),
                 }
@@ -64,20 +64,20 @@ def list_drafts() -> list[dict[str, Any]]:
     return sorted(out, key=lambda d: d["updatedAt"], reverse=True)
 
 
-def delete_draft(draft_id: str) -> None:
-    path = DRAFTS_DIR / f"{draft_id}.json"
+def drop_session(session_id: str) -> None:
+    path = SESSIONS_DIR / f"{session_id}.json"
     path.unlink(missing_ok=True)
 
 
-def save_run(run_id: str, payload: dict[str, Any]) -> None:
+def put_result(result_id: str, payload: dict[str, Any]) -> None:
     _ensure()
-    (RUNS_DIR / f"{run_id}.json").write_text(json.dumps(payload))
+    (RESULTS_DIR / f"{result_id}.json").write_text(json.dumps(payload))
 
 
-def list_runs() -> list[dict[str, Any]]:
+def result_index() -> list[dict[str, Any]]:
     _ensure()
     out = []
-    for p in RUNS_DIR.glob("*.json"):
+    for p in RESULTS_DIR.glob("*.json"):
         try:
             d = json.loads(p.read_text())
             out.append(
@@ -92,8 +92,8 @@ def list_runs() -> list[dict[str, Any]]:
     return sorted(out, key=lambda d: d["createdAt"])
 
 
-def load_run(run_id: str) -> dict[str, Any] | None:
-    path = RUNS_DIR / f"{run_id}.json"
+def get_result(result_id: str) -> dict[str, Any] | None:
+    path = RESULTS_DIR / f"{result_id}.json"
     if not path.exists():
         return None
     try:

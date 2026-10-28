@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ..engine.types import Player
+from ..domain.model import Player
 
 DATA_PATH = Path(__file__).parent / "players.json"
 
@@ -29,20 +29,20 @@ def load_players() -> list[Player]:
                 ast=r["ast"],
                 stl=r["stl"],
                 blk=r["blk"],
-                tpm=r["tpm"],
+                threes=r["threes"],
                 fgm=r["fgm"],
                 fga=r["fga"],
                 ftm=r["ftm"],
                 fta=r["fta"],
                 tov=r["tov"],
-                nba_id=r.get("nbaId"),
-                as_of_season=r.get("asOfSeason"),
+                ref_id=r.get("refId"),
+                season=r.get("season"),
                 gp=r.get("gp", 0),
-                min=r.get("min", 0.0),
+                mpg=r.get("mpg", 0.0),
                 signed=r.get("signed", True),
-                gp_by_season=r.get("gpBySeason") or {},
+                season_gp=r.get("seasonGp") or {},
                 adp=r.get("adp"),
-                injury=r.get("injury"),
+                status=r.get("status"),
             )
         )
     return out

@@ -2,8875 +2,8875 @@
  {
   "id": "nba-1629029",
   "adp": 3.5,
-  "nbaId": 1629029,
   "name": "Luka Don\u010di\u0107",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 50,
-   "2023-24": 70
-  },
-  "min": 35.8,
   "pts": 33.5,
   "reb": 7.7,
   "ast": 8.3,
   "stl": 1.6,
   "blk": 0.5,
-  "tpm": 4.0,
   "fgm": 10.8,
   "fga": 22.8,
   "ftm": 7.9,
   "fta": 10.1,
-  "tov": 4.0
+  "tov": 4.0,
+  "refId": 1629029,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 50,
+   "2023-24": 70
+  },
+  "mpg": 35.8,
+  "threes": 4.0,
+  "status": null
  },
  {
   "id": "nba-1628983",
   "adp": 3.5,
-  "nbaId": 1628983,
   "name": "Shai Gilgeous-Alexander",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 76,
-   "2023-24": 75
-  },
-  "min": 33.2,
   "pts": 31.1,
   "reb": 4.3,
   "ast": 6.6,
   "stl": 1.4,
   "blk": 0.8,
-  "tpm": 1.7,
   "fgm": 10.8,
   "fga": 19.4,
   "ftm": 7.9,
   "fta": 9.0,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 1628983,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 76,
+   "2023-24": 75
+  },
+  "mpg": 33.2,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1630162",
   "adp": 6.5,
-  "nbaId": 1630162,
   "name": "Anthony Edwards",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 61,
-  "gpBySeason": {
-   "2025-26": 61,
-   "2024-25": 79,
-   "2023-24": 79
-  },
-  "min": 35.0,
   "pts": 28.8,
   "reb": 5.0,
   "ast": 3.7,
   "stl": 1.4,
   "blk": 0.8,
-  "tpm": 3.4,
   "fgm": 9.9,
   "fga": 20.2,
   "ftm": 5.7,
   "fta": 7.2,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1630162,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 61,
+   "2024-25": 79,
+   "2023-24": 79
+  },
+  "mpg": 35.0,
+  "threes": 3.4,
+  "status": null
  },
  {
   "id": "nba-1627759",
   "adp": 31.0,
-  "nbaId": 1627759,
   "name": "Jaylen Brown",
   "team": "PHI",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 71,
-  "gpBySeason": {
-   "2025-26": 71,
-   "2024-25": 63,
-   "2023-24": 70
-  },
-  "min": 34.4,
   "pts": 28.7,
   "reb": 6.9,
   "ast": 5.1,
   "stl": 1.0,
   "blk": 0.4,
-  "tpm": 2.0,
   "fgm": 10.4,
   "fga": 21.7,
   "ftm": 6.0,
   "fta": 7.5,
-  "tov": 3.6
+  "tov": 3.6,
+  "refId": 1627759,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 71,
+   "2024-25": 63,
+   "2023-24": 70
+  },
+  "mpg": 34.4,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1630178",
   "adp": 10.5,
-  "nbaId": 1630178,
   "name": "Tyrese Maxey",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 52,
-   "2023-24": 70
-  },
-  "min": 38.0,
   "pts": 28.3,
   "reb": 4.1,
   "ast": 6.6,
   "stl": 1.9,
   "blk": 0.8,
-  "tpm": 3.1,
   "fgm": 9.9,
   "fga": 21.4,
   "ftm": 5.3,
   "fta": 6.0,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1630178,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 52,
+   "2023-24": 70
+  },
+  "mpg": 38.0,
+  "threes": 3.1,
+  "status": null
  },
  {
   "id": "nba-1628378",
   "adp": 11.5,
-  "nbaId": 1628378,
   "name": "Donovan Mitchell",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 71,
-   "2023-24": 55
-  },
-  "min": 33.5,
   "pts": 27.9,
   "reb": 4.5,
   "ast": 5.7,
   "stl": 1.5,
   "blk": 0.3,
-  "tpm": 3.2,
   "fgm": 9.7,
   "fga": 20.0,
   "ftm": 5.3,
   "fta": 6.1,
-  "tov": 2.8
+  "tov": 2.8,
+  "refId": 1628378,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 71,
+   "2023-24": 55
+  },
+  "mpg": 33.5,
+  "threes": 3.2,
+  "status": null
  },
  {
   "id": "nba-202695",
   "adp": 31.0,
-  "nbaId": 202695,
   "name": "Kawhi Leonard",
   "team": "TOR",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 37,
-   "2023-24": 68
-  },
-  "min": 32.1,
   "pts": 27.9,
   "reb": 6.4,
   "ast": 3.6,
   "stl": 1.9,
   "blk": 0.4,
-  "tpm": 2.6,
   "fgm": 9.8,
   "fga": 19.4,
   "ftm": 5.7,
   "fta": 6.4,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 202695,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 37,
+   "2023-24": 68
+  },
+  "mpg": 32.1,
+  "threes": 2.6,
+  "status": null
  },
  {
   "id": "nba-203999",
   "adp": 1.0,
-  "nbaId": 203999,
   "name": "Nikola Joki\u0107",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 70,
-   "2023-24": 79
-  },
-  "min": 34.8,
   "pts": 27.7,
   "reb": 12.9,
   "ast": 10.7,
   "stl": 1.4,
   "blk": 0.8,
-  "tpm": 1.7,
   "fgm": 9.9,
   "fga": 17.4,
   "ftm": 6.1,
   "fta": 7.4,
-  "tov": 3.7
+  "tov": 3.7,
+  "refId": 203999,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 70,
+   "2023-24": 79
+  },
+  "mpg": 34.8,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-203507",
   "adp": 5.5,
-  "nbaId": 203507,
   "name": "Giannis Antetokounmpo",
   "team": "MIA",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 36,
-  "gpBySeason": {
-   "2025-26": 36,
-   "2024-25": 67,
-   "2023-24": 73
-  },
-  "min": 28.9,
   "pts": 27.6,
   "reb": 9.8,
   "ast": 5.4,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0.4,
   "fgm": 10.4,
   "fga": 16.6,
   "ftm": 6.4,
   "fta": 9.9,
-  "tov": 3.2
+  "tov": 3.2,
+  "refId": 203507,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 36,
+   "2024-25": 67,
+   "2023-24": 73
+  },
+  "mpg": 28.9,
+  "threes": 0.4,
+  "status": null
  },
  {
   "id": "nba-203954",
   "adp": 54.5,
-  "nbaId": 203954,
   "name": "Joel Embiid",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 38,
-  "gpBySeason": {
-   "2025-26": 38,
-   "2024-25": 19,
-   "2023-24": 39
-  },
-  "min": 31.6,
   "pts": 26.9,
   "reb": 7.7,
   "ast": 3.9,
   "stl": 0.6,
   "blk": 1.2,
-  "tpm": 1.4,
   "fgm": 9.0,
   "fga": 18.3,
   "ftm": 7.5,
   "fta": 8.8,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 203954,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 38,
+   "2024-25": 19,
+   "2023-24": 39
+  },
+  "mpg": 31.6,
+  "threes": 1.4,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1628369",
   "adp": 8.5,
-  "nbaId": 1628369,
   "name": "Jayson Tatum",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 16,
-   "2024-25": 72,
-   "2023-24": 74
-  },
-  "min": 36.4,
   "pts": 26.8,
   "reb": 8.7,
   "ast": 6.0,
   "stl": 1.1,
   "blk": 0.5,
-  "tpm": 3.5,
   "fgm": 9.2,
   "fga": 20.3,
   "ftm": 5.0,
   "fta": 6.1,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1628369,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 16,
+   "2024-25": 72,
+   "2023-24": 74
+  },
+  "mpg": 36.4,
+  "threes": 3.5,
+  "status": null
  },
  {
   "id": "nba-1628374",
   "adp": 44.0,
-  "nbaId": 1628374,
   "name": "Lauri Markkanen",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 42,
-  "gpBySeason": {
-   "2025-26": 42,
-   "2024-25": 47,
-   "2023-24": 55
-  },
-  "min": 34.3,
   "pts": 26.7,
   "reb": 6.9,
   "ast": 2.1,
   "stl": 1.0,
   "blk": 0.5,
-  "tpm": 2.7,
   "fgm": 9.1,
   "fga": 19.2,
   "ftm": 5.7,
   "fta": 6.4,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1628374,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 42,
+   "2024-25": 47,
+   "2023-24": 55
+  },
+  "mpg": 34.3,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-201939",
   "adp": 24.5,
-  "nbaId": 201939,
   "name": "Stephen Curry",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 43,
-  "gpBySeason": {
-   "2025-26": 43,
-   "2024-25": 70,
-   "2023-24": 74
-  },
-  "min": 30.9,
   "pts": 26.6,
   "reb": 3.6,
   "ast": 4.7,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 4.4,
   "fgm": 8.7,
   "fga": 18.6,
   "ftm": 4.7,
   "fta": 5.1,
-  "tov": 2.8
+  "tov": 2.8,
+  "refId": 201939,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 43,
+   "2024-25": 70,
+   "2023-24": 74
+  },
+  "mpg": 30.9,
+  "threes": 4.4,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1626164",
   "adp": 23.0,
-  "nbaId": 1626164,
   "name": "Devin Booker",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 75,
-   "2023-24": 68
-  },
-  "min": 33.5,
   "pts": 26.1,
   "reb": 3.9,
   "ast": 6.0,
   "stl": 0.8,
   "blk": 0.3,
-  "tpm": 1.9,
   "fgm": 8.5,
   "fga": 18.7,
   "ftm": 7.1,
   "fta": 8.1,
-  "tov": 3.1
+  "tov": 3.1,
+  "refId": 1626164,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 75,
+   "2023-24": 68
+  },
+  "mpg": 33.5,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1628973",
   "adp": 16.0,
-  "nbaId": 1628973,
   "name": "Jalen Brunson",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74,
-   "2024-25": 65,
-   "2023-24": 77
-  },
-  "min": 35.0,
   "pts": 26.0,
   "reb": 3.3,
   "ast": 6.8,
   "stl": 0.8,
   "blk": 0.1,
-  "tpm": 2.6,
   "fgm": 9.3,
   "fga": 19.9,
   "ftm": 4.8,
   "fta": 5.7,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1628973,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74,
+   "2024-25": 65,
+   "2023-24": 77
+  },
+  "mpg": 35.0,
+  "threes": 2.6,
+  "status": null
  },
  {
   "id": "nba-201142",
   "adp": 17.0,
-  "nbaId": 201142,
   "name": "Kevin Durant",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 62,
-   "2023-24": 75
-  },
-  "min": 36.4,
   "pts": 26.0,
   "reb": 5.5,
   "ast": 4.8,
   "stl": 0.8,
   "blk": 0.9,
-  "tpm": 2.4,
   "fgm": 9.2,
   "fga": 17.6,
   "ftm": 5.2,
   "fta": 6.0,
-  "tov": 3.2
+  "tov": 3.2,
+  "refId": 201142,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 62,
+   "2023-24": 75
+  },
+  "mpg": 36.4,
+  "threes": 2.4,
+  "status": null
  },
  {
   "id": "nba-1627750",
   "adp": 24.5,
-  "nbaId": 1627750,
   "name": "Jamal Murray",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 67,
-   "2023-24": 59
-  },
-  "min": 35.4,
   "pts": 25.4,
   "reb": 4.4,
   "ast": 7.1,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 3.3,
   "fgm": 8.8,
   "fga": 18.1,
   "ftm": 4.6,
   "fta": 5.2,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1627750,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 67,
+   "2023-24": 59
+  },
+  "mpg": 35.4,
+  "threes": 3.3,
+  "status": null
  },
  {
   "id": "nba-1641705",
   "adp": 2.0,
-  "nbaId": 1641705,
   "name": "Victor Wembanyama",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 46,
-   "2023-24": 71
-  },
-  "min": 29.2,
   "pts": 25.0,
   "reb": 11.5,
   "ast": 3.1,
   "stl": 1.0,
   "blk": 3.1,
-  "tpm": 1.9,
   "fgm": 8.6,
   "fga": 16.9,
   "ftm": 5.8,
   "fta": 7.0,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1641705,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 46,
+   "2023-24": 71
+  },
+  "mpg": 29.2,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-203081",
   "adp": 65.0,
-  "nbaId": 203081,
   "name": "Damian Lillard",
   "team": "POR",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 58,
-  "gpBySeason": {
-   "2024-25": 58,
-   "2023-24": 73
-  },
-  "min": 36.1,
   "pts": 24.9,
   "reb": 4.7,
   "ast": 7.1,
   "stl": 1.2,
   "blk": 0.2,
-  "tpm": 3.4,
   "fgm": 7.7,
   "fga": 17.1,
   "ftm": 6.2,
   "fta": 6.8,
-  "tov": 2.8
+  "tov": 2.8,
+  "refId": 203081,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 58,
+   "2023-24": 73
+  },
+  "mpg": 36.1,
+  "threes": 3.4,
+  "status": null
  },
  {
   "id": "nba-203076",
   "adp": 35.5,
-  "nbaId": 203076,
   "name": "Anthony Davis",
   "team": "WAS",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 51,
-  "gpBySeason": {
-   "2025-26": 20,
-   "2024-25": 51,
-   "2023-24": 76
-  },
-  "min": 33.4,
   "pts": 24.7,
   "reb": 11.6,
   "ast": 3.5,
   "stl": 1.2,
   "blk": 2.2,
-  "tpm": 0.7,
   "fgm": 9.2,
   "fga": 17.8,
   "ftm": 5.6,
   "fta": 7.2,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 203076,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 20,
+   "2024-25": 51,
+   "2023-24": 76
+  },
+  "mpg": 33.4,
+  "threes": 0.7,
+  "status": null
  },
  {
   "id": "nba-202681",
   "adp": 47.5,
-  "nbaId": 202681,
   "name": "Kyrie Irving",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 50,
-  "gpBySeason": {
-   "2024-25": 50,
-   "2023-24": 58
-  },
-  "min": 36.1,
   "pts": 24.7,
   "reb": 4.8,
   "ast": 4.6,
   "stl": 1.3,
   "blk": 0.5,
-  "tpm": 2.9,
   "fgm": 8.9,
   "fga": 18.9,
   "ftm": 3.9,
   "fta": 4.3,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 202681,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 50,
+   "2023-24": 58
+  },
+  "mpg": 36.1,
+  "threes": 2.9,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1630166",
   "adp": 36.5,
-  "nbaId": 1630166,
   "name": "Deni Avdija",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 72,
-   "2023-24": 75
-  },
-  "min": 33.3,
   "pts": 24.2,
   "reb": 6.9,
   "ast": 6.7,
   "stl": 0.8,
   "blk": 0.6,
-  "tpm": 1.9,
   "fgm": 7.5,
   "fga": 16.1,
   "ftm": 7.4,
   "fta": 9.2,
-  "tov": 3.8
+  "tov": 3.8,
+  "refId": 1630166,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 72,
+   "2023-24": 75
+  },
+  "mpg": 33.3,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1629008",
   "adp": 53.0,
-  "nbaId": 1629008,
   "name": "Michael Porter Jr.",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 52,
-  "gpBySeason": {
-   "2025-26": 52,
-   "2024-25": 77,
-   "2023-24": 81
-  },
-  "min": 32.5,
   "pts": 24.2,
   "reb": 7.1,
   "ast": 3.0,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 3.4,
   "fgm": 8.5,
   "fga": 18.4,
   "ftm": 3.8,
   "fta": 4.4,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1629008,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 52,
+   "2024-25": 77,
+   "2023-24": 81
+  },
+  "mpg": 32.5,
+  "threes": 3.4,
+  "status": null
  },
  {
   "id": "nba-1629027",
   "adp": 23.0,
-  "nbaId": 1629027,
   "name": "Trae Young",
   "team": "WAS",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 15,
-   "2024-25": 76,
-   "2023-24": 54
-  },
-  "min": 36.0,
   "pts": 24.2,
   "reb": 3.1,
   "ast": 11.6,
   "stl": 1.2,
   "blk": 0.2,
-  "tpm": 2.9,
   "fgm": 7.4,
   "fga": 18.1,
   "ftm": 6.5,
   "fta": 7.4,
-  "tov": 4.7
+  "tov": 4.7,
+  "refId": 1629027,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 15,
+   "2024-25": 76,
+   "2023-24": 54
+  },
+  "mpg": 36.0,
+  "threes": 2.9,
+  "status": null
  },
  {
   "id": "nba-1627783",
   "adp": 38.5,
-  "nbaId": 1627783,
   "name": "Pascal Siakam",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 62,
-  "gpBySeason": {
-   "2025-26": 62,
-   "2024-25": 78,
-   "2023-24": 80
-  },
-  "min": 33.2,
   "pts": 24.0,
   "reb": 6.6,
   "ast": 3.8,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 1.7,
   "fgm": 9.0,
   "fga": 18.6,
   "ftm": 4.2,
   "fta": 6.1,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 1627783,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 62,
+   "2024-25": 78,
+   "2023-24": 80
+  },
+  "mpg": 33.2,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1630595",
   "adp": 6.0,
-  "nbaId": 1630595,
   "name": "Cade Cunningham",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 70,
-   "2023-24": 62
-  },
-  "min": 33.9,
   "pts": 23.9,
   "reb": 5.5,
   "ast": 9.9,
   "stl": 1.4,
   "blk": 0.8,
-  "tpm": 2.0,
   "fgm": 8.6,
   "fga": 18.6,
   "ftm": 4.8,
   "fta": 6.0,
-  "tov": 3.7
+  "tov": 3.7,
+  "refId": 1630595,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 70,
+   "2023-24": 62
+  },
+  "mpg": 33.9,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-201935",
   "adp": 29.5,
-  "nbaId": 201935,
   "name": "James Harden",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 79,
-   "2023-24": 72
-  },
-  "min": 34.8,
   "pts": 23.6,
   "reb": 4.8,
   "ast": 8.0,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 3.1,
   "fgm": 7.0,
   "fga": 16.0,
   "ftm": 6.6,
   "fta": 7.5,
-  "tov": 3.5
+  "tov": 3.5,
+  "refId": 201935,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 79,
+   "2023-24": 72
+  },
+  "mpg": 34.8,
+  "threes": 3.1,
+  "status": null
  },
  {
   "id": "nba-1641718",
   "adp": 58.5,
-  "nbaId": 1641718,
   "name": "Keyonte George",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 54,
-   "2024-25": 67,
-   "2023-24": 75
-  },
-  "min": 33.1,
   "pts": 23.6,
   "reb": 3.7,
   "ast": 6.1,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 2.5,
   "fgm": 7.4,
   "fga": 16.3,
   "ftm": 6.2,
   "fta": 7.0,
-  "tov": 3.1
+  "tov": 3.1,
+  "refId": 1641718,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 54,
+   "2024-25": 67,
+   "2023-24": 75
+  },
+  "mpg": 33.1,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1630559",
   "adp": 29.0,
-  "nbaId": 1630559,
   "name": "Austin Reaves",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 51,
-  "gpBySeason": {
-   "2025-26": 51,
-   "2024-25": 73,
-   "2023-24": 82
-  },
-  "min": 34.5,
   "pts": 23.3,
   "reb": 4.7,
   "ast": 5.5,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 2.3,
   "fgm": 7.3,
   "fga": 14.9,
   "ftm": 6.3,
   "fta": 7.3,
-  "tov": 3.0
+  "tov": 3.0,
+  "refId": 1630559,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 51,
+   "2024-25": 73,
+   "2023-24": 82
+  },
+  "mpg": 34.5,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-1629630",
   "adp": 81.0,
-  "nbaId": 1629630,
   "name": "Ja Morant",
   "team": "POR",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 20,
-   "2024-25": 50,
-   "2023-24": 9
-  },
-  "min": 30.4,
   "pts": 23.2,
   "reb": 4.1,
   "ast": 7.3,
   "stl": 1.2,
   "blk": 0.2,
-  "tpm": 1.8,
   "fgm": 8.1,
   "fga": 17.8,
   "ftm": 5.3,
   "fta": 6.4,
-  "tov": 3.7
+  "tov": 3.7,
+  "refId": 1629630,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 20,
+   "2024-25": 50,
+   "2023-24": 9
+  },
+  "mpg": 30.4,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1630552",
   "adp": 9.5,
-  "nbaId": 1630552,
   "name": "Jalen Johnson",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 36,
-   "2023-24": 56
-  },
-  "min": 35.2,
   "pts": 22.5,
   "reb": 10.3,
   "ast": 7.9,
   "stl": 1.2,
   "blk": 0.4,
-  "tpm": 1.7,
   "fgm": 8.3,
   "fga": 17.1,
   "ftm": 4.2,
   "fta": 5.3,
-  "tov": 3.4
+  "tov": 3.4,
+  "refId": 1630552,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 36,
+   "2023-24": 56
+  },
+  "mpg": 35.2,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1631094",
   "adp": 37.5,
-  "nbaId": 1631094,
   "name": "Paolo Banchero",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 46,
-   "2023-24": 80
-  },
-  "min": 34.7,
   "pts": 22.2,
   "reb": 8.4,
   "ast": 5.2,
   "stl": 0.7,
   "blk": 0.6,
-  "tpm": 1.2,
   "fgm": 7.3,
   "fga": 16.0,
   "ftm": 6.3,
   "fta": 8.2,
-  "tov": 3.1
+  "tov": 3.1,
+  "refId": 1631094,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 46,
+   "2023-24": 80
+  },
+  "mpg": 34.7,
+  "threes": 1.2,
+  "status": "Out"
  },
  {
   "id": "nba-1626181",
   "adp": 83.5,
-  "nbaId": 1626181,
   "name": "Norman Powell",
   "team": "CHI",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 58,
-  "gpBySeason": {
-   "2025-26": 58,
-   "2024-25": 60,
-   "2023-24": 76
-  },
-  "min": 29.6,
   "pts": 21.7,
   "reb": 3.5,
   "ast": 2.5,
   "stl": 1.1,
   "blk": 0.2,
-  "tpm": 2.7,
   "fgm": 7.3,
   "fga": 15.4,
   "ftm": 4.5,
   "fta": 5.5,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1626181,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 58,
+   "2024-25": 60,
+   "2023-24": 76
+  },
+  "mpg": 29.6,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1627742",
   "adp": 82.0,
-  "nbaId": 1627742,
   "name": "Brandon Ingram",
   "team": "LAC",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 18,
-   "2023-24": 64
-  },
-  "min": 33.8,
   "pts": 21.5,
   "reb": 5.6,
   "ast": 3.7,
   "stl": 0.8,
   "blk": 0.7,
-  "tpm": 1.8,
   "fgm": 8.0,
   "fga": 16.7,
   "ftm": 3.8,
   "fta": 4.6,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1627742,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 18,
+   "2023-24": 64
+  },
+  "mpg": 33.8,
+  "threes": 1.8,
+  "status": "Out"
  },
  {
   "id": "nba-1630530",
   "adp": 49.5,
-  "nbaId": 1630530,
   "name": "Trey Murphy III",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 53,
-   "2023-24": 57
-  },
-  "min": 35.5,
   "pts": 21.5,
   "reb": 5.7,
   "ast": 3.8,
   "stl": 1.5,
   "blk": 0.4,
-  "tpm": 3.2,
   "fgm": 7.5,
   "fga": 15.9,
   "ftm": 3.3,
   "fta": 3.7,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1630530,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 53,
+   "2023-24": 57
+  },
+  "mpg": 35.5,
+  "threes": 3.2,
+  "status": null
  },
  {
   "id": "nba-203944",
   "adp": 60.0,
-  "nbaId": 203944,
   "name": "Julius Randle",
   "team": "BKN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 79,
-  "gpBySeason": {
-   "2025-26": 79,
-   "2024-25": 69,
-   "2023-24": 46
-  },
-  "min": 33.0,
   "pts": 21.1,
   "reb": 6.7,
   "ast": 5.0,
   "stl": 1.1,
   "blk": 0.2,
-  "tpm": 1.4,
   "fgm": 7.3,
   "fga": 15.3,
   "ftm": 5.0,
   "fta": 6.3,
-  "tov": 2.7
+  "tov": 2.7,
+  "refId": 203944,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 79,
+   "2024-25": 69,
+   "2023-24": 46
+  },
+  "mpg": 33.0,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1642843",
   "adp": 10.5,
-  "nbaId": 1642843,
   "name": "Cooper Flagg",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70
-  },
-  "min": 33.5,
   "pts": 21.0,
   "reb": 6.7,
   "ast": 4.5,
   "stl": 1.2,
   "blk": 0.9,
-  "tpm": 1.0,
   "fgm": 8.0,
   "fga": 17.1,
   "ftm": 4.0,
   "fta": 4.9,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1642843,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70
+  },
+  "mpg": 33.5,
+  "threes": 1.0,
+  "status": "Out"
  },
  {
   "id": "nba-1629627",
   "adp": 60.0,
-  "nbaId": 1629627,
   "name": "Zion Williamson",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 62,
-  "gpBySeason": {
-   "2025-26": 62,
-   "2024-25": 30,
-   "2023-24": 70
-  },
-  "min": 29.7,
   "pts": 21.0,
   "reb": 5.7,
   "ast": 3.2,
   "stl": 1.0,
   "blk": 0.5,
-  "tpm": 0.0,
   "fgm": 7.8,
   "fga": 13.0,
   "ftm": 5.4,
   "fta": 7.5,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 1629627,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 62,
+   "2024-25": 30,
+   "2023-24": 70
+  },
+  "mpg": 29.7,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-2544",
   "adp": 38.0,
-  "nbaId": 2544,
   "name": "LeBron James",
   "team": "PHI",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60,
-   "2024-25": 70,
-   "2023-24": 71
-  },
-  "min": 33.2,
   "pts": 20.9,
   "reb": 6.1,
   "ast": 7.2,
   "stl": 1.2,
   "blk": 0.6,
-  "tpm": 1.3,
   "fgm": 7.9,
   "fga": 15.3,
   "ftm": 3.9,
   "fta": 5.3,
-  "tov": 3.0
+  "tov": 3.0,
+  "refId": 2544,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60,
+   "2024-25": 70,
+   "2023-24": 71
+  },
+  "mpg": 33.2,
+  "threes": 1.3,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1629638",
   "adp": 54.0,
-  "nbaId": 1629638,
   "name": "Nickeil Alexander-Walker",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 82,
-   "2023-24": 82
-  },
-  "min": 33.4,
   "pts": 20.8,
   "reb": 3.4,
   "ast": 3.7,
   "stl": 1.3,
   "blk": 0.5,
-  "tpm": 3.2,
   "fgm": 7.0,
   "fga": 15.3,
   "ftm": 3.6,
   "fta": 3.9,
-  "tov": 2.1
+  "tov": 2.1,
+  "refId": 1629638,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 82,
+   "2023-24": 82
+  },
+  "mpg": 33.4,
+  "threes": 3.2,
+  "status": null
  },
  {
   "id": "nba-1631101",
   "adp": null,
-  "nbaId": 1631101,
   "name": "Shaedon Sharpe",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 50,
-   "2024-25": 72,
-   "2023-24": 32
-  },
-  "min": 29.4,
   "pts": 20.8,
   "reb": 4.3,
   "ast": 2.6,
   "stl": 1.4,
   "blk": 0.1,
-  "tpm": 2.1,
   "fgm": 7.8,
   "fga": 17.4,
   "ftm": 3.1,
   "fta": 3.9,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1631101,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 50,
+   "2024-25": 72,
+   "2023-24": 32
+  },
+  "mpg": 29.4,
+  "threes": 2.1,
+  "status": "Out"
  },
  {
   "id": "nba-1630532",
   "adp": 54.5,
-  "nbaId": 1630532,
   "name": "Franz Wagner",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 34,
-  "gpBySeason": {
-   "2025-26": 34,
-   "2024-25": 60,
-   "2023-24": 72
-  },
-  "min": 30.0,
   "pts": 20.6,
   "reb": 5.2,
   "ast": 3.3,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 1.4,
   "fgm": 7.2,
   "fga": 14.9,
   "ftm": 4.8,
   "fta": 5.8,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1630532,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 34,
+   "2024-25": 60,
+   "2023-24": 72
+  },
+  "mpg": 30.0,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1629639",
   "adp": 61.0,
-  "nbaId": 1629639,
   "name": "Tyler Herro",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 33,
-  "gpBySeason": {
-   "2025-26": 33,
-   "2024-25": 77,
-   "2023-24": 42
-  },
-  "min": 31.3,
   "pts": 20.5,
   "reb": 4.8,
   "ast": 4.1,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 2.5,
   "fgm": 7.5,
   "fga": 15.6,
   "ftm": 3.0,
   "fta": 3.3,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1629639,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 33,
+   "2024-25": 77,
+   "2023-24": 42
+  },
+  "mpg": 31.3,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1630578",
   "adp": 20.5,
-  "nbaId": 1630578,
   "name": "Alperen Sengun",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 76,
-   "2023-24": 63
-  },
-  "min": 33.3,
   "pts": 20.4,
   "reb": 8.9,
   "ast": 6.2,
   "stl": 1.2,
   "blk": 1.1,
-  "tpm": 0.6,
   "fgm": 8.1,
   "fga": 15.6,
   "ftm": 3.6,
   "fta": 5.2,
-  "tov": 3.2
+  "tov": 3.2,
+  "refId": 1630578,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 76,
+   "2023-24": 63
+  },
+  "mpg": 33.3,
+  "threes": 0.6,
+  "status": null
  },
  {
   "id": "nba-1641706",
   "adp": 52.5,
-  "nbaId": 1641706,
   "name": "Brandon Miller",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 27,
-   "2023-24": 74
-  },
-  "min": 30.3,
   "pts": 20.2,
   "reb": 4.9,
   "ast": 3.3,
   "stl": 1.0,
   "blk": 0.7,
-  "tpm": 3.1,
   "fgm": 7.0,
   "fga": 16.1,
   "ftm": 3.1,
   "fta": 3.4,
-  "tov": 2.5
+  "tov": 2.5,
+  "refId": 1641706,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 27,
+   "2023-24": 74
+  },
+  "mpg": 30.3,
+  "threes": 3.1,
+  "status": null
  },
  {
   "id": "nba-1628415",
   "adp": 135.0,
-  "nbaId": 1628415,
   "name": "Dillon Brooks",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 75,
-   "2023-24": 72
-  },
-  "min": 30.4,
   "pts": 20.2,
   "reb": 3.6,
   "ast": 1.8,
   "stl": 1.0,
   "blk": 0.2,
-  "tpm": 2.3,
   "fgm": 7.4,
   "fga": 17.1,
   "ftm": 3.0,
   "fta": 3.6,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1628415,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 75,
+   "2023-24": 72
+  },
+  "mpg": 30.4,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-1628389",
   "adp": 26.0,
-  "nbaId": 1628389,
   "name": "Bam Adebayo",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 73,
-  "gpBySeason": {
-   "2025-26": 73,
-   "2024-25": 78,
-   "2023-24": 71
-  },
-  "min": 32.4,
   "pts": 20.1,
   "reb": 10.0,
   "ast": 3.2,
   "stl": 1.2,
   "blk": 0.7,
-  "tpm": 1.7,
   "fgm": 6.9,
   "fga": 15.7,
   "ftm": 4.5,
   "fta": 5.8,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1628389,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 73,
+   "2024-25": 78,
+   "2023-24": 71
+  },
+  "mpg": 32.4,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1630217",
   "adp": 47.0,
-  "nbaId": 1630217,
   "name": "Desmond Bane",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 69,
-   "2023-24": 42
-  },
-  "min": 33.6,
   "pts": 20.1,
   "reb": 4.1,
   "ast": 4.1,
   "stl": 1.0,
   "blk": 0.5,
-  "tpm": 2.0,
   "fgm": 7.1,
   "fga": 14.7,
   "ftm": 3.8,
   "fta": 4.2,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 1630217,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 69,
+   "2023-24": 42
+  },
+  "mpg": 33.6,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1626157",
   "adp": 17.5,
-  "nbaId": 1626157,
   "name": "Karl-Anthony Towns",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 72,
-   "2023-24": 62
-  },
-  "min": 31.0,
   "pts": 20.1,
   "reb": 11.9,
   "ast": 3.0,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1.5,
   "fgm": 6.9,
   "fga": 13.8,
   "ftm": 4.8,
   "fta": 5.5,
-  "tov": 2.5
+  "tov": 2.5,
+  "refId": 1626157,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 72,
+   "2023-24": 62
+  },
+  "mpg": 31.0,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1630163",
   "adp": 21.0,
-  "nbaId": 1630163,
   "name": "LaMelo Ball",
   "team": "MIN",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 47,
-   "2023-24": 22
-  },
-  "min": 28.0,
   "pts": 20.1,
   "reb": 4.8,
   "ast": 7.1,
   "stl": 1.2,
   "blk": 0.3,
-  "tpm": 3.8,
   "fgm": 7.0,
   "fga": 17.3,
   "ftm": 2.2,
   "fta": 2.5,
-  "tov": 2.8
+  "tov": 2.8,
+  "refId": 1630163,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 47,
+   "2023-24": 22
+  },
+  "mpg": 28.0,
+  "threes": 3.8,
+  "status": null
  },
  {
   "id": "nba-202710",
   "adp": 150.0,
-  "nbaId": 202710,
   "name": "Jimmy Butler III",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 38,
-  "gpBySeason": {
-   "2025-26": 38,
-   "2024-25": 55,
-   "2023-24": 60
-  },
-  "min": 31.1,
   "pts": 20.0,
   "reb": 5.6,
   "ast": 4.9,
   "stl": 1.4,
   "blk": 0.2,
-  "tpm": 0.8,
   "fgm": 6.3,
   "fga": 12.2,
   "ftm": 6.5,
   "fta": 7.6,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 202710,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 38,
+   "2024-25": 55,
+   "2023-24": 60
+  },
+  "mpg": 31.1,
+  "threes": 0.8,
+  "status": "Out"
  },
  {
   "id": "nba-1631105",
   "adp": 33.5,
-  "nbaId": 1631105,
   "name": "Jalen Duren",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 78,
-   "2023-24": 61
-  },
-  "min": 28.2,
   "pts": 19.5,
   "reb": 10.5,
   "ast": 2.0,
   "stl": 0.8,
   "blk": 0.8,
-  "tpm": 0.0,
   "fgm": 7.5,
   "fga": 11.5,
   "ftm": 4.6,
   "fta": 6.1,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1631105,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 78,
+   "2023-24": 61
+  },
+  "mpg": 28.2,
+  "threes": 0.0,
+  "status": "Out"
  },
  {
   "id": "nba-1628991",
   "adp": 62.0,
-  "nbaId": 1628991,
   "name": "Jaren Jackson Jr.",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 48,
-  "gpBySeason": {
-   "2025-26": 48,
-   "2024-25": 74,
-   "2023-24": 66
-  },
-  "min": 30.3,
   "pts": 19.4,
   "reb": 5.7,
   "ast": 2.0,
   "stl": 1.1,
   "blk": 1.4,
-  "tpm": 1.8,
   "fgm": 7.1,
   "fga": 15.0,
   "ftm": 3.4,
   "fta": 4.2,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 1628991,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 48,
+   "2024-25": 74,
+   "2023-24": 66
+  },
+  "mpg": 30.3,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1629628",
   "adp": 118.0,
-  "nbaId": 1629628,
   "name": "RJ Barrett",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 58,
-   "2023-24": 58
-  },
-  "min": 30.3,
   "pts": 19.3,
   "reb": 5.3,
   "ast": 3.3,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 1.7,
   "fgm": 7.0,
   "fga": 14.3,
   "ftm": 3.5,
   "fta": 4.9,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1629628,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 58,
+   "2023-24": 58
+  },
+  "mpg": 30.3,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-203897",
   "adp": 106.0,
-  "nbaId": 203897,
   "name": "Zach LaVine",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 39,
-  "gpBySeason": {
-   "2025-26": 39,
-   "2024-25": 74,
-   "2023-24": 25
-  },
-  "min": 31.4,
   "pts": 19.2,
   "reb": 2.8,
   "ast": 2.3,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 2.5,
   "fgm": 6.7,
   "fga": 14.0,
   "ftm": 3.2,
   "fta": 3.6,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 203897,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 39,
+   "2024-25": 74,
+   "2023-24": 25
+  },
+  "mpg": 31.4,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1627734",
   "adp": 21.5,
-  "nbaId": 1627734,
   "name": "Domantas Sabonis",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 19,
-   "2024-25": 70,
-   "2023-24": 82
-  },
-  "min": 34.7,
   "pts": 19.1,
   "reb": 13.9,
   "ast": 6.0,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 0.9,
   "fgm": 7.5,
   "fga": 12.8,
   "ftm": 3.1,
   "fta": 4.1,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1627734,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 19,
+   "2024-25": 70,
+   "2023-24": 82
+  },
+  "mpg": 34.7,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1629636",
   "adp": 50.0,
-  "nbaId": 1629636,
   "name": "Darius Garland",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 45,
-  "gpBySeason": {
-   "2025-26": 45,
-   "2024-25": 75,
-   "2023-24": 57
-  },
-  "min": 29.9,
   "pts": 18.8,
   "reb": 2.4,
   "ast": 6.7,
   "stl": 1.0,
   "blk": 0.2,
-  "tpm": 2.7,
   "fgm": 6.9,
   "fga": 14.9,
   "ftm": 2.3,
   "fta": 2.7,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1629636,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 45,
+   "2024-25": 75,
+   "2023-24": 57
+  },
+  "mpg": 29.9,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-203468",
   "adp": 101.0,
-  "nbaId": 203468,
   "name": "CJ McCollum",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 76,
-   "2024-25": 56,
-   "2023-24": 66
-  },
-  "min": 29.8,
   "pts": 18.7,
   "reb": 3.3,
   "ast": 3.9,
   "stl": 0.8,
   "blk": 0.5,
-  "tpm": 2.5,
   "fgm": 6.9,
   "fga": 15.2,
   "ftm": 2.4,
   "fta": 3.1,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 203468,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 76,
+   "2024-25": 56,
+   "2023-24": 66
+  },
+  "mpg": 29.8,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1628368",
   "adp": 63.5,
-  "nbaId": 1628368,
   "name": "De'Aaron Fox",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 62,
-   "2023-24": 74
-  },
-  "min": 31.0,
   "pts": 18.6,
   "reb": 3.8,
   "ast": 6.2,
   "stl": 1.2,
   "blk": 0.3,
-  "tpm": 1.8,
   "fgm": 7.1,
   "fga": 14.5,
   "ftm": 2.6,
   "fta": 3.4,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1628368,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 62,
+   "2023-24": 74
+  },
+  "mpg": 31.0,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-203924",
   "adp": 161.5,
-  "nbaId": 203924,
   "name": "Jerami Grant",
   "team": "MEM",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 47,
-   "2023-24": 54
-  },
-  "min": 29.7,
   "pts": 18.6,
   "reb": 3.5,
   "ast": 2.1,
   "stl": 0.7,
   "blk": 0.6,
-  "tpm": 2.4,
   "fgm": 5.8,
   "fga": 12.8,
   "ftm": 4.6,
   "fta": 5.6,
-  "tov": 2.1
+  "tov": 2.1,
+  "refId": 203924,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 47,
+   "2023-24": 54
+  },
+  "mpg": 29.7,
+  "threes": 2.4,
+  "status": null
  },
  {
   "id": "nba-1630169",
   "adp": 14.5,
-  "nbaId": 1630169,
   "name": "Tyrese Haliburton",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 73,
-  "gpBySeason": {
-   "2024-25": 73,
-   "2023-24": 69
-  },
-  "min": 33.6,
   "pts": 18.6,
   "reb": 3.5,
   "ast": 9.2,
   "stl": 1.4,
   "blk": 0.7,
-  "tpm": 3.0,
   "fgm": 6.5,
   "fga": 13.8,
   "ftm": 2.6,
   "fta": 3.0,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1630169,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 73,
+   "2023-24": 69
+  },
+  "mpg": 33.6,
+  "threes": 3.0,
+  "status": null
  },
  {
   "id": "nba-1642851",
   "adp": 44.5,
-  "nbaId": 1642851,
   "name": "Kon Knueppel",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 81,
-  "gpBySeason": {
-   "2025-26": 81
-  },
-  "min": 31.5,
   "pts": 18.5,
   "reb": 5.3,
   "ast": 3.4,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 3.4,
   "fgm": 6.4,
   "fga": 13.4,
   "ftm": 2.4,
   "fta": 2.8,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 1642851,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 81
+  },
+  "mpg": 31.5,
+  "threes": 3.4,
+  "status": "Out"
  },
  {
   "id": "nba-201942",
   "adp": 98.5,
-  "nbaId": 201942,
   "name": "DeMar DeRozan",
   "team": "DEN",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 77,
-   "2023-24": 79
-  },
-  "min": 31.2,
   "pts": 18.4,
   "reb": 2.9,
   "ast": 4.1,
   "stl": 1.0,
   "blk": 0.3,
-  "tpm": 0.6,
   "fgm": 6.5,
   "fga": 13.1,
   "ftm": 4.9,
   "fta": 5.6,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 201942,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 77,
+   "2023-24": 79
+  },
+  "mpg": 31.2,
+  "threes": 0.6,
+  "status": null
  },
  {
   "id": "nba-1641708",
   "adp": 20.0,
-  "nbaId": 1641708,
   "name": "Amen Thompson",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 79,
-  "gpBySeason": {
-   "2025-26": 79,
-   "2024-25": 69,
-   "2023-24": 62
-  },
-  "min": 37.4,
   "pts": 18.3,
   "reb": 7.8,
   "ast": 5.3,
   "stl": 1.5,
   "blk": 0.6,
-  "tpm": 0.3,
   "fgm": 7.1,
   "fga": 13.2,
   "ftm": 3.8,
   "fta": 4.9,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1641708,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 79,
+   "2024-25": 69,
+   "2023-24": 62
+  },
+  "mpg": 37.4,
+  "threes": 0.3,
+  "status": null
  },
  {
   "id": "nba-1630596",
   "adp": 32.5,
-  "nbaId": 1630596,
   "name": "Evan Mobley",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 71,
-   "2023-24": 50
-  },
-  "min": 31.9,
   "pts": 18.2,
   "reb": 9.0,
   "ast": 3.6,
   "stl": 0.7,
   "blk": 1.7,
-  "tpm": 1.0,
   "fgm": 7.2,
   "fga": 13.2,
   "ftm": 2.8,
   "fta": 4.6,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1630596,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 71,
+   "2023-24": 50
+  },
+  "mpg": 31.9,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1630567",
   "adp": 14.0,
-  "nbaId": 1630567,
   "name": "Scottie Barnes",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 80,
-  "gpBySeason": {
-   "2025-26": 80,
-   "2024-25": 65,
-   "2023-24": 60
-  },
-  "min": 33.5,
   "pts": 18.1,
   "reb": 7.5,
   "ast": 5.9,
   "stl": 1.4,
   "blk": 1.5,
-  "tpm": 0.9,
   "fgm": 7.1,
   "fga": 14.0,
   "ftm": 3.0,
   "fta": 3.7,
-  "tov": 2.6
+  "tov": 2.6,
+  "refId": 1630567,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 80,
+   "2024-25": 65,
+   "2023-24": 60
+  },
+  "mpg": 33.5,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1630224",
   "adp": 97.0,
-  "nbaId": 1630224,
   "name": "Jalen Green",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 32,
-  "gpBySeason": {
-   "2025-26": 32,
-   "2024-25": 82,
-   "2023-24": 82
-  },
-  "min": 25.9,
   "pts": 17.8,
   "reb": 3.6,
   "ast": 2.8,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 2.2,
   "fgm": 6.8,
   "fga": 16.0,
   "ftm": 2.0,
   "fta": 2.7,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1630224,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 32,
+   "2024-25": 82,
+   "2023-24": 82
+  },
+  "mpg": 25.9,
+  "threes": 2.2,
+  "status": null
  },
  {
   "id": "nba-1630180",
   "adp": 166.5,
-  "nbaId": 1630180,
   "name": "Saddiq Bey",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2023-24": 63
-  },
-  "min": 31.2,
   "pts": 17.7,
   "reb": 5.6,
   "ast": 2.5,
   "stl": 0.9,
   "blk": 0.1,
-  "tpm": 2.1,
   "fgm": 6.1,
   "fga": 13.4,
   "ftm": 3.4,
   "fta": 4.1,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1630180,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2023-24": 63
+  },
+  "mpg": 31.2,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1631097",
   "adp": 159.0,
-  "nbaId": 1631097,
   "name": "Bennedict Mathurin",
   "team": "NOP",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 54,
-   "2024-25": 72,
-   "2023-24": 59
-  },
-  "min": 30.0,
   "pts": 17.6,
   "reb": 5.4,
   "ast": 2.4,
   "stl": 0.8,
   "blk": 0.2,
-  "tpm": 1.4,
   "fgm": 5.4,
   "fga": 12.5,
   "ftm": 5.4,
   "fta": 6.2,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 1631097,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 54,
+   "2024-25": 72,
+   "2023-24": 59
+  },
+  "mpg": 30.0,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1627749",
   "adp": 64.0,
-  "nbaId": 1627749,
   "name": "Dejounte Murray",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 31,
-  "gpBySeason": {
-   "2025-26": 14,
-   "2024-25": 31,
-   "2023-24": 78
-  },
-  "min": 32.7,
   "pts": 17.5,
   "reb": 6.5,
   "ast": 7.4,
   "stl": 2.0,
   "blk": 0.4,
-  "tpm": 1.7,
   "fgm": 6.3,
   "fga": 15.9,
   "ftm": 3.3,
   "fta": 4.0,
-  "tov": 3.4
+  "tov": 3.4,
+  "refId": 1627749,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 14,
+   "2024-25": 31,
+   "2023-24": 78
+  },
+  "mpg": 32.7,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1629632",
   "adp": 89.5,
-  "nbaId": 1629632,
   "name": "Coby White",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 50,
-   "2024-25": 74,
-   "2023-24": 79
-  },
-  "min": 25.0,
   "pts": 17.4,
   "reb": 3.4,
   "ast": 4.0,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 2.3,
   "fgm": 5.6,
   "fga": 12.5,
   "ftm": 3.9,
   "fta": 4.8,
-  "tov": 2.6
+  "tov": 2.6,
+  "refId": 1629632,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 50,
+   "2024-25": 74,
+   "2023-24": 79
+  },
+  "mpg": 25.0,
+  "threes": 2.3,
+  "status": "Out"
  },
  {
   "id": "nba-1629645",
   "adp": 140.5,
-  "nbaId": 1629645,
   "name": "Kevin Porter Jr.",
   "team": "",
   "lastTeam": "MIL",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 38,
-  "gpBySeason": {
-   "2025-26": 38,
-   "2024-25": 75
-  },
-  "min": 33.2,
   "pts": 17.4,
   "reb": 5.2,
   "ast": 7.4,
   "stl": 2.2,
   "blk": 0.5,
-  "tpm": 1.2,
   "fgm": 6.3,
   "fga": 13.5,
   "ftm": 3.6,
   "fta": 4.1,
-  "tov": 2.9
+  "tov": 2.9,
+  "refId": 1629645,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 38,
+   "2024-25": 75
+  },
+  "mpg": 33.2,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-202331",
   "adp": 88.5,
-  "nbaId": 202331,
   "name": "Paul George",
   "team": "BOS",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 37,
-  "gpBySeason": {
-   "2025-26": 37,
-   "2024-25": 41,
-   "2023-24": 74
-  },
-  "min": 30.7,
   "pts": 17.3,
   "reb": 5.3,
   "ast": 3.6,
   "stl": 1.7,
   "blk": 0.4,
-  "tpm": 2.7,
   "fgm": 6.1,
   "fga": 13.9,
   "ftm": 2.5,
   "fta": 3.0,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 202331,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 37,
+   "2024-25": 41,
+   "2023-24": 74
+  },
+  "mpg": 30.7,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1631157",
   "adp": 87.5,
-  "nbaId": 1631157,
   "name": "Ryan Rollins",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74,
-   "2024-25": 56,
-   "2023-24": 13
-  },
-  "min": 32.1,
   "pts": 17.3,
   "reb": 4.6,
   "ast": 5.6,
   "stl": 1.5,
   "blk": 0.4,
-  "tpm": 2.5,
   "fgm": 6.6,
   "fga": 13.9,
   "ftm": 1.7,
   "fta": 2.1,
-  "tov": 2.7
+  "tov": 2.7,
+  "refId": 1631157,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74,
+   "2024-25": 56,
+   "2023-24": 13
+  },
+  "mpg": 32.1,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1631096",
   "adp": 43.5,
-  "nbaId": 1631096,
   "name": "Chet Holmgren",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 32,
-   "2023-24": 82
-  },
-  "min": 28.9,
   "pts": 17.1,
   "reb": 8.9,
   "ast": 1.7,
   "stl": 0.6,
   "blk": 1.9,
-  "tpm": 1.3,
   "fgm": 6.3,
   "fga": 11.3,
   "ftm": 3.3,
   "fta": 4.1,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1631096,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 32,
+   "2023-24": 82
+  },
+  "mpg": 28.9,
+  "threes": 1.3,
+  "status": null
  },
  {
   "id": "nba-1631114",
   "adp": 38.5,
-  "nbaId": 1631114,
   "name": "Jalen Williams",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 33,
-  "gpBySeason": {
-   "2025-26": 33,
-   "2024-25": 69,
-   "2023-24": 71
-  },
-  "min": 28.4,
   "pts": 17.1,
   "reb": 4.6,
   "ast": 5.5,
   "stl": 1.2,
   "blk": 0.3,
-  "tpm": 0.7,
   "fgm": 6.5,
   "fga": 13.5,
   "ftm": 3.3,
   "fta": 3.9,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1631114,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 33,
+   "2024-25": 69,
+   "2023-24": 71
+  },
+  "mpg": 28.4,
+  "threes": 0.7,
+  "status": null
  },
  {
   "id": "nba-1628970",
   "adp": 90.5,
-  "nbaId": 1628970,
   "name": "Miles Bridges",
   "team": "PHX",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 64,
-   "2023-24": 69
-  },
-  "min": 31.0,
   "pts": 17.1,
   "reb": 5.8,
   "ast": 3.2,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 1.9,
   "fgm": 6.2,
   "fga": 13.5,
   "ftm": 2.7,
   "fta": 3.3,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1628970,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 64,
+   "2023-24": 69
+  },
+  "mpg": 31.0,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-203078",
   "adp": null,
-  "nbaId": 203078,
   "name": "Bradley Beal",
   "team": "LAC",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 53,
-  "gpBySeason": {
-   "2025-26": 6,
-   "2024-25": 53,
-   "2023-24": 53
-  },
-  "min": 32.1,
   "pts": 17.0,
   "reb": 3.3,
   "ast": 3.7,
   "stl": 1.1,
   "blk": 0.5,
-  "tpm": 1.9,
   "fgm": 6.5,
   "fga": 13.1,
   "ftm": 2.1,
   "fta": 2.6,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 203078,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 6,
+   "2024-25": 53,
+   "2023-24": 53
+  },
+  "mpg": 32.1,
+  "threes": 1.9,
+  "status": "Out"
  },
  {
   "id": "nba-1630581",
   "adp": 21.5,
-  "nbaId": 1630581,
   "name": "Josh Giddey",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 54,
-   "2024-25": 70,
-   "2023-24": 80
-  },
-  "min": 32.1,
   "pts": 17.0,
   "reb": 8.3,
   "ast": 9.1,
   "stl": 1.0,
   "blk": 0.5,
-  "tpm": 1.9,
   "fgm": 5.9,
   "fga": 13.3,
   "ftm": 3.2,
   "fta": 4.2,
-  "tov": 3.6
+  "tov": 3.6,
+  "refId": 1630581,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 54,
+   "2024-25": 70,
+   "2023-24": 80
+  },
+  "mpg": 32.1,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1630202",
   "adp": 87.0,
-  "nbaId": 1630202,
   "name": "Payton Pritchard",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 79,
-  "gpBySeason": {
-   "2025-26": 79,
-   "2024-25": 80,
-   "2023-24": 82
-  },
-  "min": 32.3,
   "pts": 17.0,
   "reb": 3.9,
   "ast": 5.2,
   "stl": 0.7,
   "blk": 0.1,
-  "tpm": 2.7,
   "fgm": 6.4,
   "fga": 13.8,
   "ftm": 1.5,
   "fta": 1.7,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1630202,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 79,
+   "2024-25": 80,
+   "2023-24": 82
+  },
+  "mpg": 32.3,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1629614",
   "adp": 138.5,
-  "nbaId": 1629614,
   "name": "Andrew Nembhard",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 65,
-   "2023-24": 68
-  },
-  "min": 31.3,
   "pts": 16.9,
   "reb": 2.8,
   "ast": 7.7,
   "stl": 0.9,
   "blk": 0.1,
-  "tpm": 1.9,
   "fgm": 5.8,
   "fga": 13.2,
   "ftm": 3.4,
   "fta": 4.1,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1629614,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 65,
+   "2023-24": 68
+  },
+  "mpg": 31.3,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-204001",
   "adp": 103.0,
-  "nbaId": 204001,
   "name": "Kristaps Porzi\u0146\u0123is",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 32,
-  "gpBySeason": {
-   "2025-26": 32,
-   "2024-25": 42,
-   "2023-24": 57
-  },
-  "min": 24.0,
   "pts": 16.7,
   "reb": 5.2,
   "ast": 2.5,
   "stl": 0.6,
   "blk": 1.2,
-  "tpm": 1.7,
   "fgm": 5.4,
   "fga": 12.1,
   "ftm": 4.2,
   "fta": 4.9,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 204001,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 32,
+   "2024-25": 42,
+   "2023-24": 57
+  },
+  "mpg": 24.0,
+  "threes": 1.7,
+  "status": "Out"
  },
  {
   "id": "nba-1628384",
   "adp": 70.5,
-  "nbaId": 1628384,
   "name": "OG Anunoby",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 67,
-  "gpBySeason": {
-   "2025-26": 67,
-   "2024-25": 74,
-   "2023-24": 50
-  },
-  "min": 33.2,
   "pts": 16.7,
   "reb": 5.2,
   "ast": 2.2,
   "stl": 1.6,
   "blk": 0.7,
-  "tpm": 2.3,
   "fgm": 5.8,
   "fga": 12.0,
   "ftm": 2.7,
   "fta": 3.3,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1628384,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 67,
+   "2024-25": 74,
+   "2023-24": 50
+  },
+  "mpg": 33.2,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-1642264",
   "adp": 49.0,
-  "nbaId": 1642264,
   "name": "Stephon Castle",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 81
-  },
-  "min": 30.0,
   "pts": 16.7,
   "reb": 5.3,
   "ast": 7.4,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 1.2,
   "fgm": 5.7,
   "fga": 12.0,
   "ftm": 4.1,
   "fta": 5.6,
-  "tov": 3.2
+  "tov": 3.2,
+  "refId": 1642264,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 81
+  },
+  "mpg": 30.0,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1628401",
   "adp": 42.0,
-  "nbaId": 1628401,
   "name": "Derrick White",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 76,
-   "2023-24": 73
-  },
-  "min": 34.1,
   "pts": 16.5,
   "reb": 4.4,
   "ast": 5.4,
   "stl": 1.1,
   "blk": 1.3,
-  "tpm": 2.7,
   "fgm": 5.7,
   "fga": 14.4,
   "ftm": 2.4,
   "fta": 2.6,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1628401,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 76,
+   "2023-24": 73
+  },
+  "mpg": 34.1,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1628960",
   "adp": 145.0,
-  "nbaId": 1628960,
   "name": "Grayson Allen",
   "team": "CHA",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 51,
-  "gpBySeason": {
-   "2025-26": 51,
-   "2024-25": 64,
-   "2023-24": 75
-  },
-  "min": 28.8,
   "pts": 16.5,
   "reb": 3.0,
   "ast": 3.8,
   "stl": 1.4,
   "blk": 0.3,
-  "tpm": 3.1,
   "fgm": 5.3,
   "fga": 13.1,
   "ftm": 2.8,
   "fta": 3.3,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1628960,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 51,
+   "2024-25": 64,
+   "2023-24": 75
+  },
+  "mpg": 28.8,
+  "threes": 3.1,
+  "status": null
  },
  {
   "id": "nba-1630193",
   "adp": 97.5,
-  "nbaId": 1630193,
   "name": "Immanuel Quickley",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 33,
-   "2023-24": 68
-  },
-  "min": 31.9,
   "pts": 16.4,
   "reb": 4.0,
   "ast": 5.9,
   "stl": 1.3,
   "blk": 0.1,
-  "tpm": 2.5,
   "fgm": 5.7,
   "fga": 12.9,
   "ftm": 2.4,
   "fta": 3.0,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1630193,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 33,
+   "2023-24": 68
+  },
+  "mpg": 31.9,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1642259",
   "adp": 75.0,
-  "nbaId": 1642259,
   "name": "Alex Sarr",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 48,
-  "gpBySeason": {
-   "2025-26": 48,
-   "2024-25": 67
-  },
-  "min": 27.2,
   "pts": 16.3,
   "reb": 7.4,
   "ast": 2.7,
   "stl": 0.8,
   "blk": 2.0,
-  "tpm": 1.0,
   "fgm": 6.6,
   "fga": 13.7,
   "ftm": 2.1,
   "fta": 3.0,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1642259,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 48,
+   "2024-25": 67
+  },
+  "mpg": 27.2,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-201950",
   "adp": 140.0,
-  "nbaId": 201950,
   "name": "Jrue Holiday",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 53,
-  "gpBySeason": {
-   "2025-26": 53,
-   "2024-25": 62,
-   "2023-24": 69
-  },
-  "min": 29.4,
   "pts": 16.3,
   "reb": 4.6,
   "ast": 6.1,
   "stl": 1.0,
   "blk": 0.1,
-  "tpm": 2.6,
   "fgm": 6.0,
   "fga": 13.4,
   "ftm": 1.7,
   "fta": 2.0,
-  "tov": 2.8
+  "tov": 2.8,
+  "refId": 201950,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 53,
+   "2024-25": 62,
+   "2023-24": 69
+  },
+  "mpg": 29.4,
+  "threes": 2.6,
+  "status": null
  },
  {
   "id": "nba-1627736",
   "adp": null,
-  "nbaId": 1627736,
   "name": "Malik Beasley",
   "team": "",
   "lastTeam": "DET",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 82,
-  "gpBySeason": {
-   "2024-25": 82,
-   "2023-24": 79
-  },
-  "min": 27.8,
   "pts": 16.3,
   "reb": 2.6,
   "ast": 1.7,
   "stl": 0.9,
   "blk": 0.1,
-  "tpm": 3.9,
   "fgm": 5.6,
   "fga": 13.1,
   "ftm": 1.2,
   "fta": 1.7,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1627736,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 82,
+   "2023-24": 79
+  },
+  "mpg": 27.8,
+  "threes": 3.9,
+  "status": null
  },
  {
   "id": "nba-1641824",
   "adp": 71.5,
-  "nbaId": 1641824,
   "name": "Matas Buzelis",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 80
-  },
-  "min": 29.2,
   "pts": 16.3,
   "reb": 5.8,
   "ast": 2.1,
   "stl": 0.7,
   "blk": 1.5,
-  "tpm": 2.2,
   "fgm": 5.8,
   "fga": 12.5,
   "ftm": 2.4,
   "fta": 3.1,
-  "tov": 2.1
+  "tov": 2.1,
+  "refId": 1641824,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 80
+  },
+  "mpg": 29.2,
+  "threes": 2.2,
+  "status": null
  },
  {
   "id": "nba-203932",
   "adp": 127.0,
-  "nbaId": 203932,
   "name": "Aaron Gordon",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 36,
-  "gpBySeason": {
-   "2025-26": 36,
-   "2024-25": 51,
-   "2023-24": 73
-  },
-  "min": 27.9,
   "pts": 16.2,
   "reb": 5.8,
   "ast": 2.7,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 1.7,
   "fgm": 5.5,
   "fga": 11.1,
   "ftm": 3.5,
   "fta": 4.5,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 203932,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 36,
+   "2024-25": 51,
+   "2023-24": 73
+  },
+  "mpg": 27.9,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1642845",
   "adp": 74.0,
-  "nbaId": 1642845,
   "name": "VJ Edgecombe",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75
-  },
-  "min": 35.0,
   "pts": 16.0,
   "reb": 5.6,
   "ast": 4.2,
   "stl": 1.4,
   "blk": 0.5,
-  "tpm": 2.0,
   "fgm": 6.0,
   "fga": 13.7,
   "ftm": 2.0,
   "fta": 2.4,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1642845,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75
+  },
+  "mpg": 35.0,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1631095",
   "adp": 100.5,
-  "nbaId": 1631095,
   "name": "Jabari Smith Jr.",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 57,
-   "2023-24": 76
-  },
-  "min": 35.1,
   "pts": 15.8,
   "reb": 6.9,
   "ast": 1.9,
   "stl": 0.7,
   "blk": 0.9,
-  "tpm": 2.3,
   "fgm": 5.7,
   "fga": 12.7,
   "ftm": 2.1,
   "fta": 2.7,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1631095,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 57,
+   "2023-24": 76
+  },
+  "mpg": 35.1,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-203952",
   "adp": 102.0,
-  "nbaId": 203952,
   "name": "Andrew Wiggins",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 60,
-   "2023-24": 71
-  },
-  "min": 30.3,
   "pts": 15.4,
   "reb": 4.8,
   "ast": 2.7,
   "stl": 1.1,
   "blk": 1.0,
-  "tpm": 2.0,
   "fgm": 5.7,
   "fga": 12.1,
   "ftm": 1.9,
   "fta": 2.4,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 203952,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 60,
+   "2023-24": 71
+  },
+  "mpg": 30.3,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1629012",
   "adp": 146.0,
-  "nbaId": 1629012,
   "name": "Collin Sexton",
   "team": "LAL",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 63,
-   "2023-24": 78
-  },
-  "min": 23.7,
   "pts": 15.4,
   "reb": 2.3,
   "ast": 3.3,
   "stl": 1.1,
   "blk": 0.1,
-  "tpm": 1.6,
   "fgm": 5.3,
   "fga": 10.9,
   "ftm": 3.2,
   "fta": 3.8,
-  "tov": 2.1
+  "tov": 2.1,
+  "refId": 1629012,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 63,
+   "2023-24": 78
+  },
+  "mpg": 23.7,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1631170",
   "adp": 124.0,
-  "nbaId": 1631170,
   "name": "Jaime Jaquez Jr.",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 66,
-   "2023-24": 75
-  },
-  "min": 28.3,
   "pts": 15.4,
   "reb": 5.0,
   "ast": 4.7,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 0.8,
   "fgm": 6.2,
   "fga": 12.2,
   "ftm": 2.2,
   "fta": 2.9,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 1631170,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 66,
+   "2023-24": 75
+  },
+  "mpg": 28.3,
+  "threes": 0.8,
+  "status": null
  },
  {
   "id": "nba-1628386",
   "adp": 64.0,
-  "nbaId": 1628386,
   "name": "Jarrett Allen",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 82,
-   "2023-24": 77
-  },
-  "min": 27.1,
   "pts": 15.4,
   "reb": 8.5,
   "ast": 1.8,
   "stl": 1.0,
   "blk": 0.8,
-  "tpm": 0.0,
   "fgm": 6.0,
   "fga": 9.4,
   "ftm": 3.3,
   "fta": 4.7,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1628386,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 82,
+   "2023-24": 77
+  },
+  "mpg": 27.1,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1630230",
   "adp": null,
-  "nbaId": 1630230,
   "name": "Naji Marshall",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74,
-   "2024-25": 69,
-   "2023-24": 66
-  },
-  "min": 29.5,
   "pts": 15.2,
   "reb": 4.7,
   "ast": 3.3,
   "stl": 1.1,
   "blk": 0.1,
-  "tpm": 0.8,
   "fgm": 5.7,
   "fga": 11.1,
   "ftm": 3.1,
   "fta": 4.1,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1630230,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74,
+   "2024-25": 69,
+   "2023-24": 66
+  },
+  "mpg": 29.5,
+  "threes": 0.8,
+  "status": null
  },
  {
   "id": "nba-1630168",
   "adp": 61.5,
-  "nbaId": 1630168,
   "name": "Onyeka Okongwu",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74,
-   "2024-25": 74,
-   "2023-24": 55
-  },
-  "min": 31.0,
   "pts": 15.2,
   "reb": 7.6,
   "ast": 3.1,
   "stl": 1.1,
   "blk": 1.1,
-  "tpm": 1.9,
   "fgm": 5.6,
   "fga": 11.6,
   "ftm": 2.1,
   "fta": 2.7,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1630168,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74,
+   "2024-25": 74,
+   "2023-24": 55
+  },
+  "mpg": 31.0,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-201566",
   "adp": 153.0,
-  "nbaId": 201566,
   "name": "Russell Westbrook",
   "team": "",
   "lastTeam": "SAC",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 75,
-   "2023-24": 68
-  },
-  "min": 28.9,
   "pts": 15.2,
   "reb": 5.4,
   "ast": 6.7,
   "stl": 1.3,
   "blk": 0.2,
-  "tpm": 2.0,
   "fgm": 5.6,
   "fga": 13.1,
   "ftm": 2.0,
   "fta": 2.9,
-  "tov": 3.3
+  "tov": 3.3,
+  "refId": 201566,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 75,
+   "2023-24": 68
+  },
+  "mpg": 28.9,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-202696",
   "adp": 124.0,
-  "nbaId": 202696,
   "name": "Nikola Vu\u010devi\u0107",
   "team": "ORL",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 73,
-   "2023-24": 76
-  },
-  "min": 28.4,
   "pts": 15.1,
   "reb": 8.4,
   "ast": 3.3,
   "stl": 0.6,
   "blk": 0.6,
-  "tpm": 1.6,
   "fgm": 6.2,
   "fga": 12.5,
   "ftm": 1.2,
   "fta": 1.5,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 202696,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 73,
+   "2023-24": 76
+  },
+  "mpg": 28.4,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1641710",
   "adp": 158.5,
-  "nbaId": 1641710,
   "name": "Anthony Black",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 78,
-   "2023-24": 69
-  },
-  "min": 29.8,
   "pts": 15.0,
   "reb": 3.8,
   "ast": 3.7,
   "stl": 1.4,
   "blk": 0.7,
-  "tpm": 1.6,
   "fgm": 5.4,
   "fga": 12.1,
   "ftm": 2.6,
   "fta": 3.6,
-  "tov": 2.1
+  "tov": 2.1,
+  "refId": 1641710,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 78,
+   "2023-24": 69
+  },
+  "mpg": 29.8,
+  "threes": 1.6,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1641729",
   "adp": null,
-  "nbaId": 1641729,
   "name": "Brice Sensabaugh",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 71,
-   "2023-24": 32
-  },
-  "min": 23.5,
   "pts": 14.9,
   "reb": 3.1,
   "ast": 1.9,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 2.2,
   "fgm": 5.3,
   "fga": 11.4,
   "ftm": 2.2,
   "fta": 2.7,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1641729,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 71,
+   "2023-24": 32
+  },
+  "mpg": 23.5,
+  "threes": 2.2,
+  "status": null
  },
  {
   "id": "nba-1630245",
   "adp": 121.5,
-  "nbaId": 1630245,
   "name": "Ayo Dosunmu",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 46,
-   "2023-24": 76
-  },
-  "min": 27.3,
   "pts": 14.8,
   "reb": 3.4,
   "ast": 3.6,
   "stl": 0.8,
   "blk": 0.3,
-  "tpm": 1.8,
   "fgm": 5.6,
   "fga": 10.8,
   "ftm": 1.8,
   "fta": 2.1,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1630245,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 46,
+   "2023-24": 76
+  },
+  "mpg": 27.3,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1630183",
   "adp": 88.5,
-  "nbaId": 1630183,
   "name": "Jaden McDaniels",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 73,
-  "gpBySeason": {
-   "2025-26": 73,
-   "2024-25": 82,
-   "2023-24": 72
-  },
-  "min": 31.7,
   "pts": 14.8,
   "reb": 4.2,
   "ast": 2.7,
   "stl": 1.1,
   "blk": 1.0,
-  "tpm": 1.4,
   "fgm": 5.7,
   "fga": 11.1,
   "ftm": 2.0,
   "fta": 2.4,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1630183,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 73,
+   "2024-25": 82,
+   "2023-24": 72
+  },
+  "mpg": 31.7,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1642273",
   "adp": 156.5,
-  "nbaId": 1642273,
   "name": "Kyshawn George",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 48,
-  "gpBySeason": {
-   "2025-26": 48,
-   "2024-25": 68
-  },
-  "min": 29.0,
   "pts": 14.8,
   "reb": 5.1,
   "ast": 4.5,
   "stl": 1.0,
   "blk": 0.9,
-  "tpm": 2.1,
   "fgm": 5.3,
   "fga": 12.0,
   "ftm": 2.2,
   "fta": 2.7,
-  "tov": 2.6
+  "tov": 2.6,
+  "refId": 1642273,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 48,
+   "2024-25": 68
+  },
+  "mpg": 29.0,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1631212",
   "adp": 135.0,
-  "nbaId": 1631212,
   "name": "Peyton Watson",
   "team": "CLE",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 54,
-   "2024-25": 68,
-   "2023-24": 80
-  },
-  "min": 29.6,
   "pts": 14.6,
   "reb": 4.9,
   "ast": 2.1,
   "stl": 0.9,
   "blk": 1.1,
-  "tpm": 1.5,
   "fgm": 5.3,
   "fga": 10.8,
   "ftm": 2.6,
   "fta": 3.5,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1631212,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 54,
+   "2024-25": 68,
+   "2023-24": 80
+  },
+  "mpg": 29.6,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1628969",
   "adp": 64.5,
-  "nbaId": 1628969,
   "name": "Mikal Bridges",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 82,
-   "2023-24": 82
-  },
-  "min": 32.8,
   "pts": 14.4,
   "reb": 3.8,
   "ast": 3.7,
   "stl": 1.3,
   "blk": 0.8,
-  "tpm": 1.9,
   "fgm": 5.8,
   "fga": 11.7,
   "ftm": 1.0,
   "fta": 1.2,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1628969,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 82,
+   "2023-24": 82
+  },
+  "mpg": 32.8,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1629014",
   "adp": 120.0,
-  "nbaId": 1629014,
   "name": "Anfernee Simons",
   "team": "PHI",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 55,
-  "gpBySeason": {
-   "2025-26": 55,
-   "2024-25": 70,
-   "2023-24": 46
-  },
-  "min": 24.9,
   "pts": 14.3,
   "reb": 2.5,
   "ast": 2.4,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 2.7,
   "fgm": 5.2,
   "fga": 11.8,
   "ftm": 1.3,
   "fta": 1.4,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1629014,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 55,
+   "2024-25": 70,
+   "2023-24": 46
+  },
+  "mpg": 24.9,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1642847",
   "adp": 147.0,
-  "nbaId": 1642847,
   "name": "Jeremiah Fears",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82
-  },
-  "min": 25.8,
   "pts": 14.3,
   "reb": 3.7,
   "ast": 3.4,
   "stl": 1.2,
   "blk": 0.4,
-  "tpm": 1.2,
   "fgm": 5.3,
   "fga": 12.3,
   "ftm": 2.4,
   "fta": 3.0,
-  "tov": 2.2
+  "tov": 2.2,
+  "refId": 1642847,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82
+  },
+  "mpg": 25.8,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1629023",
   "adp": 162.0,
-  "nbaId": 1629023,
   "name": "P.J. Washington",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 57,
-   "2023-24": 73
-  },
-  "min": 31.0,
   "pts": 14.2,
   "reb": 7.0,
   "ast": 1.8,
   "stl": 1.0,
   "blk": 1.1,
-  "tpm": 1.4,
   "fgm": 5.3,
   "fga": 11.8,
   "ftm": 2.2,
   "fta": 3.3,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1629023,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 57,
+   "2023-24": 73
+  },
+  "mpg": 31.0,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1630703",
   "adp": null,
-  "nbaId": 1630703,
   "name": "Scoot Henderson",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 30,
-  "gpBySeason": {
-   "2025-26": 30,
-   "2024-25": 66,
-   "2023-24": 62
-  },
-  "min": 24.9,
   "pts": 14.2,
   "reb": 2.7,
   "ast": 3.7,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 1.9,
   "fgm": 4.8,
   "fga": 11.4,
   "ftm": 2.8,
   "fta": 3.3,
-  "tov": 2.4
+  "tov": 2.4,
+  "refId": 1630703,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 30,
+   "2024-25": 66,
+   "2023-24": 62
+  },
+  "mpg": 24.9,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1627832",
   "adp": 133.0,
-  "nbaId": 1627832,
   "name": "Fred VanVleet",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 60,
-  "gpBySeason": {
-   "2024-25": 60,
-   "2023-24": 73
-  },
-  "min": 35.2,
   "pts": 14.1,
   "reb": 3.7,
   "ast": 5.6,
   "stl": 1.6,
   "blk": 0.4,
-  "tpm": 2.7,
   "fgm": 4.8,
   "fga": 12.7,
   "ftm": 1.9,
   "fta": 2.3,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1627832,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 60,
+   "2023-24": 73
+  },
+  "mpg": 35.2,
+  "threes": 2.7,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1627826",
   "adp": 69.0,
-  "nbaId": 1627826,
   "name": "Ivica Zubac",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 48,
-  "gpBySeason": {
-   "2025-26": 48,
-   "2024-25": 80,
-   "2023-24": 68
-  },
-  "min": 30.1,
   "pts": 14.1,
   "reb": 10.6,
   "ast": 2.2,
   "stl": 0.4,
   "blk": 0.8,
-  "tpm": 0.0,
   "fgm": 6.0,
   "fga": 10.0,
   "ftm": 2.1,
   "fta": 3.0,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1627826,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 48,
+   "2024-25": 80,
+   "2023-24": 68
+  },
+  "mpg": 30.1,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1626162",
   "adp": 127.0,
-  "nbaId": 1626162,
   "name": "Kelly Oubre Jr.",
   "team": "IND",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 50,
-   "2024-25": 60,
-   "2023-24": 68
-  },
-  "min": 31.5,
   "pts": 14.1,
   "reb": 5.0,
   "ast": 1.6,
   "stl": 1.4,
   "blk": 0.5,
-  "tpm": 1.7,
   "fgm": 5.1,
   "fga": 10.9,
   "ftm": 2.2,
   "fta": 2.9,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1626162,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 50,
+   "2024-25": 60,
+   "2023-24": 68
+  },
+  "mpg": 31.5,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1630200",
   "adp": null,
-  "nbaId": 1630200,
   "name": "Tre Jones",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 46,
-   "2023-24": 77
-  },
-  "min": 27.0,
   "pts": 14.1,
   "reb": 3.1,
   "ast": 5.4,
   "stl": 1.2,
   "blk": 0.2,
-  "tpm": 0.6,
   "fgm": 5.2,
   "fga": 9.5,
   "ftm": 2.9,
   "fta": 3.5,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1630200,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 46,
+   "2023-24": 77
+  },
+  "mpg": 27.0,
+  "threes": 0.6,
+  "status": null
  },
  {
   "id": "nba-1630583",
   "adp": null,
-  "nbaId": 1630583,
   "name": "Santi Aldama",
   "team": "DAL",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 43,
-  "gpBySeason": {
-   "2025-26": 43,
-   "2024-25": 65,
-   "2023-24": 61
-  },
-  "min": 27.9,
   "pts": 14.0,
   "reb": 6.7,
   "ast": 2.9,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 1.6,
   "fgm": 5.3,
   "fga": 11.1,
   "ftm": 1.8,
   "fta": 2.7,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1630583,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 43,
+   "2024-25": 65,
+   "2023-24": 61
+  },
+  "mpg": 27.9,
+  "threes": 1.6,
+  "status": "Out"
  },
  {
   "id": "nba-1630170",
   "adp": 139.0,
-  "nbaId": 1630170,
   "name": "Devin Vassell",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 67,
-  "gpBySeason": {
-   "2025-26": 67,
-   "2024-25": 64,
-   "2023-24": 68
-  },
-  "min": 30.5,
   "pts": 13.9,
   "reb": 4.0,
   "ast": 2.5,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 2.5,
   "fgm": 4.9,
   "fga": 11.3,
   "ftm": 1.6,
   "fta": 1.9,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1630170,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 67,
+   "2024-25": 64,
+   "2023-24": 68
+  },
+  "mpg": 30.5,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1630174",
   "adp": 122.0,
-  "nbaId": 1630174,
   "name": "Aaron Nesmith",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 45,
-  "gpBySeason": {
-   "2025-26": 45,
-   "2024-25": 45,
-   "2023-24": 72
-  },
-  "min": 29.7,
   "pts": 13.8,
   "reb": 4.2,
   "ast": 1.9,
   "stl": 0.6,
   "blk": 0.5,
-  "tpm": 2.3,
   "fgm": 4.7,
   "fga": 11.4,
   "ftm": 2.0,
   "fta": 2.5,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1630174,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 45,
+   "2024-25": 45,
+   "2023-24": 72
+  },
+  "mpg": 29.7,
+  "threes": 2.3,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1642846",
   "adp": 146.5,
-  "nbaId": 1642846,
   "name": "Ace Bailey",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72
-  },
-  "min": 27.6,
   "pts": 13.8,
   "reb": 4.2,
   "ast": 1.8,
   "stl": 0.8,
   "blk": 0.7,
-  "tpm": 1.9,
   "fgm": 5.5,
   "fga": 12.4,
   "ftm": 0.9,
   "fta": 1.2,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1642846,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72
+  },
+  "mpg": 27.6,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1641764",
   "adp": 119.5,
-  "nbaId": 1641764,
   "name": "Brandin Podziemski",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 64,
-   "2023-24": 74
-  },
-  "min": 28.4,
   "pts": 13.8,
   "reb": 5.1,
   "ast": 3.7,
   "stl": 1.1,
   "blk": 0.2,
-  "tpm": 1.9,
   "fgm": 4.8,
   "fga": 10.6,
   "ftm": 2.3,
   "fta": 2.9,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1641764,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 64,
+   "2023-24": 74
+  },
+  "mpg": 28.4,
+  "threes": 1.9,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1630591",
   "adp": 123.5,
-  "nbaId": 1630591,
   "name": "Jalen Suggs",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 35,
-   "2023-24": 75
-  },
-  "min": 27.6,
   "pts": 13.8,
   "reb": 3.9,
   "ast": 5.5,
   "stl": 1.8,
   "blk": 0.7,
-  "tpm": 2.1,
   "fgm": 4.9,
   "fga": 11.4,
   "ftm": 1.8,
   "fta": 2.1,
-  "tov": 2.7
+  "tov": 2.7,
+  "refId": 1630591,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 35,
+   "2023-24": 75
+  },
+  "mpg": 27.6,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1626171",
   "adp": 123.0,
-  "nbaId": 1626171,
   "name": "Bobby Portis Jr.",
   "team": "MIA",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 67,
-  "gpBySeason": {
-   "2025-26": 67,
-   "2024-25": 49,
-   "2023-24": 82
-  },
-  "min": 24.2,
   "pts": 13.7,
   "reb": 6.4,
   "ast": 1.6,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 2.0,
   "fgm": 5.5,
   "fga": 11.2,
   "ftm": 0.7,
   "fta": 1.0,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1626171,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 67,
+   "2024-25": 49,
+   "2023-24": 82
+  },
+  "mpg": 24.2,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1629631",
   "adp": null,
-  "nbaId": 1629631,
   "name": "De'Andre Hunter",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 45,
-  "gpBySeason": {
-   "2025-26": 45,
-   "2024-25": 64,
-   "2023-24": 57
-  },
-  "min": 26.1,
   "pts": 13.7,
   "reb": 4.1,
   "ast": 2.0,
   "stl": 0.7,
   "blk": 0.1,
-  "tpm": 1.7,
   "fgm": 4.6,
   "fga": 11.1,
   "ftm": 2.8,
   "fta": 3.2,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1629631,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 45,
+   "2024-25": 64,
+   "2023-24": 57
+  },
+  "mpg": 26.1,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1642349",
   "adp": 174.5,
-  "nbaId": 1642349,
   "name": "Ajay Mitchell",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 36
-  },
-  "min": 25.8,
   "pts": 13.6,
   "reb": 3.3,
   "ast": 3.6,
   "stl": 1.2,
   "blk": 0.3,
-  "tpm": 1.1,
   "fgm": 5.0,
   "fga": 10.4,
   "ftm": 2.5,
   "fta": 2.8,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1642349,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 36
+  },
+  "mpg": 25.8,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1642907",
   "adp": 104.0,
-  "nbaId": 1642907,
   "name": "Cedric Coward",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 62,
-  "gpBySeason": {
-   "2025-26": 62
-  },
-  "min": 25.8,
   "pts": 13.6,
   "reb": 5.9,
   "ast": 2.8,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 1.5,
   "fgm": 4.9,
   "fga": 10.5,
   "ftm": 2.3,
   "fta": 2.7,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1642907,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 62
+  },
+  "mpg": 25.8,
+  "threes": 1.5,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1628381",
   "adp": 116.5,
-  "nbaId": 1628381,
   "name": "John Collins",
   "team": "DET",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 40,
-   "2023-24": 68
-  },
-  "min": 27.1,
   "pts": 13.6,
   "reb": 5.3,
   "ast": 1.0,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 1.3,
   "fgm": 5.3,
   "fga": 9.6,
   "ftm": 1.7,
   "fta": 2.2,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1628381,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 40,
+   "2023-24": 68
+  },
+  "mpg": 27.1,
+  "threes": 1.3,
+  "status": null
  },
  {
   "id": "nba-1629675",
   "adp": 55.0,
-  "nbaId": 1629675,
   "name": "Naz Reid",
   "team": "CHA",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 80,
-   "2023-24": 81
-  },
-  "min": 26.1,
   "pts": 13.6,
   "reb": 6.2,
   "ast": 2.2,
   "stl": 1.0,
   "blk": 1.0,
-  "tpm": 2.1,
   "fgm": 5.2,
   "fga": 11.3,
   "ftm": 1.2,
   "fta": 1.6,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1629675,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 80,
+   "2023-24": 81
+  },
+  "mpg": 26.1,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1630560",
   "adp": null,
-  "nbaId": 1630560,
   "name": "Cam Thomas",
   "team": "",
   "lastTeam": "MIL",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 42,
-  "gpBySeason": {
-   "2025-26": 42,
-   "2024-25": 25,
-   "2023-24": 66
-  },
-  "min": 21.0,
   "pts": 13.5,
   "reb": 1.7,
   "ast": 2.6,
   "stl": 0.2,
   "blk": 0.1,
-  "tpm": 1.2,
   "fgm": 4.5,
   "fga": 11.0,
   "ftm": 3.3,
   "fta": 4.0,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1630560,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 42,
+   "2024-25": 25,
+   "2023-24": 66
+  },
+  "mpg": 21.0,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1642263",
   "adp": 140.5,
-  "nbaId": 1642263,
   "name": "Reed Sheppard",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 52
-  },
-  "min": 26.2,
   "pts": 13.5,
   "reb": 2.9,
   "ast": 3.4,
   "stl": 1.5,
   "blk": 0.7,
-  "tpm": 2.8,
   "fgm": 5.0,
   "fga": 11.5,
   "ftm": 0.8,
   "fta": 1.0,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1642263,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 52
+  },
+  "mpg": 26.2,
+  "threes": 2.8,
+  "status": null
  },
  {
   "id": "nba-203501",
   "adp": null,
-  "nbaId": 203501,
   "name": "Tim Hardaway Jr.",
   "team": "MIA",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 80,
-  "gpBySeason": {
-   "2025-26": 80,
-   "2024-25": 77,
-   "2023-24": 79
-  },
-  "min": 26.6,
   "pts": 13.5,
   "reb": 2.6,
   "ast": 1.4,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 2.8,
   "fgm": 4.4,
   "fga": 9.7,
   "ftm": 2.0,
   "fta": 2.5,
-  "tov": 0.5
+  "tov": 0.5,
+  "refId": 203501,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 80,
+   "2024-25": 77,
+   "2023-24": 79
+  },
+  "mpg": 26.6,
+  "threes": 2.8,
+  "status": null
  },
  {
   "id": "nba-1629673",
   "adp": 145.0,
-  "nbaId": 1629673,
   "name": "Jordan Poole",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 39,
-  "gpBySeason": {
-   "2025-26": 39,
-   "2024-25": 68,
-   "2023-24": 78
-  },
-  "min": 23.9,
   "pts": 13.4,
   "reb": 2.0,
   "ast": 3.1,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 2.5,
   "fgm": 4.2,
   "fga": 11.4,
   "ftm": 2.5,
   "fta": 2.9,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1629673,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 39,
+   "2024-25": 68,
+   "2023-24": 78
+  },
+  "mpg": 23.9,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1629656",
   "adp": 153.5,
-  "nbaId": 1629656,
   "name": "Quentin Grimes",
   "team": "LAL",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 75,
-   "2023-24": 51
-  },
-  "min": 29.4,
   "pts": 13.4,
   "reb": 3.6,
   "ast": 3.3,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 1.7,
   "fgm": 4.5,
   "fga": 10.1,
   "ftm": 2.7,
   "fta": 3.2,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1629656,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 75,
+   "2023-24": 51
+  },
+  "mpg": 29.4,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1641739",
   "adp": 145.5,
-  "nbaId": 1641739,
   "name": "Toumani Camara",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 78,
-   "2023-24": 70
-  },
-  "min": 33.3,
   "pts": 13.4,
   "reb": 5.1,
   "ast": 2.5,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 2.7,
   "fgm": 4.8,
   "fga": 10.9,
   "ftm": 1.2,
   "fta": 1.7,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1641739,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 78,
+   "2023-24": 70
+  },
+  "mpg": 33.3,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-202699",
   "adp": 121.5,
-  "nbaId": 202699,
   "name": "Tobias Harris",
   "team": "SAS",
   "lastTeam": "DET",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 63,
-  "gpBySeason": {
-   "2025-26": 63,
-   "2024-25": 73,
-   "2023-24": 70
-  },
-  "min": 27.7,
   "pts": 13.3,
   "reb": 5.1,
   "ast": 2.5,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 1.3,
   "fgm": 4.9,
   "fga": 10.5,
   "ftm": 2.2,
   "fta": 2.5,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 202699,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 63,
+   "2024-25": 73,
+   "2023-24": 70
+  },
+  "mpg": 27.7,
+  "threes": 1.3,
+  "status": "Out"
  },
  {
   "id": "nba-1642281",
   "adp": null,
-  "nbaId": 1642281,
   "name": "Jaylon Tyson",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 47
-  },
-  "min": 26.9,
   "pts": 13.2,
   "reb": 5.1,
   "ast": 2.2,
   "stl": 0.8,
   "blk": 0.4,
-  "tpm": 2.0,
   "fgm": 5.0,
   "fga": 10.2,
   "ftm": 1.2,
   "fta": 1.6,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1642281,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 47
+  },
+  "mpg": 26.9,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1629640",
   "adp": null,
-  "nbaId": 1629640,
   "name": "Keldon Johnson",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 77,
-   "2023-24": 69
-  },
-  "min": 23.3,
   "pts": 13.2,
   "reb": 5.4,
   "ast": 1.4,
   "stl": 0.6,
   "blk": 0.1,
-  "tpm": 1.2,
   "fgm": 5.0,
   "fga": 9.7,
   "ftm": 1.9,
   "fta": 2.4,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1629640,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 77,
+   "2023-24": 69
+  },
+  "mpg": 23.3,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1630314",
   "adp": null,
-  "nbaId": 1630314,
   "name": "Brandon Williams",
   "team": "GSW",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 33,
-   "2023-24": 17
-  },
-  "min": 22.2,
   "pts": 13.0,
   "reb": 2.9,
   "ast": 3.9,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 0.5,
   "fgm": 4.4,
   "fga": 9.3,
   "ftm": 3.7,
   "fta": 4.6,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1630314,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 33,
+   "2023-24": 17
+  },
+  "mpg": 22.2,
+  "threes": 0.5,
+  "status": null
  },
  {
   "id": "nba-1628398",
   "adp": 165.0,
-  "nbaId": 1628398,
   "name": "Kyle Kuzma",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 65,
-   "2023-24": 70
-  },
-  "min": 26.2,
   "pts": 13.0,
   "reb": 4.5,
   "ast": 2.7,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 1.2,
   "fgm": 4.9,
   "fga": 10.0,
   "ftm": 2.0,
   "fta": 2.7,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1628398,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 65,
+   "2023-24": 70
+  },
+  "mpg": 26.2,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1630241",
   "adp": null,
-  "nbaId": 1630241,
   "name": "Sam Merrill",
   "team": "CLE",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 52,
-  "gpBySeason": {
-   "2025-26": 52,
-   "2024-25": 71,
-   "2023-24": 61
-  },
-  "min": 26.5,
   "pts": 12.8,
   "reb": 2.6,
   "ast": 2.4,
   "stl": 0.6,
   "blk": 0.1,
-  "tpm": 3.0,
   "fgm": 4.3,
   "fga": 9.3,
   "ftm": 1.1,
   "fta": 1.3,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1630241,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 52,
+   "2024-25": 71,
+   "2023-24": 61
+  },
+  "mpg": 26.5,
+  "threes": 3.0,
+  "status": null
  },
  {
   "id": "nba-1631221",
   "adp": 155.0,
-  "nbaId": 1631221,
   "name": "Collin Gillespie",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 80,
-  "gpBySeason": {
-   "2025-26": 80,
-   "2024-25": 33,
-   "2023-24": 24
-  },
-  "min": 28.5,
   "pts": 12.7,
   "reb": 4.1,
   "ast": 4.6,
   "stl": 1.2,
   "blk": 0.2,
-  "tpm": 2.9,
   "fgm": 4.4,
   "fga": 10.5,
   "ftm": 1.0,
   "fta": 1.1,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1631221,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 80,
+   "2024-25": 33,
+   "2023-24": 24
+  },
+  "mpg": 28.5,
+  "threes": 2.9,
+  "status": null
  },
  {
   "id": "nba-1627763",
   "adp": null,
-  "nbaId": 1627763,
   "name": "Malcolm Brogdon",
   "team": "",
   "lastTeam": "WAS",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 24,
-  "gpBySeason": {
-   "2024-25": 24,
-   "2023-24": 39
-  },
-  "min": 23.5,
   "pts": 12.7,
   "reb": 3.8,
   "ast": 4.1,
   "stl": 0.5,
   "blk": 0.2,
-  "tpm": 0.7,
   "fgm": 4.3,
   "fga": 10.0,
   "ftm": 3.4,
   "fta": 3.8,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1627763,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 24,
+   "2023-24": 39
+  },
+  "mpg": 23.5,
+  "threes": 0.7,
+  "status": null
  },
  {
   "id": "nba-1626156",
   "adp": null,
-  "nbaId": 1626156,
   "name": "D'Angelo Russell",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 58,
-  "gpBySeason": {
-   "2025-26": 26,
-   "2024-25": 58,
-   "2023-24": 76
-  },
-  "min": 25.5,
   "pts": 12.6,
   "reb": 2.8,
   "ast": 5.1,
   "stl": 1.0,
   "blk": 0.4,
-  "tpm": 1.9,
   "fgm": 4.3,
   "fga": 11.0,
   "ftm": 2.1,
   "fta": 2.5,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1626156,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 26,
+   "2024-25": 58,
+   "2023-24": 76
+  },
+  "mpg": 25.5,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1629028",
   "adp": 125.0,
-  "nbaId": 1629028,
   "name": "Deandre Ayton",
   "team": "WAS",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 40,
-   "2023-24": 55
-  },
-  "min": 27.2,
   "pts": 12.5,
   "reb": 8.0,
   "ast": 0.8,
   "stl": 0.6,
   "blk": 1.0,
-  "tpm": 0.0,
   "fgm": 5.6,
   "fga": 8.3,
   "ftm": 1.3,
   "fta": 2.0,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1629028,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 40,
+   "2023-24": 55
+  },
+  "mpg": 27.2,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1641713",
   "adp": null,
-  "nbaId": 1641713,
   "name": "GG Jackson",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 55,
-  "gpBySeason": {
-   "2025-26": 55,
-   "2024-25": 29,
-   "2023-24": 48
-  },
-  "min": 21.4,
   "pts": 12.5,
   "reb": 4.3,
   "ast": 1.5,
   "stl": 0.6,
   "blk": 0.8,
-  "tpm": 1.2,
   "fgm": 4.6,
   "fga": 9.3,
   "ftm": 2.0,
   "fta": 2.7,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1641713,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 55,
+   "2024-25": 29,
+   "2023-24": 48
+  },
+  "mpg": 21.4,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1642377",
   "adp": null,
-  "nbaId": 1642377,
   "name": "Jaylen Wells",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 79
-  },
-  "min": 26.4,
   "pts": 12.5,
   "reb": 3.2,
   "ast": 1.6,
   "stl": 0.9,
   "blk": 0.1,
-  "tpm": 1.9,
   "fgm": 4.4,
   "fga": 10.1,
   "ftm": 1.9,
   "fta": 2.5,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1642377,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 79
+  },
+  "mpg": 26.4,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1628370",
   "adp": null,
-  "nbaId": 1628370,
   "name": "Malik Monk",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 62,
-  "gpBySeason": {
-   "2025-26": 62,
-   "2024-25": 65,
-   "2023-24": 72
-  },
-  "min": 22.0,
   "pts": 12.5,
   "reb": 1.9,
   "ast": 3.0,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 2.0,
   "fgm": 4.5,
   "fga": 10.2,
   "ftm": 1.5,
   "fta": 1.7,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1628370,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 62,
+   "2024-25": 65,
+   "2023-24": 72
+  },
+  "mpg": 22.0,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1642875",
   "adp": 169.0,
-  "nbaId": 1642875,
   "name": "Maxime Raynaud",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74
-  },
-  "min": 26.5,
   "pts": 12.5,
   "reb": 7.5,
   "ast": 1.4,
   "stl": 0.5,
   "blk": 0.5,
-  "tpm": 0.3,
   "fgm": 5.2,
   "fga": 9.1,
   "ftm": 1.8,
   "fta": 2.3,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1642875,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74
+  },
+  "mpg": 26.5,
+  "threes": 0.3,
+  "status": "Out"
  },
  {
   "id": "nba-1631099",
   "adp": 137.0,
-  "nbaId": 1631099,
   "name": "Keegan Murray",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 23,
-   "2024-25": 76,
-   "2023-24": 77
-  },
-  "min": 34.3,
   "pts": 12.4,
   "reb": 6.7,
   "ast": 1.4,
   "stl": 0.8,
   "blk": 0.9,
-  "tpm": 2.0,
   "fgm": 4.8,
   "fga": 10.8,
   "ftm": 0.8,
   "fta": 0.9,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1631099,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 23,
+   "2024-25": 76,
+   "2023-24": 77
+  },
+  "mpg": 34.3,
+  "threes": 2.0,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1629022",
   "adp": null,
-  "nbaId": 1629022,
   "name": "Lonnie Walker IV",
   "team": "",
   "lastTeam": "PHI",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 20,
-  "gpBySeason": {
-   "2024-25": 20,
-   "2023-24": 58
-  },
-  "min": 23.8,
   "pts": 12.4,
   "reb": 3.2,
   "ast": 2.5,
   "stl": 0.5,
   "blk": 0.3,
-  "tpm": 2.3,
   "fgm": 4.5,
   "fga": 10.6,
   "ftm": 1.2,
   "fta": 1.5,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1629022,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 20,
+   "2023-24": 58
+  },
+  "mpg": 23.8,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-1629001",
   "adp": null,
-  "nbaId": 1629001,
   "name": "De'Anthony Melton",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 49,
-  "gpBySeason": {
-   "2025-26": 49,
-   "2024-25": 6,
-   "2023-24": 38
-  },
-  "min": 23.0,
   "pts": 12.3,
   "reb": 3.2,
   "ast": 2.6,
   "stl": 1.6,
   "blk": 0.4,
-  "tpm": 1.5,
   "fgm": 4.4,
   "fga": 10.8,
   "ftm": 2.0,
   "fta": 2.5,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1629001,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 49,
+   "2024-25": 6,
+   "2023-24": 38
+  },
+  "mpg": 23.0,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1631108",
   "adp": null,
-  "nbaId": 1631108,
   "name": "Max Christie",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 78,
-   "2023-24": 67
-  },
-  "min": 29.1,
   "pts": 12.3,
   "reb": 3.2,
   "ast": 2.0,
   "stl": 0.6,
   "blk": 0.4,
-  "tpm": 2.3,
   "fgm": 4.2,
   "fga": 9.4,
   "ftm": 1.6,
   "fta": 1.8,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1631108,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 78,
+   "2023-24": 67
+  },
+  "mpg": 29.1,
+  "threes": 2.3,
+  "status": null
  },
  {
   "id": "nba-1641730",
   "adp": null,
-  "nbaId": 1641730,
   "name": "Noah Clowney",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 46,
-   "2023-24": 23
-  },
-  "min": 27.0,
   "pts": 12.3,
   "reb": 4.1,
   "ast": 1.6,
   "stl": 0.8,
   "blk": 0.7,
-  "tpm": 2.0,
   "fgm": 3.8,
   "fga": 9.6,
   "ftm": 2.7,
   "fta": 3.4,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1641730,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 46,
+   "2023-24": 23
+  },
+  "mpg": 27.0,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1629661",
   "adp": 139.0,
-  "nbaId": 1629661,
   "name": "Cameron Johnson",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 54,
-   "2024-25": 57,
-   "2023-24": 58
-  },
-  "min": 30.5,
   "pts": 12.2,
   "reb": 3.8,
   "ast": 2.4,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 2.0,
   "fgm": 4.2,
   "fga": 8.8,
   "ftm": 1.7,
   "fta": 2.1,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1629661,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 54,
+   "2024-25": 57,
+   "2023-24": 58
+  },
+  "mpg": 30.5,
+  "threes": 2.0,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1628978",
   "adp": 168.0,
-  "nbaId": 1628978,
   "name": "Donte DiVincenzo",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 62,
-   "2023-24": 81
-  },
-  "min": 30.4,
   "pts": 12.2,
   "reb": 4.1,
   "ast": 3.8,
   "stl": 1.3,
   "blk": 0.4,
-  "tpm": 3.0,
   "fgm": 4.1,
   "fga": 10.2,
   "ftm": 1.0,
   "fta": 1.3,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1628978,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 62,
+   "2023-24": 81
+  },
+  "mpg": 30.4,
+  "threes": 3.0,
+  "status": "Out"
  },
  {
   "id": "nba-1629130",
   "adp": null,
-  "nbaId": 1629130,
   "name": "Duncan Robinson",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 74,
-   "2023-24": 68
-  },
-  "min": 27.4,
   "pts": 12.2,
   "reb": 2.7,
   "ast": 2.1,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 2.9,
   "fgm": 4.1,
   "fga": 9.1,
   "ftm": 1.1,
   "fta": 1.4,
-  "tov": 0.7
+  "tov": 0.7,
+  "refId": 1629130,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 74,
+   "2023-24": 68
+  },
+  "mpg": 27.4,
+  "threes": 2.9,
+  "status": null
  },
  {
   "id": "nba-1630228",
   "adp": 143.0,
-  "nbaId": 1630228,
   "name": "Jonathan Kuminga",
   "team": "MIN",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 36,
-  "gpBySeason": {
-   "2025-26": 36,
-   "2024-25": 47,
-   "2023-24": 74
-  },
-  "min": 23.1,
   "pts": 12.2,
   "reb": 5.6,
   "ast": 2.3,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 1.0,
   "fgm": 4.4,
   "fga": 9.4,
   "ftm": 2.5,
   "fta": 3.4,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1630228,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 36,
+   "2024-25": 47,
+   "2023-24": 74
+  },
+  "mpg": 23.1,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1642848",
   "adp": null,
-  "nbaId": 1642848,
   "name": "Tre Johnson",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60
-  },
-  "min": 24.0,
   "pts": 12.2,
   "reb": 2.8,
   "ast": 2.0,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 1.9,
   "fgm": 4.5,
   "fga": 10.8,
   "ftm": 1.3,
   "fta": 1.5,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1642848,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60
+  },
+  "mpg": 24.0,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1642270",
   "adp": 57.5,
-  "nbaId": 1642270,
   "name": "Donovan Clingan",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 67
-  },
-  "min": 27.2,
   "pts": 12.1,
   "reb": 11.6,
   "ast": 2.1,
   "stl": 0.6,
   "blk": 1.7,
-  "tpm": 1.1,
   "fgm": 4.6,
   "fga": 8.9,
   "ftm": 1.8,
   "fta": 2.6,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1642270,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 67
+  },
+  "mpg": 27.2,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1630541",
   "adp": null,
-  "nbaId": 1630541,
   "name": "Moses Moody",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60,
-   "2024-25": 74,
-   "2023-24": 66
-  },
-  "min": 25.7,
   "pts": 12.1,
   "reb": 3.3,
   "ast": 1.6,
   "stl": 1.0,
   "blk": 0.6,
-  "tpm": 2.5,
   "fgm": 4.1,
   "fga": 9.3,
   "ftm": 1.5,
   "fta": 1.9,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1630541,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60,
+   "2024-25": 74,
+   "2023-24": 66
+  },
+  "mpg": 25.7,
+  "threes": 2.5,
+  "status": "Out"
  },
  {
   "id": "nba-1631128",
   "adp": 178.0,
-  "nbaId": 1631128,
   "name": "Christian Braun",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 44,
-  "gpBySeason": {
-   "2025-26": 44,
-   "2024-25": 79,
-   "2023-24": 82
-  },
-  "min": 31.8,
   "pts": 12.0,
   "reb": 4.8,
   "ast": 2.7,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 1.0,
   "fgm": 4.6,
   "fga": 8.8,
   "ftm": 1.8,
   "fta": 2.3,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1631128,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 44,
+   "2024-25": 79,
+   "2023-24": 82
+  },
+  "mpg": 31.8,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1628404",
   "adp": 91.5,
-  "nbaId": 1628404,
   "name": "Josh Hart",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 66,
-   "2024-25": 77,
-   "2023-24": 81
-  },
-  "min": 30.2,
   "pts": 12.0,
   "reb": 7.4,
   "ast": 4.8,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 1.5,
   "fgm": 4.6,
   "fga": 9.0,
   "ftm": 1.4,
   "fta": 1.9,
-  "tov": 1.9
+  "tov": 1.9,
+  "refId": 1628404,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 66,
+   "2024-25": 77,
+   "2023-24": 81
+  },
+  "mpg": 30.2,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1630540",
   "adp": null,
-  "nbaId": 1630540,
   "name": "Miles McBride",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 41,
-  "gpBySeason": {
-   "2025-26": 41,
-   "2024-25": 64,
-   "2023-24": 68
-  },
-  "min": 26.3,
   "pts": 12.0,
   "reb": 2.4,
   "ast": 2.6,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 2.7,
   "fgm": 4.2,
   "fga": 9.9,
   "ftm": 0.9,
   "fta": 1.1,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1630540,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 41,
+   "2024-25": 64,
+   "2023-24": 68
+  },
+  "mpg": 26.3,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1630700",
   "adp": 57.0,
-  "nbaId": 1630700,
   "name": "Dyson Daniels",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 76,
-   "2024-25": 76,
-   "2023-24": 61
-  },
-  "min": 33.2,
   "pts": 11.9,
   "reb": 6.8,
   "ast": 5.9,
   "stl": 2.0,
   "blk": 0.4,
-  "tpm": 0.3,
   "fgm": 5.3,
   "fga": 10.2,
   "ftm": 1.0,
   "fta": 1.6,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1630700,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 76,
+   "2024-25": 76,
+   "2023-24": 61
+  },
+  "mpg": 33.2,
+  "threes": 0.3,
+  "status": null
  },
  {
   "id": "nba-1626167",
   "adp": 110.0,
-  "nbaId": 1626167,
   "name": "Myles Turner",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 71,
-  "gpBySeason": {
-   "2025-26": 71,
-   "2024-25": 72,
-   "2023-24": 77
-  },
-  "min": 26.9,
   "pts": 11.9,
   "reb": 5.3,
   "ast": 1.5,
   "stl": 0.7,
   "blk": 1.6,
-  "tpm": 2.1,
   "fgm": 4.0,
   "fga": 9.1,
   "ftm": 1.8,
   "fta": 2.5,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1626167,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 71,
+   "2024-25": 72,
+   "2023-24": 77
+  },
+  "mpg": 26.9,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1642844",
   "adp": 76.5,
-  "nbaId": 1642844,
   "name": "Dylan Harper",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69
-  },
-  "min": 22.6,
   "pts": 11.8,
   "reb": 3.4,
   "ast": 3.9,
   "stl": 0.8,
   "blk": 0.3,
-  "tpm": 0.9,
   "fgm": 4.8,
   "fga": 9.5,
   "ftm": 1.3,
   "fta": 1.7,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1642844,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69
+  },
+  "mpg": 22.6,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1628976",
   "adp": 182.0,
-  "nbaId": 1628976,
   "name": "Wendell Carter Jr.",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 68,
-   "2023-24": 55
-  },
-  "min": 29.3,
   "pts": 11.8,
   "reb": 7.4,
   "ast": 2.0,
   "stl": 0.8,
   "blk": 0.6,
-  "tpm": 0.9,
   "fgm": 4.2,
   "fga": 8.2,
   "ftm": 2.5,
   "fta": 3.2,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1628976,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 68,
+   "2023-24": 55
+  },
+  "mpg": 29.3,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1641731",
   "adp": null,
-  "nbaId": 1641731,
   "name": "Bilal Coulibaly",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 59,
-   "2023-24": 63
-  },
-  "min": 26.2,
   "pts": 11.7,
   "reb": 4.3,
   "ast": 2.6,
   "stl": 1.3,
   "blk": 1.0,
-  "tpm": 1.2,
   "fgm": 4.1,
   "fga": 9.7,
   "ftm": 2.4,
   "fta": 3.2,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1641731,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 59,
+   "2023-24": 63
+  },
+  "mpg": 26.2,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1642852",
   "adp": 88.5,
-  "nbaId": 1642852,
   "name": "Derik Queen",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 81,
-  "gpBySeason": {
-   "2025-26": 81
-  },
-  "min": 25.0,
   "pts": 11.7,
   "reb": 7.1,
   "ast": 3.7,
   "stl": 1.0,
   "blk": 0.9,
-  "tpm": 0.3,
   "fgm": 4.4,
   "fga": 9.2,
   "ftm": 2.7,
   "fta": 3.4,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1642852,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 81
+  },
+  "mpg": 25.0,
+  "threes": 0.3,
+  "status": null
  },
  {
   "id": "nba-1642268",
   "adp": null,
-  "nbaId": 1642268,
   "name": "Isaiah Collier",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 59,
-  "gpBySeason": {
-   "2025-26": 59,
-   "2024-25": 71
-  },
-  "min": 25.7,
   "pts": 11.7,
   "reb": 2.5,
   "ast": 7.2,
   "stl": 1.1,
   "blk": 0.3,
-  "tpm": 0.5,
   "fgm": 4.3,
   "fga": 8.7,
   "ftm": 2.6,
   "fta": 3.5,
-  "tov": 2.5
+  "tov": 2.5,
+  "refId": 1642268,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 59,
+   "2024-25": 71
+  },
+  "mpg": 25.7,
+  "threes": 0.5,
+  "status": null
  },
  {
   "id": "nba-202691",
   "adp": 133.5,
-  "nbaId": 202691,
   "name": "Klay Thompson",
   "team": "MIA",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 72,
-   "2023-24": 77
-  },
-  "min": 21.7,
   "pts": 11.7,
   "reb": 2.1,
   "ast": 1.4,
   "stl": 0.5,
   "blk": 0.3,
-  "tpm": 2.9,
   "fgm": 4.1,
   "fga": 10.6,
   "ftm": 0.5,
   "fta": 0.7,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 202691,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 72,
+   "2023-24": 77
+  },
+  "mpg": 21.7,
+  "threes": 2.9,
+  "status": null
  },
  {
   "id": "nba-1631109",
   "adp": 118.0,
-  "nbaId": 1631109,
   "name": "Mark Williams",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60,
-   "2024-25": 44,
-   "2023-24": 19
-  },
-  "min": 23.6,
   "pts": 11.7,
   "reb": 8.0,
   "ast": 1.0,
   "stl": 0.9,
   "blk": 0.9,
-  "tpm": 0.0,
   "fgm": 4.7,
   "fga": 7.3,
   "ftm": 2.3,
   "fta": 2.9,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1631109,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60,
+   "2024-25": 44,
+   "2023-24": 19
+  },
+  "mpg": 23.6,
+  "threes": 0.0,
+  "status": "Out"
  },
  {
   "id": "nba-1629651",
   "adp": 105.5,
-  "nbaId": 1629651,
   "name": "Nic Claxton",
   "team": "CHI",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 70,
-   "2023-24": 71
-  },
-  "min": 27.8,
   "pts": 11.7,
   "reb": 6.9,
   "ast": 3.7,
   "stl": 0.7,
   "blk": 1.1,
-  "tpm": 0.0,
   "fgm": 4.8,
   "fga": 8.4,
   "ftm": 2.0,
   "fta": 3.3,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1629651,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 70,
+   "2023-24": 71
+  },
+  "mpg": 27.8,
+  "threes": 0.0,
+  "status": "Out"
  },
  {
   "id": "nba-1641716",
   "adp": null,
-  "nbaId": 1641716,
   "name": "Jarace Walker",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 76,
-   "2024-25": 75,
-   "2023-24": 33
-  },
-  "min": 25.7,
   "pts": 11.6,
   "reb": 5.1,
   "ast": 2.5,
   "stl": 0.8,
   "blk": 0.3,
-  "tpm": 1.8,
   "fgm": 4.0,
   "fga": 9.6,
   "ftm": 1.8,
   "fta": 2.4,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 1641716,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 76,
+   "2024-25": 75,
+   "2023-24": 33
+  },
+  "mpg": 25.7,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1629060",
   "adp": 151.5,
-  "nbaId": 1629060,
   "name": "Rui Hachimura",
   "team": "LAC",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 59,
-   "2023-24": 68
-  },
-  "min": 28.3,
   "pts": 11.5,
   "reb": 3.3,
   "ast": 0.8,
   "stl": 0.6,
   "blk": 0.3,
-  "tpm": 1.7,
   "fgm": 4.5,
   "fga": 8.8,
   "ftm": 0.7,
   "fta": 1.1,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1629060,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 59,
+   "2023-24": 68
+  },
+  "mpg": 28.3,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1631110",
   "adp": null,
-  "nbaId": 1631110,
   "name": "Jeremy Sochan",
   "team": "",
   "lastTeam": "SAS",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 44,
-   "2024-25": 54,
-   "2023-24": 74
-  },
-  "min": 25.3,
   "pts": 11.4,
   "reb": 6.5,
   "ast": 2.4,
   "stl": 0.8,
   "blk": 0.5,
-  "tpm": 0.5,
   "fgm": 4.6,
   "fga": 8.7,
   "ftm": 1.6,
   "fta": 2.3,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1631110,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 44,
+   "2024-25": 54,
+   "2023-24": 74
+  },
+  "mpg": 25.3,
+  "threes": 0.5,
+  "status": null
  },
  {
   "id": "nba-1642271",
   "adp": 148.0,
-  "nbaId": 1642271,
   "name": "Kyle Filipowski",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 72
-  },
-  "min": 23.4,
   "pts": 11.4,
   "reb": 7.2,
   "ast": 2.6,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1.0,
   "fgm": 4.2,
   "fga": 8.5,
   "ftm": 2.1,
   "fta": 2.8,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1642271,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 72
+  },
+  "mpg": 23.4,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1641796",
   "adp": null,
-  "nbaId": 1641796,
   "name": "Pelle Larsson",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 55
-  },
-  "min": 26.4,
   "pts": 11.4,
   "reb": 3.5,
   "ast": 3.4,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 0.9,
   "fgm": 4.0,
   "fga": 8.0,
   "ftm": 2.6,
   "fta": 3.3,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1641796,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 55
+  },
+  "mpg": 26.4,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1630572",
   "adp": 175.0,
-  "nbaId": 1630572,
   "name": "Sandro Mamukelashvili",
   "team": "LAL",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 80,
-  "gpBySeason": {
-   "2025-26": 80,
-   "2024-25": 61,
-   "2023-24": 46
-  },
-  "min": 21.9,
   "pts": 11.2,
   "reb": 4.9,
   "ast": 1.9,
   "stl": 0.8,
   "blk": 0.5,
-  "tpm": 1.4,
   "fgm": 4.1,
   "fga": 7.9,
   "ftm": 1.5,
   "fta": 2.0,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1630572,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 80,
+   "2024-25": 61,
+   "2023-24": 46
+  },
+  "mpg": 21.9,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1642285",
   "adp": null,
-  "nbaId": 1642285,
   "name": "Cam Spencer",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 72,
-   "2024-25": 25
-  },
-  "min": 23.8,
   "pts": 11.1,
   "reb": 2.5,
   "ast": 5.6,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 2.0,
   "fgm": 3.7,
   "fga": 7.7,
   "ftm": 1.8,
   "fta": 1.9,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1642285,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 72,
+   "2024-25": 25
+  },
+  "mpg": 23.8,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1630198",
   "adp": null,
-  "nbaId": 1630198,
   "name": "Isaiah Joe",
   "team": "DET",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 71,
-  "gpBySeason": {
-   "2025-26": 71,
-   "2024-25": 74,
-   "2023-24": 78
-  },
-  "min": 21.2,
   "pts": 11.1,
   "reb": 2.5,
   "ast": 1.3,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 2.5,
   "fgm": 3.5,
   "fga": 7.6,
   "ftm": 1.5,
   "fta": 1.7,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1630198,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 71,
+   "2024-25": 74,
+   "2023-24": 78
+  },
+  "mpg": 21.2,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1630577",
   "adp": 128.0,
-  "nbaId": 1630577,
   "name": "Julian Champagnie",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 82,
-   "2023-24": 74
-  },
-  "min": 27.6,
   "pts": 11.1,
   "reb": 5.8,
   "ast": 1.5,
   "stl": 0.8,
   "blk": 0.5,
-  "tpm": 2.4,
   "fgm": 3.7,
   "fga": 8.4,
   "ftm": 1.4,
   "fta": 1.6,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1630577,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 82,
+   "2023-24": 74
+  },
+  "mpg": 27.6,
+  "threes": 2.4,
+  "status": null
  },
  {
   "id": "nba-1642276",
   "adp": 80.5,
-  "nbaId": 1642276,
   "name": "Kel'el Ware",
   "team": "MIL",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 64
-  },
-  "min": 22.1,
   "pts": 11.1,
   "reb": 9.0,
   "ast": 0.7,
   "stl": 0.8,
   "blk": 1.1,
-  "tpm": 1.2,
   "fgm": 4.5,
   "fga": 8.4,
   "ftm": 0.9,
   "fta": 1.2,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1642276,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 64
+  },
+  "mpg": 22.1,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1631117",
   "adp": 55.0,
-  "nbaId": 1631117,
   "name": "Walker Kessler",
   "team": "LAL",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2024-25",
   "gp": 58,
-  "gpBySeason": {
-   "2025-26": 5,
-   "2024-25": 58,
-   "2023-24": 64
-  },
-  "min": 30.0,
   "pts": 11.1,
   "reb": 12.2,
   "ast": 1.7,
   "stl": 0.6,
   "blk": 2.4,
-  "tpm": 0.1,
   "fgm": 4.8,
   "fga": 7.2,
   "ftm": 1.4,
   "fta": 2.6,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1631117,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 5,
+   "2024-25": 58,
+   "2023-24": 64
+  },
+  "mpg": 30.0,
+  "threes": 0.1,
+  "status": null
  },
  {
   "id": "nba-203915",
   "adp": null,
-  "nbaId": 203915,
   "name": "Spencer Dinwiddie",
   "team": "",
   "lastTeam": "DAL",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 79,
-  "gpBySeason": {
-   "2024-25": 79,
-   "2023-24": 76
-  },
-  "min": 27.0,
   "pts": 11.0,
   "reb": 2.7,
   "ast": 4.4,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 1.4,
   "fgm": 3.6,
   "fga": 8.6,
   "ftm": 2.5,
   "fta": 3.1,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 203915,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 79,
+   "2023-24": 76
+  },
+  "mpg": 27.0,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-203994",
   "adp": 141.0,
-  "nbaId": 203994,
   "name": "Jusuf Nurki\u0107",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 41,
-  "gpBySeason": {
-   "2025-26": 41,
-   "2024-25": 51,
-   "2023-24": 76
-  },
-  "min": 26.4,
   "pts": 10.9,
   "reb": 10.4,
   "ast": 4.8,
   "stl": 1.3,
   "blk": 0.5,
-  "tpm": 0.6,
   "fgm": 4.4,
   "fga": 8.7,
   "ftm": 1.5,
   "fta": 2.8,
-  "tov": 2.5
+  "tov": 2.5,
+  "refId": 203994,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 41,
+   "2024-25": 51,
+   "2023-24": 76
+  },
+  "mpg": 26.4,
+  "threes": 0.6,
+  "status": "Out"
  },
  {
   "id": "nba-203497",
   "adp": 72.0,
-  "nbaId": 203497,
   "name": "Rudy Gobert",
   "team": "MIN",
   "lastTeam": "MIN",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 76,
-   "2024-25": 72,
-   "2023-24": 76
-  },
-  "min": 31.3,
   "pts": 10.9,
   "reb": 11.5,
   "ast": 1.7,
   "stl": 0.8,
   "blk": 1.6,
-  "tpm": 0.0,
   "fgm": 4.4,
   "fga": 6.5,
   "ftm": 2.1,
   "fta": 4.0,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 203497,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 76,
+   "2024-25": 72,
+   "2023-24": 76
+  },
+  "mpg": 31.3,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-203992",
   "adp": null,
-  "nbaId": 203992,
   "name": "Bogdan Bogdanovi\u0107",
   "team": "HOU",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 54,
-  "gpBySeason": {
-   "2025-26": 23,
-   "2024-25": 54,
-   "2023-24": 79
-  },
-  "min": 25.0,
   "pts": 10.8,
   "reb": 2.9,
   "ast": 2.7,
   "stl": 0.8,
   "blk": 0.2,
-  "tpm": 1.9,
   "fgm": 3.9,
   "fga": 9.1,
   "ftm": 1.1,
   "fta": 1.2,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 203992,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 23,
+   "2024-25": 54,
+   "2023-24": 79
+  },
+  "mpg": 25.0,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1631342",
   "adp": null,
-  "nbaId": 1631342,
   "name": "Daeqwon Plowden",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 32,
-  "gpBySeason": {
-   "2025-26": 32,
-   "2024-25": 6
-  },
-  "min": 26.4,
   "pts": 10.8,
   "reb": 3.0,
   "ast": 1.3,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 1.9,
   "fgm": 3.8,
   "fga": 8.7,
   "ftm": 1.3,
   "fta": 1.5,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1631342,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 32,
+   "2024-25": 6
+  },
+  "mpg": 26.4,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-203471",
   "adp": null,
-  "nbaId": 203471,
   "name": "Dennis Schr\u00f6der",
   "team": "CHA",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 75,
-   "2023-24": 80
-  },
-  "min": 24.2,
   "pts": 10.8,
   "reb": 2.7,
   "ast": 4.9,
   "stl": 0.8,
   "blk": 0.2,
-  "tpm": 1.1,
   "fgm": 3.6,
   "fga": 9.0,
   "ftm": 2.4,
   "fta": 2.9,
-  "tov": 1.8
+  "tov": 1.8,
+  "refId": 203471,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 75,
+   "2023-24": 80
+  },
+  "mpg": 24.2,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1641722",
   "adp": null,
-  "nbaId": 1641722,
   "name": "Jordan Hawkins",
   "team": "CHI",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 51,
-   "2024-25": 56,
-   "2023-24": 67
-  },
-  "min": 23.6,
   "pts": 10.8,
   "reb": 2.8,
   "ast": 1.2,
   "stl": 0.5,
   "blk": 0.4,
-  "tpm": 2.0,
   "fgm": 3.7,
   "fga": 9.9,
   "ftm": 1.4,
   "fta": 1.8,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1641722,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 51,
+   "2024-25": 56,
+   "2023-24": 67
+  },
+  "mpg": 23.6,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1630527",
   "adp": null,
-  "nbaId": 1630527,
   "name": "Brandon Boston",
   "team": "",
   "lastTeam": "NOP",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 42,
-  "gpBySeason": {
-   "2024-25": 42,
-   "2023-24": 32
-  },
-  "min": 23.6,
   "pts": 10.7,
   "reb": 3.2,
   "ast": 2.2,
   "stl": 1.3,
   "blk": 0.2,
-  "tpm": 1.2,
   "fgm": 4.0,
   "fga": 9.1,
   "ftm": 1.6,
   "fta": 2.0,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1630527,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 42,
+   "2023-24": 32
+  },
+  "mpg": 23.6,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1642267",
   "adp": null,
-  "nbaId": 1642267,
   "name": "Bub Carrington",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 82
-  },
-  "min": 27.7,
   "pts": 10.7,
   "reb": 3.4,
   "ast": 4.6,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 2.1,
   "fgm": 3.8,
   "fga": 9.0,
   "ftm": 1.0,
   "fta": 1.4,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1642267,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 82
+  },
+  "mpg": 27.7,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-1627751",
   "adp": 152.5,
-  "nbaId": 1627751,
   "name": "Jakob Poeltl",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 46,
-  "gpBySeason": {
-   "2025-26": 46,
-   "2024-25": 57,
-   "2023-24": 50
-  },
-  "min": 25.0,
   "pts": 10.7,
   "reb": 7.0,
   "ast": 2.0,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0.0,
   "fgm": 4.7,
   "fga": 6.7,
   "ftm": 1.3,
   "fta": 2.1,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1627751,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 46,
+   "2024-25": 57,
+   "2023-24": 50
+  },
+  "mpg": 25.0,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1629111",
   "adp": null,
-  "nbaId": 1629111,
   "name": "Jock Landale",
   "team": "ATL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 42,
-   "2023-24": 56
-  },
-  "min": 22.1,
   "pts": 10.6,
   "reb": 5.7,
   "ast": 1.7,
   "stl": 0.5,
   "blk": 0.5,
-  "tpm": 1.1,
   "fgm": 4.1,
   "fga": 8.1,
   "ftm": 1.2,
   "fta": 1.9,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1629111,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 42,
+   "2023-24": 56
+  },
+  "mpg": 22.1,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1630553",
   "adp": null,
-  "nbaId": 1630553,
   "name": "Keon Johnson",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 79,
-  "gpBySeason": {
-   "2024-25": 79,
-   "2023-24": 5
-  },
-  "min": 24.4,
   "pts": 10.6,
   "reb": 3.8,
   "ast": 2.2,
   "stl": 1.0,
   "blk": 0.4,
-  "tpm": 1.6,
   "fgm": 3.8,
   "fga": 9.9,
   "ftm": 1.4,
   "fta": 1.8,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1630553,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 79,
+   "2023-24": 5
+  },
+  "mpg": 24.4,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1626179",
   "adp": null,
-  "nbaId": 1626179,
   "name": "Terry Rozier",
   "team": "",
   "lastTeam": "MIA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 64,
-  "gpBySeason": {
-   "2024-25": 64,
-   "2023-24": 61
-  },
-  "min": 25.9,
   "pts": 10.6,
   "reb": 3.7,
   "ast": 2.6,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 1.4,
   "fgm": 3.9,
   "fga": 9.9,
   "ftm": 1.4,
   "fta": 1.7,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1626179,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 64,
+   "2023-24": 61
+  },
+  "mpg": 25.9,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1631106",
   "adp": 155.0,
-  "nbaId": 1631106,
   "name": "Tari Eason",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60,
-   "2024-25": 57,
-   "2023-24": 22
-  },
-  "min": 25.8,
   "pts": 10.5,
   "reb": 6.3,
   "ast": 1.5,
   "stl": 1.2,
   "blk": 0.5,
-  "tpm": 1.6,
   "fgm": 4.0,
   "fga": 9.7,
   "ftm": 0.9,
   "fta": 1.1,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1631106,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60,
+   "2024-25": 57,
+   "2023-24": 22
+  },
+  "mpg": 25.8,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1631260",
   "adp": 119.0,
-  "nbaId": 1631260,
   "name": "AJ Green",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 73,
-   "2023-24": 56
-  },
-  "min": 29.1,
   "pts": 10.4,
   "reb": 2.7,
   "ast": 1.9,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 3.0,
   "fgm": 3.4,
   "fga": 7.9,
   "ftm": 0.7,
   "fta": 0.8,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1631260,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 73,
+   "2023-24": 56
+  },
+  "mpg": 29.1,
+  "threes": 3.0,
+  "status": null
  },
  {
   "id": "nba-1642856",
   "adp": 144.5,
-  "nbaId": 1642856,
   "name": "Egor D\u00ebmin",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 52,
-  "gpBySeason": {
-   "2025-26": 52
-  },
-  "min": 25.2,
   "pts": 10.3,
   "reb": 3.2,
   "ast": 3.3,
   "stl": 0.8,
   "blk": 0.3,
-  "tpm": 2.4,
   "fgm": 3.4,
   "fga": 8.6,
   "ftm": 1.0,
   "fta": 1.3,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1642856,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 52
+  },
+  "mpg": 25.2,
+  "threes": 2.4,
+  "status": null
  },
  {
   "id": "nba-1642860",
   "adp": null,
-  "nbaId": 1642860,
   "name": "Will Riley",
   "team": "WAS",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 74
-  },
-  "min": 22.1,
   "pts": 10.3,
   "reb": 2.9,
   "ast": 2.0,
   "stl": 0.7,
   "blk": 0.1,
-  "tpm": 1.1,
   "fgm": 3.7,
   "fga": 8.4,
   "ftm": 1.9,
   "fta": 2.4,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1642860,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 74
+  },
+  "mpg": 22.1,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-203114",
   "adp": null,
-  "nbaId": 203114,
   "name": "Khris Middleton",
   "team": "WAS",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 63,
-  "gpBySeason": {
-   "2025-26": 63,
-   "2024-25": 37,
-   "2023-24": 55
-  },
-  "min": 22.8,
   "pts": 10.2,
   "reb": 3.7,
   "ast": 2.8,
   "stl": 0.7,
   "blk": 0.1,
-  "tpm": 1.1,
   "fgm": 3.6,
   "fga": 8.6,
   "ftm": 1.9,
   "fta": 2.2,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 203114,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 63,
+   "2024-25": 37,
+   "2023-24": 55
+  },
+  "mpg": 22.8,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1629674",
   "adp": 146.5,
-  "nbaId": 1629674,
   "name": "Neemias Queta",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 76,
-  "gpBySeason": {
-   "2025-26": 76,
-   "2024-25": 62,
-   "2023-24": 28
-  },
-  "min": 25.3,
   "pts": 10.2,
   "reb": 8.4,
   "ast": 1.7,
   "stl": 0.8,
   "blk": 1.3,
-  "tpm": 0.0,
   "fgm": 4.3,
   "fga": 6.6,
   "ftm": 1.6,
   "fta": 2.3,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1629674,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 76,
+   "2024-25": 62,
+   "2023-24": 28
+  },
+  "mpg": 25.3,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1630533",
   "adp": null,
-  "nbaId": 1630533,
   "name": "Ziaire Williams",
   "team": "LAL",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 63,
-   "2023-24": 51
-  },
-  "min": 22.9,
   "pts": 10.2,
   "reb": 2.4,
   "ast": 1.1,
   "stl": 1.4,
   "blk": 0.4,
-  "tpm": 1.5,
   "fgm": 3.3,
   "fga": 7.7,
   "ftm": 2.1,
   "fta": 2.5,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1630533,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 63,
+   "2023-24": 51
+  },
+  "mpg": 22.9,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1627884",
   "adp": null,
-  "nbaId": 1627884,
   "name": "Derrick Jones Jr.",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 50,
-   "2024-25": 77,
-   "2023-24": 76
-  },
-  "min": 27.0,
   "pts": 10.1,
   "reb": 3.5,
   "ast": 1.4,
   "stl": 0.9,
   "blk": 1.0,
-  "tpm": 1.1,
   "fgm": 3.8,
   "fga": 7.6,
   "ftm": 1.4,
   "fta": 1.9,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1627884,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 50,
+   "2024-25": 77,
+   "2023-24": 76
+  },
+  "mpg": 27.0,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1630173",
   "adp": null,
-  "nbaId": 1630173,
   "name": "Precious Achiuwa",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 73,
-  "gpBySeason": {
-   "2025-26": 73,
-   "2024-25": 57,
-   "2023-24": 74
-  },
-  "min": 23.9,
   "pts": 10.1,
   "reb": 6.7,
   "ast": 1.4,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0.4,
   "fgm": 4.3,
   "fga": 8.2,
   "ftm": 1.1,
   "fta": 1.9,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1630173,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 73,
+   "2024-25": 57,
+   "2023-24": 74
+  },
+  "mpg": 23.9,
+  "threes": 0.4,
+  "status": null
  },
  {
   "id": "nba-1630191",
   "adp": 138.0,
-  "nbaId": 1630191,
   "name": "Isaiah Stewart",
   "team": "MEM",
   "lastTeam": "DET",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 58,
-  "gpBySeason": {
-   "2025-26": 58,
-   "2024-25": 72,
-   "2023-24": 46
-  },
-  "min": 22.7,
   "pts": 10.0,
   "reb": 5.0,
   "ast": 1.1,
   "stl": 0.3,
   "blk": 1.6,
-  "tpm": 0.7,
   "fgm": 3.8,
   "fga": 6.9,
   "ftm": 1.7,
   "fta": 2.3,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1630191,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 58,
+   "2024-25": 72,
+   "2023-24": 46
+  },
+  "mpg": 22.7,
+  "threes": 0.7,
+  "status": null
  },
  {
   "id": "nba-1641757",
   "adp": null,
-  "nbaId": 1641757,
   "name": "Jordan Miller",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 60,
-   "2024-25": 37,
-   "2023-24": 8
-  },
-  "min": 22.1,
   "pts": 10.0,
   "reb": 3.0,
   "ast": 2.3,
   "stl": 0.8,
   "blk": 0.2,
-  "tpm": 0.6,
   "fgm": 3.5,
   "fga": 6.7,
   "ftm": 2.3,
   "fta": 2.9,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1641757,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 60,
+   "2024-25": 37,
+   "2023-24": 8
+  },
+  "mpg": 22.1,
+  "threes": 0.6,
+  "status": "Out"
  },
  {
   "id": "nba-1628989",
   "adp": null,
-  "nbaId": 1628989,
   "name": "Kevin Huerter",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 69,
-   "2023-24": 64
-  },
-  "min": 22.5,
   "pts": 10.0,
   "reb": 3.5,
   "ast": 2.6,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1.4,
   "fgm": 3.9,
   "fga": 8.6,
   "ftm": 0.8,
   "fta": 1.0,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1628989,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 69,
+   "2023-24": 64
+  },
+  "mpg": 22.5,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1641709",
   "adp": 87.0,
-  "nbaId": 1641709,
   "name": "Ausar Thompson",
   "team": "DET",
   "lastTeam": "DET",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 73,
-  "gpBySeason": {
-   "2025-26": 73,
-   "2024-25": 59,
-   "2023-24": 63
-  },
-  "min": 26.0,
   "pts": 9.9,
   "reb": 5.7,
   "ast": 3.1,
   "stl": 2.0,
   "blk": 0.9,
-  "tpm": 0.1,
   "fgm": 4.2,
   "fga": 7.9,
   "ftm": 1.5,
   "fta": 2.6,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1641709,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 73,
+   "2024-25": 59,
+   "2023-24": 63
+  },
+  "mpg": 26.0,
+  "threes": 0.1,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1627777",
   "adp": null,
-  "nbaId": 1627777,
   "name": "Georges Niang",
   "team": "GSW",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 79,
-  "gpBySeason": {
-   "2024-25": 79,
-   "2023-24": 82
-  },
-  "min": 21.5,
   "pts": 9.9,
   "reb": 3.4,
   "ast": 1.4,
   "stl": 0.4,
   "blk": 0.2,
-  "tpm": 2.1,
   "fgm": 3.6,
   "fga": 7.8,
   "ftm": 0.6,
   "fta": 0.7,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1627777,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 79,
+   "2023-24": 82
+  },
+  "mpg": 21.5,
+  "threes": 2.1,
+  "status": null
  },
  {
   "id": "nba-203084",
   "adp": null,
-  "nbaId": 203084,
   "name": "Harrison Barnes",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 82,
-   "2023-24": 82
-  },
-  "min": 25.8,
   "pts": 9.9,
   "reb": 2.8,
   "ast": 1.9,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 1.8,
   "fgm": 3.4,
   "fga": 7.5,
   "ftm": 1.3,
   "fta": 1.6,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 203084,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 82,
+   "2023-24": 82
+  },
+  "mpg": 25.8,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1641733",
   "adp": null,
-  "nbaId": 1641733,
   "name": "Nick Smith Jr.",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 60,
-  "gpBySeason": {
-   "2025-26": 30,
-   "2024-25": 60,
-   "2023-24": 51
-  },
-  "min": 22.8,
   "pts": 9.9,
   "reb": 2.1,
   "ast": 2.4,
   "stl": 0.3,
   "blk": 0.1,
-  "tpm": 1.7,
   "fgm": 3.7,
   "fga": 9.5,
   "ftm": 0.7,
   "fta": 0.8,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1641733,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 30,
+   "2024-25": 60,
+   "2023-24": 51
+  },
+  "mpg": 22.8,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1630590",
   "adp": 148.0,
-  "nbaId": 1630590,
   "name": "Scotty Pippen Jr.",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 79,
-  "gpBySeason": {
-   "2025-26": 10,
-   "2024-25": 79,
-   "2023-24": 21
-  },
-  "min": 21.3,
   "pts": 9.9,
   "reb": 3.3,
   "ast": 4.4,
   "stl": 1.3,
   "blk": 0.4,
-  "tpm": 1.1,
   "fgm": 3.6,
   "fga": 7.5,
   "ftm": 1.5,
   "fta": 2.2,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1630590,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 10,
+   "2024-25": 79,
+   "2023-24": 21
+  },
+  "mpg": 21.3,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1641783",
   "adp": null,
-  "nbaId": 1641783,
   "name": "Tristan da Silva",
   "team": "ORL",
   "lastTeam": "ORL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 74
-  },
-  "min": 24.7,
   "pts": 9.9,
   "reb": 3.7,
   "ast": 1.6,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 1.6,
   "fgm": 3.6,
   "fga": 8.1,
   "ftm": 1.1,
   "fta": 1.2,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1641783,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 74
+  },
+  "mpg": 24.7,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1626220",
   "adp": null,
-  "nbaId": 1626220,
   "name": "Royce O'Neale",
   "team": "CHA",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 75,
-   "2023-24": 79
-  },
-  "min": 28.4,
   "pts": 9.8,
   "reb": 4.8,
   "ast": 2.7,
   "stl": 1.1,
   "blk": 0.4,
-  "tpm": 2.7,
   "fgm": 3.4,
   "fga": 8.0,
   "ftm": 0.3,
   "fta": 0.5,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1626220,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 75,
+   "2023-24": 79
+  },
+  "mpg": 28.4,
+  "threes": 2.7,
+  "status": null
  },
  {
   "id": "nba-1629599",
   "adp": null,
-  "nbaId": 1629599,
   "name": "Amir Coffey",
   "team": "",
   "lastTeam": "LAC",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 72,
-  "gpBySeason": {
-   "2025-26": 46,
-   "2024-25": 72,
-   "2023-24": 70
-  },
-  "min": 24.3,
   "pts": 9.7,
   "reb": 2.2,
   "ast": 1.1,
   "stl": 0.6,
   "blk": 0.1,
-  "tpm": 1.4,
   "fgm": 3.3,
   "fga": 7.1,
   "ftm": 1.6,
   "fta": 1.8,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1629599,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 46,
+   "2024-25": 72,
+   "2023-24": 70
+  },
+  "mpg": 24.3,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1642258",
   "adp": null,
-  "nbaId": 1642258,
   "name": "Zaccharie Risacher",
   "team": "DAL",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 67,
-  "gpBySeason": {
-   "2025-26": 67,
-   "2024-25": 75
-  },
-  "min": 22.4,
   "pts": 9.6,
   "reb": 3.8,
   "ast": 1.1,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1.4,
   "fgm": 3.6,
   "fga": 8.0,
   "ftm": 0.9,
   "fta": 1.3,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1642258,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 67,
+   "2024-25": 75
+  },
+  "mpg": 22.4,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1629655",
   "adp": 161.5,
-  "nbaId": 1629655,
   "name": "Daniel Gafford",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 55,
-  "gpBySeason": {
-   "2025-26": 55,
-   "2024-25": 57,
-   "2023-24": 74
-  },
-  "min": 21.7,
   "pts": 9.5,
   "reb": 6.9,
   "ast": 1.1,
   "stl": 0.8,
   "blk": 1.3,
-  "tpm": 0.0,
   "fgm": 3.8,
   "fga": 5.7,
   "ftm": 2.0,
   "fta": 2.9,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1629655,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 55,
+   "2024-25": 57,
+   "2023-24": 74
+  },
+  "mpg": 21.7,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1630643",
   "adp": null,
-  "nbaId": 1630643,
   "name": "Jay Huff",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 64,
-   "2023-24": 20
-  },
-  "min": 21.0,
   "pts": 9.5,
   "reb": 4.0,
   "ast": 1.5,
   "stl": 0.5,
   "blk": 1.9,
-  "tpm": 1.5,
   "fgm": 3.5,
   "fga": 7.5,
   "ftm": 1.0,
   "fta": 1.2,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1630643,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 64,
+   "2023-24": 20
+  },
+  "mpg": 21.0,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1641787",
   "adp": null,
-  "nbaId": 1641787,
   "name": "Tosan Evbuomwan",
   "team": "",
   "lastTeam": "BKN",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 28,
-  "gpBySeason": {
-   "2025-26": 5,
-   "2024-25": 28,
-   "2023-24": 17
-  },
-  "min": 23.7,
   "pts": 9.5,
   "reb": 4.3,
   "ast": 2.0,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 0.9,
   "fgm": 3.4,
   "fga": 7.9,
   "ftm": 2.0,
   "fta": 2.6,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1641787,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 5,
+   "2024-25": 28,
+   "2023-24": 17
+  },
+  "mpg": 23.7,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1630598",
   "adp": null,
-  "nbaId": 1630598,
   "name": "Aaron Wiggins",
   "team": "ATL",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 76,
-   "2023-24": 78
-  },
-  "min": 21.8,
   "pts": 9.4,
   "reb": 3.1,
   "ast": 1.7,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 1.5,
   "fgm": 3.6,
   "fga": 8.2,
   "ftm": 0.8,
   "fta": 1.1,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1630598,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 76,
+   "2023-24": 78
+  },
+  "mpg": 21.8,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1629622",
   "adp": null,
-  "nbaId": 1629622,
   "name": "Max Strus",
   "team": "LAC",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 12,
-   "2024-25": 50,
-   "2023-24": 70
-  },
-  "min": 25.5,
   "pts": 9.4,
   "reb": 4.3,
   "ast": 3.2,
   "stl": 0.5,
   "blk": 0.2,
-  "tpm": 2.3,
   "fgm": 3.3,
   "fga": 7.5,
   "ftm": 0.6,
   "fta": 0.7,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1629622,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 12,
+   "2024-25": 50,
+   "2023-24": 70
+  },
+  "mpg": 25.5,
+  "threes": 2.3,
+  "status": "Out"
  },
  {
   "id": "nba-1629004",
   "adp": null,
-  "nbaId": 1629004,
   "name": "Svi Mykhailiuk",
   "team": "UTA",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 50,
-  "gpBySeason": {
-   "2025-26": 50,
-   "2024-25": 38,
-   "2023-24": 41
-  },
-  "min": 23.1,
   "pts": 9.4,
   "reb": 2.5,
   "ast": 1.9,
   "stl": 0.5,
   "blk": 0.1,
-  "tpm": 2.0,
   "fgm": 3.5,
   "fga": 7.2,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1629004,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 50,
+   "2024-25": 38,
+   "2023-24": 41
+  },
+  "mpg": 23.1,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-1630558",
   "adp": 164.5,
-  "nbaId": 1630558,
   "name": "Davion Mitchell",
   "team": "MIA",
   "lastTeam": "MIA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 74,
-   "2023-24": 72
-  },
-  "min": 28.6,
   "pts": 9.3,
   "reb": 2.7,
   "ast": 6.5,
   "stl": 1.0,
   "blk": 0.2,
-  "tpm": 1.3,
   "fgm": 3.7,
   "fga": 7.6,
   "ftm": 0.6,
   "fta": 0.9,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1630558,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 74,
+   "2023-24": 72
+  },
+  "mpg": 28.6,
+  "threes": 1.3,
+  "status": null
  },
  {
   "id": "nba-1630171",
   "adp": null,
-  "nbaId": 1630171,
   "name": "Isaac Okoro",
   "team": "CHI",
   "lastTeam": "CHI",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 63,
-  "gpBySeason": {
-   "2025-26": 63,
-   "2024-25": 55,
-   "2023-24": 69
-  },
-  "min": 26.9,
   "pts": 9.3,
   "reb": 2.7,
   "ast": 1.6,
   "stl": 0.7,
   "blk": 0.5,
-  "tpm": 1.2,
   "fgm": 3.3,
   "fga": 7.3,
   "ftm": 1.4,
   "fta": 1.8,
-  "tov": 0.7
+  "tov": 0.7,
+  "refId": 1630171,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 63,
+   "2024-25": 55,
+   "2023-24": 69
+  },
+  "mpg": 26.9,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1629013",
   "adp": 192.0,
-  "nbaId": 1629013,
   "name": "Landry Shamet",
   "team": "NYK",
   "lastTeam": "NYK",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 51,
-  "gpBySeason": {
-   "2025-26": 51,
-   "2024-25": 50,
-   "2023-24": 46
-  },
-  "min": 23.0,
   "pts": 9.3,
   "reb": 1.8,
   "ast": 1.4,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 2.0,
   "fgm": 3.1,
   "fga": 7.1,
   "ftm": 1.1,
   "fta": 1.5,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1629013,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 51,
+   "2024-25": 50,
+   "2023-24": 46
+  },
+  "mpg": 23.0,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-203935",
   "adp": null,
-  "nbaId": 203935,
   "name": "Marcus Smart",
   "team": "HOU",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 62,
-  "gpBySeason": {
-   "2025-26": 62,
-   "2024-25": 34,
-   "2023-24": 20
-  },
-  "min": 28.5,
   "pts": 9.3,
   "reb": 2.8,
   "ast": 3.0,
   "stl": 1.4,
   "blk": 0.4,
-  "tpm": 1.6,
   "fgm": 3.0,
   "fga": 7.7,
   "ftm": 1.7,
   "fta": 2.1,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 203935,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 62,
+   "2024-25": 34,
+   "2023-24": 20
+  },
+  "mpg": 28.5,
+  "threes": 1.6,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1628392",
   "adp": 117.0,
-  "nbaId": 1628392,
   "name": "Isaiah Hartenstein",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 47,
-  "gpBySeason": {
-   "2025-26": 47,
-   "2024-25": 57,
-   "2023-24": 75
-  },
-  "min": 24.2,
   "pts": 9.2,
   "reb": 9.4,
   "ast": 3.5,
   "stl": 1.0,
   "blk": 0.8,
-  "tpm": 0.0,
   "fgm": 3.9,
   "fga": 6.3,
   "ftm": 1.4,
   "fta": 2.2,
-  "tov": 1.7
+  "tov": 1.7,
+  "refId": 1628392,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 47,
+   "2024-25": 57,
+   "2023-24": 75
+  },
+  "mpg": 24.2,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1630573",
   "adp": null,
-  "nbaId": 1630573,
   "name": "Sam Hauser",
   "team": "BOS",
   "lastTeam": "BOS",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 71,
-   "2023-24": 79
-  },
-  "min": 24.8,
   "pts": 9.2,
   "reb": 3.8,
   "ast": 1.5,
   "stl": 0.5,
   "blk": 0.3,
-  "tpm": 2.5,
   "fgm": 3.2,
   "fga": 7.7,
   "ftm": 0.2,
   "fta": 0.3,
-  "tov": 0.4
+  "tov": 0.4,
+  "refId": 1630573,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 71,
+   "2023-24": 79
+  },
+  "mpg": 24.8,
+  "threes": 2.5,
+  "status": null
  },
  {
   "id": "nba-1641744",
   "adp": 92.5,
-  "nbaId": 1641744,
   "name": "Zach Edey",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2024-25",
   "gp": 66,
-  "gpBySeason": {
-   "2025-26": 11,
-   "2024-25": 66
-  },
-  "min": 21.5,
   "pts": 9.2,
   "reb": 8.3,
   "ast": 1.0,
   "stl": 0.5,
   "blk": 1.3,
-  "tpm": 0.3,
   "fgm": 3.8,
   "fga": 6.6,
   "ftm": 1.4,
   "fta": 1.9,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1641744,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 11,
+   "2024-25": 66
+  },
+  "mpg": 21.5,
+  "threes": 0.3,
+  "status": "Out"
  },
  {
   "id": "nba-203991",
   "adp": null,
-  "nbaId": 203991,
   "name": "Clint Capela",
   "team": "HOU",
   "lastTeam": "ATL",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2024-25",
   "gp": 55,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 55,
-   "2023-24": 73
-  },
-  "min": 21.4,
   "pts": 8.9,
   "reb": 8.5,
   "ast": 1.1,
   "stl": 0.6,
   "blk": 1.0,
-  "tpm": 0.0,
   "fgm": 4.0,
   "fga": 7.1,
   "ftm": 0.9,
   "fta": 1.8,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 203991,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 55,
+   "2023-24": 73
+  },
+  "mpg": 21.4,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1642874",
   "adp": null,
-  "nbaId": 1642874,
   "name": "Danny Wolf",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57
-  },
-  "min": 20.8,
   "pts": 8.9,
   "reb": 4.9,
   "ast": 2.2,
   "stl": 0.5,
   "blk": 0.6,
-  "tpm": 1.2,
   "fgm": 3.1,
   "fga": 7.7,
   "ftm": 1.5,
   "fta": 1.9,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1642874,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57
+  },
+  "mpg": 20.8,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1630529",
   "adp": null,
-  "nbaId": 1630529,
   "name": "Herbert Jones",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56,
-   "2024-25": 20,
-   "2023-24": 76
-  },
-  "min": 28.4,
   "pts": 8.9,
   "reb": 3.4,
   "ast": 2.8,
   "stl": 1.6,
   "blk": 0.5,
-  "tpm": 1.4,
   "fgm": 3.3,
   "fga": 8.5,
   "ftm": 0.9,
   "fta": 1.1,
-  "tov": 1.3
+  "tov": 1.3,
+  "refId": 1630529,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56,
+   "2024-25": 20,
+   "2023-24": 76
+  },
+  "mpg": 28.4,
+  "threes": 1.4,
+  "status": null
  },
  {
   "id": "nba-1642849",
   "adp": null,
-  "nbaId": 1642849,
   "name": "Nolan Traore",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 56,
-  "gpBySeason": {
-   "2025-26": 56
-  },
-  "min": 22.2,
   "pts": 8.9,
   "reb": 1.8,
   "ast": 3.8,
   "stl": 0.8,
   "blk": 0.4,
-  "tpm": 1.1,
   "fgm": 3.3,
   "fga": 8.6,
   "ftm": 1.3,
   "fta": 1.7,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1642849,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 56
+  },
+  "mpg": 22.2,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-101108",
   "adp": 176.0,
-  "nbaId": 101108,
   "name": "Chris Paul",
   "team": "",
   "lastTeam": "SAS",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 16,
-   "2024-25": 82,
-   "2023-24": 58
-  },
-  "min": 28.0,
   "pts": 8.8,
   "reb": 3.6,
   "ast": 7.4,
   "stl": 1.3,
   "blk": 0.3,
-  "tpm": 1.7,
   "fgm": 3.0,
   "fga": 7.1,
   "ftm": 1.0,
   "fta": 1.1,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 101108,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 16,
+   "2024-25": 82,
+   "2023-24": 58
+  },
+  "mpg": 28.0,
+  "threes": 1.7,
+  "status": null
  },
  {
   "id": "nba-1642262",
   "adp": null,
-  "nbaId": 1642262,
   "name": "Cody Williams",
   "team": "MIN",
   "lastTeam": "UTA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 67,
-  "gpBySeason": {
-   "2025-26": 67,
-   "2024-25": 50
-  },
-  "min": 24.3,
   "pts": 8.8,
   "reb": 3.0,
   "ast": 2.0,
   "stl": 0.8,
   "blk": 0.4,
-  "tpm": 0.4,
   "fgm": 3.6,
   "fga": 7.6,
   "ftm": 1.3,
   "fta": 1.8,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1642262,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 67,
+   "2024-25": 50
+  },
+  "mpg": 24.3,
+  "threes": 0.4,
+  "status": null
  },
  {
   "id": "nba-1641726",
   "adp": null,
-  "nbaId": 1641726,
   "name": "Dereck Lively II",
   "team": "DAL",
   "lastTeam": "DAL",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2024-25",
   "gp": 36,
-  "gpBySeason": {
-   "2025-26": 7,
-   "2024-25": 36,
-   "2023-24": 55
-  },
-  "min": 23.1,
   "pts": 8.7,
   "reb": 7.5,
   "ast": 2.4,
   "stl": 0.6,
   "blk": 1.6,
-  "tpm": 0.0,
   "fgm": 3.7,
   "fga": 5.3,
   "ftm": 1.3,
   "fta": 2.0,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1641726,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 7,
+   "2024-25": 36,
+   "2023-24": 55
+  },
+  "mpg": 23.1,
+  "threes": 0.0,
+  "status": "Out"
  },
  {
   "id": "nba-1630692",
   "adp": null,
-  "nbaId": 1630692,
   "name": "Jordan Goodwin",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 70,
-  "gpBySeason": {
-   "2025-26": 70,
-   "2024-25": 29,
-   "2023-24": 57
-  },
-  "min": 22.5,
   "pts": 8.7,
   "reb": 4.9,
   "ast": 2.2,
   "stl": 1.5,
   "blk": 0.2,
-  "tpm": 1.6,
   "fgm": 3.3,
   "fga": 7.9,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1630692,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 70,
+   "2024-25": 29,
+   "2023-24": 57
+  },
+  "mpg": 22.5,
+  "threes": 1.6,
+  "status": null
  },
  {
   "id": "nba-1641717",
   "adp": 159.5,
-  "nbaId": 1641717,
   "name": "Cason Wallace",
   "team": "OKC",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 77,
-  "gpBySeason": {
-   "2025-26": 77,
-   "2024-25": 68,
-   "2023-24": 82
-  },
-  "min": 26.6,
   "pts": 8.6,
   "reb": 3.1,
   "ast": 2.6,
   "stl": 1.9,
   "blk": 0.4,
-  "tpm": 1.3,
   "fgm": 3.3,
   "fga": 7.6,
   "ftm": 0.7,
   "fta": 0.9,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1641717,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 77,
+   "2024-25": 68,
+   "2023-24": 82
+  },
+  "mpg": 26.6,
+  "threes": 1.3,
+  "status": null
  },
  {
   "id": "nba-1642363",
   "adp": null,
-  "nbaId": 1642363,
   "name": "Nique Clifford",
   "team": "SAC",
   "lastTeam": "SAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75
-  },
-  "min": 25.1,
   "pts": 8.6,
   "reb": 3.8,
   "ast": 2.4,
   "stl": 0.9,
   "blk": 0.3,
-  "tpm": 1.0,
   "fgm": 3.3,
   "fga": 7.9,
   "ftm": 0.9,
   "fta": 1.3,
-  "tov": 1.5
+  "tov": 1.5,
+  "refId": 1642363,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75
+  },
+  "mpg": 25.1,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-201572",
   "adp": 135.0,
-  "nbaId": 201572,
   "name": "Brook Lopez",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 75,
-  "gpBySeason": {
-   "2025-26": 75,
-   "2024-25": 80,
-   "2023-24": 79
-  },
-  "min": 21.8,
   "pts": 8.5,
   "reb": 3.6,
   "ast": 1.3,
   "stl": 0.6,
   "blk": 1.2,
-  "tpm": 1.5,
   "fgm": 3.1,
   "fga": 7.2,
   "ftm": 0.7,
   "fta": 1.0,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 201572,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 75,
+   "2024-25": 80,
+   "2023-24": 79
+  },
+  "mpg": 21.8,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-1642867",
   "adp": 143.0,
-  "nbaId": 1642867,
   "name": "Collin Murray-Boyles",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57
-  },
-  "min": 21.9,
   "pts": 8.5,
   "reb": 5.0,
   "ast": 1.9,
   "stl": 0.9,
   "blk": 0.9,
-  "tpm": 0.3,
   "fgm": 3.5,
   "fga": 6.0,
   "ftm": 1.2,
   "fta": 1.9,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1642867,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57
+  },
+  "mpg": 21.9,
+  "threes": 0.3,
+  "status": null
  },
  {
   "id": "nba-1630249",
   "adp": null,
-  "nbaId": 1630249,
   "name": "V\u00edt Krej\u010d\u00ed",
   "team": "POR",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 57,
-   "2023-24": 22
-  },
-  "min": 21.4,
   "pts": 8.5,
   "reb": 2.3,
   "ast": 1.5,
   "stl": 0.7,
   "blk": 0.3,
-  "tpm": 2.0,
   "fgm": 3.0,
   "fga": 6.6,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1630249,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 57,
+   "2023-24": 22
+  },
+  "mpg": 21.4,
+  "threes": 2.0,
+  "status": null
  },
  {
   "id": "nba-203110",
   "adp": 122.0,
-  "nbaId": 203110,
   "name": "Draymond Green",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 68,
-   "2023-24": 55
-  },
-  "min": 27.5,
   "pts": 8.4,
   "reb": 5.5,
   "ast": 5.5,
   "stl": 0.9,
   "blk": 0.6,
-  "tpm": 1.5,
   "fgm": 3.0,
   "fga": 7.2,
   "ftm": 0.9,
   "fta": 1.2,
-  "tov": 2.7
+  "tov": 2.7,
+  "refId": 203110,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 68,
+   "2023-24": 55
+  },
+  "mpg": 27.5,
+  "threes": 1.5,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-203484",
   "adp": null,
-  "nbaId": 203484,
   "name": "Kentavious Caldwell-Pope",
   "team": "PHI",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 51,
-  "gpBySeason": {
-   "2025-26": 51,
-   "2024-25": 77,
-   "2023-24": 76
-  },
-  "min": 21.3,
   "pts": 8.4,
   "reb": 2.5,
   "ast": 2.7,
   "stl": 0.8,
   "blk": 0.2,
-  "tpm": 1.1,
   "fgm": 2.9,
   "fga": 7.2,
   "ftm": 1.4,
   "fta": 1.6,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 203484,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 51,
+   "2024-25": 77,
+   "2023-24": 76
+  },
+  "mpg": 21.3,
+  "threes": 1.1,
+  "status": null
  },
  {
   "id": "nba-1628379",
   "adp": null,
-  "nbaId": 1628379,
   "name": "Luke Kennard",
   "team": "PHX",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 78,
-  "gpBySeason": {
-   "2025-26": 78,
-   "2024-25": 65,
-   "2023-24": 39
-  },
-  "min": 21.5,
   "pts": 8.4,
   "reb": 2.3,
   "ast": 2.2,
   "stl": 0.7,
   "blk": 0.1,
-  "tpm": 1.5,
   "fgm": 3.0,
   "fga": 5.7,
   "ftm": 0.8,
   "fta": 0.9,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1628379,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 78,
+   "2024-25": 65,
+   "2023-24": 39
+  },
+  "mpg": 21.5,
+  "threes": 1.5,
+  "status": null
  },
  {
   "id": "nba-201143",
   "adp": 107.0,
-  "nbaId": 201143,
   "name": "Al Horford",
   "team": "GSW",
   "lastTeam": "GSW",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 45,
-  "gpBySeason": {
-   "2025-26": 45,
-   "2024-25": 60,
-   "2023-24": 65
-  },
-  "min": 21.5,
   "pts": 8.3,
   "reb": 4.9,
   "ast": 2.6,
   "stl": 0.7,
   "blk": 1.1,
-  "tpm": 1.6,
   "fgm": 3.1,
   "fga": 7.2,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 201143,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 45,
+   "2024-25": 60,
+   "2023-24": 65
+  },
+  "mpg": 21.5,
+  "threes": 1.6,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1629652",
   "adp": null,
-  "nbaId": 1629652,
   "name": "Luguentz Dort",
   "team": "ATL",
   "lastTeam": "OKC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69,
-   "2024-25": 71,
-   "2023-24": 79
-  },
-  "min": 26.8,
   "pts": 8.3,
   "reb": 3.6,
   "ast": 1.2,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 1.9,
   "fgm": 2.9,
   "fga": 7.6,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1629652,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69,
+   "2024-25": 71,
+   "2023-24": 79
+  },
+  "mpg": 26.8,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1631222",
   "adp": null,
-  "nbaId": 1631222,
   "name": "Jake LaRavia",
   "team": "LAL",
   "lastTeam": "LAL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 66,
-   "2023-24": 35
-  },
-  "min": 25.1,
   "pts": 8.2,
   "reb": 4.0,
   "ast": 1.8,
   "stl": 1.3,
   "blk": 0.5,
-  "tpm": 1.0,
   "fgm": 2.9,
   "fga": 6.4,
   "ftm": 1.4,
   "fta": 1.9,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1631222,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 66,
+   "2023-24": 35
+  },
+  "mpg": 25.1,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1627752",
   "adp": null,
-  "nbaId": 1627752,
   "name": "Taurean Prince",
   "team": "DET",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 80,
-  "gpBySeason": {
-   "2025-26": 26,
-   "2024-25": 80,
-   "2023-24": 78
-  },
-  "min": 27.1,
   "pts": 8.2,
   "reb": 3.6,
   "ast": 1.9,
   "stl": 1.0,
   "blk": 0.2,
-  "tpm": 1.8,
   "fgm": 2.9,
   "fga": 6.4,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1627752,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 26,
+   "2024-25": 80,
+   "2023-24": 78
+  },
+  "mpg": 27.1,
+  "threes": 1.8,
+  "status": null
  },
  {
   "id": "nba-1631121",
   "adp": null,
-  "nbaId": 1631121,
   "name": "Bryce McGowens",
   "team": "NOP",
   "lastTeam": "NOP",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 42,
-  "gpBySeason": {
-   "2025-26": 42,
-   "2024-25": 13,
-   "2023-24": 59
-  },
-  "min": 21.0,
   "pts": 8.1,
   "reb": 2.1,
   "ast": 1.5,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 0.9,
   "fgm": 2.7,
   "fga": 5.6,
   "ftm": 1.8,
   "fta": 2.3,
-  "tov": 0.4
+  "tov": 0.4,
+  "refId": 1631121,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 42,
+   "2024-25": 13,
+   "2023-24": 59
+  },
+  "mpg": 21.0,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1629018",
   "adp": null,
-  "nbaId": 1629018,
   "name": "Gary Trent Jr.",
   "team": "MIL",
   "lastTeam": "MIL",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 74,
-   "2023-24": 71
-  },
-  "min": 21.2,
   "pts": 8.1,
   "reb": 1.0,
   "ast": 1.2,
   "stl": 0.5,
   "blk": 0.0,
-  "tpm": 1.9,
   "fgm": 2.8,
   "fga": 7.3,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1629018,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 74,
+   "2023-24": 71
+  },
+  "mpg": 21.2,
+  "threes": 1.9,
+  "status": null
  },
  {
   "id": "nba-1628971",
   "adp": null,
-  "nbaId": 1628971,
   "name": "Bruce Brown",
   "team": "",
   "lastTeam": "DEN",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 41,
-   "2023-24": 67
-  },
-  "min": 24.4,
   "pts": 7.9,
   "reb": 3.9,
   "ast": 2.1,
   "stl": 1.0,
   "blk": 0.2,
-  "tpm": 0.7,
   "fgm": 3.0,
   "fga": 6.4,
   "ftm": 1.2,
   "fta": 1.5,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1628971,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 41,
+   "2023-24": 67
+  },
+  "mpg": 24.4,
+  "threes": 0.7,
+  "status": null
  },
  {
   "id": "nba-1631217",
   "adp": 147.0,
-  "nbaId": 1631217,
   "name": "Moussa Diabat\u00e9",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 73,
-  "gpBySeason": {
-   "2025-26": 73,
-   "2024-25": 71,
-   "2023-24": 11
-  },
-  "min": 26.0,
   "pts": 7.9,
   "reb": 8.7,
   "ast": 1.9,
   "stl": 0.8,
   "blk": 1.0,
-  "tpm": 0.0,
   "fgm": 3.1,
   "fga": 5.0,
   "ftm": 1.6,
   "fta": 2.4,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1631217,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 73,
+   "2024-25": 71,
+   "2023-24": 11
+  },
+  "mpg": 26.0,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1642354",
   "adp": null,
-  "nbaId": 1642354,
   "name": "KJ Simpson",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 36,
-  "gpBySeason": {
-   "2025-26": 20,
-   "2024-25": 36
-  },
-  "min": 23.4,
   "pts": 7.8,
   "reb": 3.0,
   "ast": 3.1,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 0.9,
   "fgm": 2.9,
   "fga": 8.4,
   "ftm": 1.1,
   "fta": 1.4,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1642354,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 20,
+   "2024-25": 36
+  },
+  "mpg": 23.4,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1631230",
   "adp": 200.0,
-  "nbaId": 1631230,
   "name": "Dominick Barlow",
   "team": "PHI",
   "lastTeam": "PHI",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 71,
-  "gpBySeason": {
-   "2025-26": 71,
-   "2024-25": 35,
-   "2023-24": 33
-  },
-  "min": 23.8,
   "pts": 7.7,
   "reb": 4.8,
   "ast": 1.2,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0.3,
   "fgm": 3.0,
   "fga": 5.6,
   "ftm": 1.3,
   "fta": 1.8,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1631230,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 71,
+   "2024-25": 35,
+   "2023-24": 33
+  },
+  "mpg": 23.8,
+  "threes": 0.3,
+  "status": "Out"
  },
  {
   "id": "nba-1642358",
   "adp": null,
-  "nbaId": 1642358,
   "name": "AJ Johnson",
   "team": "NOP",
   "lastTeam": "WAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 29,
-  "gpBySeason": {
-   "2025-26": 48,
-   "2024-25": 29
-  },
-  "min": 22.0,
   "pts": 7.6,
   "reb": 2.0,
   "ast": 2.6,
   "stl": 0.4,
   "blk": 0.1,
-  "tpm": 0.8,
   "fgm": 2.8,
   "fga": 7.3,
   "ftm": 1.1,
   "fta": 1.3,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1642358,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 48,
+   "2024-25": 29
+  },
+  "mpg": 22.0,
+  "threes": 0.8,
+  "status": null
  },
  {
   "id": "nba-1641750",
   "adp": null,
-  "nbaId": 1641750,
   "name": "Ryan Kalkbrenner",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 69,
-  "gpBySeason": {
-   "2025-26": 69
-  },
-  "min": 21.4,
   "pts": 7.6,
   "reb": 5.5,
   "ast": 0.8,
   "stl": 0.5,
   "blk": 1.5,
-  "tpm": 0.0,
   "fgm": 3.2,
   "fga": 4.2,
   "ftm": 1.2,
   "fta": 1.7,
-  "tov": 0.9
+  "tov": 0.9,
+  "refId": 1641750,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 69
+  },
+  "mpg": 21.4,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1642879",
   "adp": null,
-  "nbaId": 1642879,
   "name": "Ben Saraf",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 44,
-  "gpBySeason": {
-   "2025-26": 44
-  },
-  "min": 20.8,
   "pts": 7.5,
   "reb": 2.1,
   "ast": 3.3,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 0.4,
   "fgm": 2.7,
   "fga": 6.9,
   "ftm": 1.7,
   "fta": 2.0,
-  "tov": 2.3
+  "tov": 2.3,
+  "refId": 1642879,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 44
+  },
+  "mpg": 20.8,
+  "threes": 0.4,
+  "status": null
  },
  {
   "id": "nba-1627739",
   "adp": null,
-  "nbaId": 1627739,
   "name": "Kris Dunn",
   "team": "LAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 74,
-   "2023-24": 66
-  },
-  "min": 27.2,
   "pts": 7.3,
   "reb": 3.3,
   "ast": 3.6,
   "stl": 1.6,
   "blk": 0.2,
-  "tpm": 1.0,
   "fgm": 2.8,
   "fga": 5.8,
   "ftm": 0.8,
   "fta": 1.0,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1627739,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 74,
+   "2023-24": 66
+  },
+  "mpg": 27.2,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1629611",
   "adp": null,
-  "nbaId": 1629611,
   "name": "Terance Mann",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 63,
-  "gpBySeason": {
-   "2025-26": 63,
-   "2024-25": 67,
-   "2023-24": 75
-  },
-  "min": 24.3,
   "pts": 7.2,
   "reb": 3.2,
   "ast": 3.0,
   "stl": 0.7,
   "blk": 0.2,
-  "tpm": 0.9,
   "fgm": 2.7,
   "fga": 5.8,
   "ftm": 1.0,
   "fta": 1.3,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 1629611,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 63,
+   "2024-25": 67,
+   "2023-24": 75
+  },
+  "mpg": 24.3,
+  "threes": 0.9,
+  "status": null
  },
  {
   "id": "nba-1641767",
   "adp": null,
-  "nbaId": 1641767,
   "name": "Ben Sheppard",
   "team": "IND",
   "lastTeam": "IND",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 65,
-  "gpBySeason": {
-   "2025-26": 65,
-   "2024-25": 63,
-   "2023-24": 57
-  },
-  "min": 21.4,
   "pts": 7.1,
   "reb": 3.0,
   "ast": 1.8,
   "stl": 0.6,
   "blk": 0.1,
-  "tpm": 1.3,
   "fgm": 2.6,
   "fga": 6.0,
   "ftm": 0.6,
   "fta": 0.8,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1641767,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 65,
+   "2024-25": 63,
+   "2023-24": 57
+  },
+  "mpg": 21.4,
+  "threes": 1.3,
+  "status": "Out"
  },
  {
   "id": "nba-1628998",
   "adp": null,
-  "nbaId": 1628998,
   "name": "Cody Martin",
   "team": "",
   "lastTeam": "PHX",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 53,
-  "gpBySeason": {
-   "2025-26": 4,
-   "2024-25": 53,
-   "2023-24": 28
-  },
-  "min": 22.1,
   "pts": 6.8,
   "reb": 4.2,
   "ast": 2.0,
   "stl": 1.1,
   "blk": 0.6,
-  "tpm": 0.8,
   "fgm": 2.6,
   "fga": 6.1,
   "ftm": 0.8,
   "fta": 1.2,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1628998,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 4,
+   "2024-25": 53,
+   "2023-24": 28
+  },
+  "mpg": 22.1,
+  "threes": 0.8,
+  "status": null
  },
  {
   "id": "nba-1629610",
   "adp": null,
-  "nbaId": 1629610,
   "name": "DaQuan Jeffries",
   "team": "",
   "lastTeam": "CHA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 47,
-  "gpBySeason": {
-   "2025-26": 3,
-   "2024-25": 47,
-   "2023-24": 17
-  },
-  "min": 22.8,
   "pts": 6.7,
   "reb": 2.9,
   "ast": 1.1,
   "stl": 0.6,
   "blk": 0.5,
-  "tpm": 1.2,
   "fgm": 2.5,
   "fga": 6.2,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 0.7
+  "tov": 0.7,
+  "refId": 1629610,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 3,
+   "2024-25": 47,
+   "2023-24": 17
+  },
+  "mpg": 22.8,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1642347",
   "adp": null,
-  "nbaId": 1642347,
   "name": "Jamal Shead",
   "team": "TOR",
   "lastTeam": "TOR",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 75
-  },
-  "min": 22.6,
   "pts": 6.6,
   "reb": 1.7,
   "ast": 5.4,
   "stl": 0.9,
   "blk": 0.2,
-  "tpm": 1.0,
   "fgm": 2.3,
   "fga": 6.1,
   "ftm": 1.1,
   "fta": 1.4,
-  "tov": 1.4
+  "tov": 1.4,
+  "refId": 1642347,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 75
+  },
+  "mpg": 22.6,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1642962",
   "adp": null,
-  "nbaId": 1642962,
   "name": "Drake Powell",
   "team": "BKN",
   "lastTeam": "BKN",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 63,
-  "gpBySeason": {
-   "2025-26": 63
-  },
-  "min": 20.9,
   "pts": 6.5,
   "reb": 1.8,
   "ast": 1.4,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 0.8,
   "fgm": 2.3,
   "fga": 5.7,
   "ftm": 1.1,
   "fta": 1.2,
-  "tov": 1.0
+  "tov": 1.0,
+  "refId": 1642962,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 63
+  },
+  "mpg": 20.9,
+  "threes": 0.8,
+  "status": null
  },
  {
   "id": "nba-1629312",
   "adp": null,
-  "nbaId": 1629312,
   "name": "Haywood Highsmith",
   "team": "",
   "lastTeam": "MIA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 74,
-  "gpBySeason": {
-   "2025-26": 7,
-   "2024-25": 74,
-   "2023-24": 66
-  },
-  "min": 24.6,
   "pts": 6.5,
   "reb": 3.4,
   "ast": 1.5,
   "stl": 0.9,
   "blk": 0.5,
-  "tpm": 1.2,
   "fgm": 2.4,
   "fga": 5.3,
   "ftm": 0.4,
   "fta": 0.6,
-  "tov": 0.7
+  "tov": 0.7,
+  "refId": 1629312,
+  "season": "2024-25",
+  "seasonGp": {
+   "2025-26": 7,
+   "2024-25": 74,
+   "2023-24": 66
+  },
+  "mpg": 24.6,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1628436",
   "adp": null,
-  "nbaId": 1628436,
   "name": "Luke Kornet",
   "team": "SAS",
   "lastTeam": "SAS",
   "signed": true,
-  "injury": null,
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 68,
-  "gpBySeason": {
-   "2025-26": 68,
-   "2024-25": 73,
-   "2023-24": 63
-  },
-  "min": 21.0,
   "pts": 6.5,
   "reb": 6.1,
   "ast": 1.9,
   "stl": 0.5,
   "blk": 1.0,
-  "tpm": 0.0,
   "fgm": 2.6,
   "fga": 4.0,
   "ftm": 1.4,
   "fta": 1.7,
-  "tov": 0.4
+  "tov": 0.4,
+  "refId": 1628436,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 68,
+   "2024-25": 73,
+   "2023-24": 63
+  },
+  "mpg": 21.0,
+  "threes": 0.0,
+  "status": null
  },
  {
   "id": "nba-1642345",
   "adp": 143.0,
-  "nbaId": 1642345,
   "name": "Oso Ighodaro",
   "team": "PHX",
   "lastTeam": "PHX",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82,
-   "2024-25": 61
-  },
-  "min": 22.1,
   "pts": 6.5,
   "reb": 5.1,
   "ast": 2.3,
   "stl": 0.9,
   "blk": 0.7,
-  "tpm": 0.0,
   "fgm": 2.9,
   "fga": 4.5,
   "ftm": 0.6,
   "fta": 1.4,
-  "tov": 1.2
+  "tov": 1.2,
+  "refId": 1642345,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82,
+   "2024-25": 61
+  },
+  "mpg": 22.1,
+  "threes": 0.0,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1630231",
   "adp": null,
-  "nbaId": 1630231,
   "name": "KJ Martin",
   "team": "",
   "lastTeam": "UTA",
   "signed": false,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2024-25",
   "gp": 43,
-  "gpBySeason": {
-   "2024-25": 43,
-   "2023-24": 60
-  },
-  "min": 21.2,
   "pts": 6.4,
   "reb": 2.9,
   "ast": 1.1,
   "stl": 0.4,
   "blk": 0.5,
-  "tpm": 0.3,
   "fgm": 2.6,
   "fga": 4.7,
   "ftm": 0.9,
   "fta": 1.1,
-  "tov": 0.6
+  "tov": 0.6,
+  "refId": 1630231,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 43,
+   "2023-24": 60
+  },
+  "mpg": 21.2,
+  "threes": 0.3,
+  "status": null
  },
  {
   "id": "nba-1642942",
   "adp": null,
-  "nbaId": 1642942,
   "name": "Jahmai Mashack",
   "team": "MEM",
   "lastTeam": "MEM",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 31,
-  "gpBySeason": {
-   "2025-26": 31
-  },
-  "min": 21.7,
   "pts": 6.2,
   "reb": 2.6,
   "ast": 2.2,
   "stl": 1.2,
   "blk": 0.5,
-  "tpm": 0.6,
   "fgm": 2.5,
   "fga": 6.3,
   "ftm": 0.6,
   "fta": 1.1,
-  "tov": 1.6
+  "tov": 1.6,
+  "refId": 1642942,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 31
+  },
+  "mpg": 21.7,
+  "threes": 0.6,
+  "status": null
  },
  {
   "id": "nba-1629731",
   "adp": null,
-  "nbaId": 1629731,
   "name": "Dean Wade",
   "team": "PHI",
   "lastTeam": "CLE",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 59,
-  "gpBySeason": {
-   "2025-26": 59,
-   "2024-25": 59,
-   "2023-24": 54
-  },
-  "min": 22.3,
   "pts": 5.8,
   "reb": 4.2,
   "ast": 1.5,
   "stl": 0.7,
   "blk": 0.4,
-  "tpm": 1.2,
   "fgm": 2.1,
   "fga": 4.7,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 0.3
+  "tov": 0.3,
+  "refId": 1629731,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 59,
+   "2024-25": 59,
+   "2023-24": 54
+  },
+  "mpg": 22.3,
+  "threes": 1.2,
+  "status": null
  },
  {
   "id": "nba-1631200",
   "adp": null,
-  "nbaId": 1631200,
   "name": "Kris Murray",
   "team": "MEM",
   "lastTeam": "POR",
   "signed": true,
-  "injury": null,
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 57,
-  "gpBySeason": {
-   "2025-26": 57,
-   "2024-25": 69,
-   "2023-24": 62
-  },
-  "min": 23.4,
   "pts": 5.8,
   "reb": 3.6,
   "ast": 1.4,
   "stl": 0.9,
   "blk": 0.4,
-  "tpm": 0.6,
   "fgm": 2.3,
   "fga": 4.8,
   "ftm": 0.7,
   "fta": 1.0,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1631200,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 57,
+   "2024-25": 69,
+   "2023-24": 62
+  },
+  "mpg": 23.4,
+  "threes": 0.6,
+  "status": null
  },
  {
   "id": "nba-203500",
   "adp": null,
-  "nbaId": 203500,
   "name": "Steven Adams",
   "team": "HOU",
   "lastTeam": "HOU",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "C"
   ],
-  "asOfSeason": "2025-26",
   "gp": 32,
-  "gpBySeason": {
-   "2025-26": 32,
-   "2024-25": 58
-  },
-  "min": 22.8,
   "pts": 5.8,
   "reb": 8.6,
   "ast": 1.5,
   "stl": 0.7,
   "blk": 0.6,
-  "tpm": 0.0,
   "fgm": 2.2,
   "fga": 4.3,
   "ftm": 1.5,
   "fta": 2.5,
-  "tov": 1.1
+  "tov": 1.1,
+  "refId": 203500,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 32,
+   "2024-25": 58
+  },
+  "mpg": 22.8,
+  "threes": 0.0,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1642461",
   "adp": null,
-  "nbaId": 1642461,
   "name": "Spencer Jones",
   "team": "DEN",
   "lastTeam": "DEN",
   "signed": true,
-  "injury": "Day-To-Day",
   "positions": [
    "F"
   ],
-  "asOfSeason": "2025-26",
   "gp": 64,
-  "gpBySeason": {
-   "2025-26": 64,
-   "2024-25": 20
-  },
-  "min": 22.1,
   "pts": 5.5,
   "reb": 3.3,
   "ast": 0.8,
   "stl": 0.8,
   "blk": 0.5,
-  "tpm": 0.9,
   "fgm": 2.1,
   "fga": 4.1,
   "ftm": 0.5,
   "fta": 0.8,
-  "tov": 0.5
+  "tov": 0.5,
+  "refId": 1642461,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 64,
+   "2024-25": 20
+  },
+  "mpg": 22.1,
+  "threes": 0.9,
+  "status": "Day-To-Day"
  },
  {
   "id": "nba-1642883",
   "adp": null,
-  "nbaId": 1642883,
   "name": "Sion James",
   "team": "CHA",
   "lastTeam": "CHA",
   "signed": true,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2025-26",
   "gp": 82,
-  "gpBySeason": {
-   "2025-26": 82
-  },
-  "min": 22.5,
   "pts": 5.4,
   "reb": 3.5,
   "ast": 2.0,
   "stl": 0.6,
   "blk": 0.2,
-  "tpm": 1.0,
   "fgm": 1.7,
   "fga": 4.5,
   "ftm": 1.0,
   "fta": 1.2,
-  "tov": 0.8
+  "tov": 0.8,
+  "refId": 1642883,
+  "season": "2025-26",
+  "seasonGp": {
+   "2025-26": 82
+  },
+  "mpg": 22.5,
+  "threes": 1.0,
+  "status": null
  },
  {
   "id": "nba-1627732",
   "adp": 161.0,
-  "nbaId": 1627732,
   "name": "Ben Simmons",
   "team": "SAC",
   "lastTeam": "LAC",
   "signed": true,
-  "injury": "Out",
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 51,
-  "gpBySeason": {
-   "2024-25": 51,
-   "2023-24": 15
-  },
-  "min": 22.0,
   "pts": 5.0,
   "reb": 4.7,
   "ast": 5.6,
   "stl": 0.7,
   "blk": 0.5,
-  "tpm": 0.0,
   "fgm": 2.3,
   "fga": 4.4,
   "ftm": 0.5,
   "fta": 0.6,
-  "tov": 2.0
+  "tov": 2.0,
+  "refId": 1627732,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 51,
+   "2023-24": 15
+  },
+  "mpg": 22.0,
+  "threes": 0.0,
+  "status": "Out"
  },
  {
   "id": "nba-203901",
   "adp": null,
-  "nbaId": 203901,
   "name": "Elfrid Payton",
   "team": "",
   "lastTeam": "NOP",
   "signed": false,
-  "injury": null,
   "positions": [
    "G"
   ],
-  "asOfSeason": "2024-25",
   "gp": 24,
-  "gpBySeason": {
-   "2024-25": 24
-  },
-  "min": 21.3,
   "pts": 3.5,
   "reb": 3.3,
   "ast": 6.9,
   "stl": 1.0,
   "blk": 0.5,
-  "tpm": 0.0,
   "fgm": 1.7,
   "fga": 5.1,
   "ftm": 0.2,
   "fta": 0.3,
-  "tov": 2.5
+  "tov": 2.5,
+  "refId": 203901,
+  "season": "2024-25",
+  "seasonGp": {
+   "2024-25": 24
+  },
+  "mpg": 21.3,
+  "threes": 0.0,
+  "status": null
  }
 ]

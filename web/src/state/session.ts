@@ -3,21 +3,21 @@ import {
   api,
   type ApiPlayer,
   type Category,
-  type DraftSummary,
-  type DraftView,
-  type RunSummary,
-  type Suggestions,
+  type SessionSummary,
+  type SessionView,
+  type ResultSummary,
+  type AdviceResult,
 } from "../api/client";
 
 export type Speed = "instant" | "fast" | "slow";
-export type Screen = "draft" | "teams";
+export type Screen = "room" | "league";
 export const SPEED_MS: Record<Speed, number> = {
   instant: 25,
   fast: 200,
   slow: 900,
 };
 
-const LAST_DRAFT_KEY = "fantasy-draft-lab/lastDraftId";
+const LAST_SESSION_KEY = "fantasy-draft-lab/lastSessionId";
 const BOARD_PREFS_KEY = "fantasy-draft-lab/boardPrefs";
 /** How long the panel stays on the player you just drafted before moving on. */
 export const JUST_DRAFTED_MS = 2500;
@@ -41,10 +41,10 @@ export const DEFAULT_BOARD_PREFS: BoardPrefs = {
   detailOpen: false,
 };
 
-function loadBoardPrefs(draftId: string | null): BoardPrefs {
-  if (!draftId) return DEFAULT_BOARD_PREFS;
+function loadBoardPrefs(sessionId: string | null): BoardPrefs {
+  if (!sessionId) return DEFAULT_BOARD_PREFS;
   try {
-    const raw = localStorage.getItem(`${BOARD_PREFS_KEY}/${draftId}`);
+    const raw = localStorage.getItem(`${BOARD_PREFS_KEY}/${sessionId}`);
     return raw ? { ...DEFAULT_BOARD_PREFS, ...JSON.parse(raw) } : DEFAULT_BOARD_PREFS;
   } catch {
     return DEFAULT_BOARD_PREFS;
@@ -52,37 +52,37 @@ function loadBoardPrefs(draftId: string | null): BoardPrefs {
 }
 
 export interface SessionState {
-  phase: "setup" | "draft";
-  view: DraftView | null;
+  phase: "setup" | "room";
+  view: SessionView | null;
   players: ApiPlayer[] | null;
   playerMap: Map<string, ApiPlayer> | null;
   speed: Speed;
   inspectedId: string | null;
-  suggestions: Suggestions | null;
-  suggestionsKey: string | null;
+  advice: AdviceResult | null;
+  adviceKey: string | null;
   browseAll: boolean; // skip the first/second-pick screens for this turn
   screen: Screen; // draft room vs. all-teams view
   boardPrefs: BoardPrefs;
   /** Pick index at which your turn arrived while you were watching — the
-   *  room announces it once; null after a resume or on bot turns. */
+   *  room announces it once; null after a resume or on rival turns. */
   turnArrivedAt: number | null;
   /** The player you just drafted: the panel stays on him briefly. */
-  justDrafted: { playerId: string; pickIndex: number } | null;
-  savedDrafts: DraftSummary[];
-  runs: RunSummary[];
-  viewingRun: DraftView | null;
-  viewingRunId: string | null;
+  justPicked: { pid: string; at: number } | null;
+  savedSessions: SessionSummary[];
+  results: ResultSummary[];
+  viewingResult: SessionView | null;
+  viewingResultId: string | null;
   error: string | null;
 }
 
-export function userPickCount(view: DraftView): number {
-  return view.rosters[view.userSlot].length;
+export function picksMade(view: SessionView): number {
+  return view.squads[view.seat].length;
 }
 
 /**
  * Session controller over the Python API. All draft mutation happens
- * server-side; this hook owns only UI state (speed, inspection, which run
- * is being viewed) and spaces out bot ticks so the draft unfolds visibly.
+ * server-side; this hook owns only UI state (speed, inspection, which result
+ * is being viewed) and spaces out rival ticks so the draft unfolds visibly.
  */
 export function useSession() {
   const [state, setState] = useState<SessionState>({
@@ -92,17 +92,17 @@ export function useSession() {
     playerMap: null,
     speed: "fast",
     inspectedId: null,
-    suggestions: null,
-    suggestionsKey: null,
+    advice: null,
+    adviceKey: null,
     browseAll: false,
-    screen: "draft",
+    screen: "room",
     boardPrefs: DEFAULT_BOARD_PREFS,
     turnArrivedAt: null,
-    justDrafted: null,
-    savedDrafts: [],
-    runs: [],
-    viewingRun: null,
-    viewingRunId: null,
+    justPicked: null,
+    savedSessions: [],
+    results: [],
+    viewingResult: null,
+    viewingResultId: null,
     error: null,
   });
 
@@ -118,7 +118,7 @@ export function useSession() {
     [set],
   );
 
-  // Initial data: player pool + resumable drafts + saved runs.
+  // Initial data: player pool + resumable sessions + saved results.
   useEffect(() => {
     api
       .players()
@@ -129,60 +129,60 @@ export function useSession() {
         });
       })
       .catch(fail);
-    api.listDrafts().then((d) => set({ savedDrafts: d })).catch(() => {});
-    api.listRuns().then((r) => set({ runs: r })).catch(() => {});
+    api.listSessions().then((d) => set({ savedSessions: d })).catch(() => {});
+    api.listResults().then((r) => set({ results: r })).catch(() => {});
   }, [set, fail]);
 
-  // Bot tick: while a bot is on the clock, advance one pick per speed tick.
+  // Rival tick: while a rival is on the clock, advance one pick per speed tick.
   const view = state.view;
   useEffect(() => {
     if (
       !view?.id ||
-      view.status !== "in_progress" ||
+      view.phase !== "in_progress" ||
       view.complete ||
       view.onClock === null ||
-      view.onClock === view.userSlot
+      view.onClock === view.seat
     ) {
       return;
     }
     const id = view.id;
     const timer = setTimeout(() => {
-      api.botPick(id).then(set0).catch(fail);
+      api.autopilot(id).then(set0).catch(fail);
     }, SPEED_MS[state.speed]);
     return () => clearTimeout(timer);
-    function set0(v: DraftView) {
+    function set0(v: SessionView) {
       // The clock just came to you: the room announces it (once per turn).
-      set(v.isUserTurn ? { view: v, turnArrivedAt: v.pickIndex } : { view: v });
+      set(v.yourPick ? { view: v, turnArrivedAt: v.atPick } : { view: v });
     }
   }, [view, state.speed, set, fail]);
 
-  // Build suggestions: simulated server-side for the user's first two turns.
-  const suggestionsKey =
-    view?.id && view.isUserTurn && userPickCount(view) < 2
-      ? `${view.id}:${view.pickIndex}:${view.userPunts.join(",")}`
+  // Build advice: simulated server-side for the user's first two turns.
+  const adviceKey =
+    view?.id && view.yourPick && picksMade(view) < 2
+      ? `${view.id}:${view.atPick}:${view.concedes.join(",")}`
       : null;
   useEffect(() => {
-    if (!suggestionsKey || !view?.id) return;
+    if (!adviceKey || !view?.id) return;
     let cancelled = false;
-    set({ suggestions: null, suggestionsKey });
+    set({ advice: null, adviceKey });
     api
-      .suggestions(view.id)
+      .advise(view.id)
       .then((s) => {
-        if (!cancelled) set({ suggestions: s });
+        if (!cancelled) set({ advice: s });
       })
       .catch(fail);
     return () => {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [suggestionsKey]);
+  }, [adviceKey]);
 
   const inspect = useCallback(
-    (playerId: string | null) => set({ inspectedId: playerId, justDrafted: null }),
+    (pid: string | null) => set({ inspectedId: pid, justPicked: null }),
     [set],
   );
 
-  const dismissJustDrafted = useCallback(() => set({ justDrafted: null }), [set]);
+  const dismissJustPicked = useCallback(() => set({ justPicked: null }), [set]);
 
   const setBoardPrefs = useCallback(
     (patch: Partial<BoardPrefs>) =>
@@ -200,51 +200,51 @@ export function useSession() {
     [],
   );
 
-  const enterDraft = useCallback(
-    (v: DraftView) => {
-      localStorage.setItem(LAST_DRAFT_KEY, v.id ?? "");
+  const enterSession = useCallback(
+    (v: SessionView) => {
+      localStorage.setItem(LAST_SESSION_KEY, v.id ?? "");
       set({
         view: v,
-        phase: "draft",
+        phase: "room",
         inspectedId: null,
-        viewingRun: null,
+        viewingResult: null,
         browseAll: false,
-        screen: "draft",
+        screen: "room",
         boardPrefs: loadBoardPrefs(v.id),
         turnArrivedAt: null,
-        justDrafted: null,
+        justPicked: null,
       });
     },
     [set],
   );
 
-  const startDraft = useCallback(
-    (seed: string, userSlot: number) => {
-      api.createDraft(seed, userSlot).then(enterDraft).catch(fail);
+  const create = useCallback(
+    (seed: string, seat: number) => {
+      api.createSession(seed, seat).then(enterSession).catch(fail);
     },
-    [enterDraft, fail],
+    [enterSession, fail],
   );
 
-  const resumeDraft = useCallback(
+  const open = useCallback(
     (id: string) => {
-      api.getDraft(id).then(enterDraft).catch(fail);
+      api.getSession(id).then(enterSession).catch(fail);
     },
-    [enterDraft, fail],
+    [enterSession, fail],
   );
 
-  const userPick = useCallback(
-    (playerId: string) => {
+  const pick = useCallback(
+    (pid: string) => {
       const v = state.view;
       if (!v?.id) return;
-      const pickIndex = v.pickIndex;
+      const at = v.atPick;
       api
-        .pick(v.id, playerId)
+        .pick(v.id, pid)
         .then((nv) =>
           set({
             view: nv,
             inspectedId: null,
             browseAll: false,
-            justDrafted: { playerId, pickIndex },
+            justPicked: { pid, at },
           }),
         )
         .catch(fail);
@@ -254,21 +254,21 @@ export function useSession() {
 
   /** Draft a player and start from the plan his build is built around; the
    *  roster keeps adjusting it from here (auto mode). */
-  const draftWithPunt = useCallback(
-    (playerId: string, punt: Category | null) => {
+  const pickWithConcede = useCallback(
+    (pid: string, concede: Category | null) => {
       const v = state.view;
       if (!v?.id) return;
       const id = v.id;
-      const pickIndex = v.pickIndex;
+      const at = v.atPick;
       api
-        .setPunts(id, punt ? [punt] : [], "auto")
-        .then(() => api.pick(id, playerId))
+        .setConcedes(id, concede ? [concede] : [], "auto")
+        .then(() => api.pick(id, pid))
         .then((nv) =>
           set({
             view: nv,
             inspectedId: null,
             browseAll: false,
-            justDrafted: { playerId, pickIndex },
+            justPicked: { pid, at },
           }),
         )
         .catch(fail);
@@ -288,23 +288,23 @@ export function useSession() {
 
   const setSpeed = useCallback((speed: Speed) => set({ speed }), [set]);
 
-  const togglePunt = useCallback(
+  const toggleConcede = useCallback(
     (category: Category) => {
       const v = state.view;
       if (!v?.id) return;
-      const punts = v.userPunts.includes(category)
-        ? v.userPunts.filter((c) => c !== category)
-        : [...v.userPunts, category];
-      api.setPunts(v.id, punts).then((nv) => set({ view: nv })).catch(fail);
+      const concedes = v.concedes.includes(category)
+        ? v.concedes.filter((c) => c !== category)
+        : [...v.concedes, category];
+      api.setConcedes(v.id, concedes).then((nv) => set({ view: nv })).catch(fail);
     },
     [state.view, set, fail],
   );
 
-  /** Hand the punt decision back to the roster. */
-  const autoPunts = useCallback(() => {
+  /** Hand the concede decision back to the roster. */
+  const autoConcedes = useCallback(() => {
     const v = state.view;
     if (!v?.id) return;
-    api.setPunts(v.id, v.userPunts, "auto").then((nv) => set({ view: nv })).catch(fail);
+    api.setConcedes(v.id, v.concedes, "auto").then((nv) => set({ view: nv })).catch(fail);
   }, [state.view, set, fail]);
 
   const setBrowseAll = useCallback(
@@ -318,58 +318,58 @@ export function useSession() {
   );
 
   const rewind = useCallback(
-    (pickIndex: number) => {
+    (at: number) => {
       const v = state.view;
       if (!v?.id) return;
       api
-        .rewind(v.id, pickIndex)
+        .rewind(v.id, at)
         .then((nv) => {
           set({
             view: nv,
             inspectedId: null,
-            viewingRun: null,
-            viewingRunId: null,
+            viewingResult: null,
+            viewingResultId: null,
             turnArrivedAt: null,
-            justDrafted: null,
+            justPicked: null,
           });
-          api.listRuns().then((r) => set({ runs: r })).catch(() => {});
+          api.listResults().then((r) => set({ results: r })).catch(() => {});
         })
         .catch(fail);
     },
     [state.view, set, fail],
   );
 
-  const viewRun = useCallback(
-    (runId: string | null) => {
-      if (runId === null) {
-        set({ viewingRun: null, viewingRunId: null });
+  const viewResult = useCallback(
+    (resultId: string | null) => {
+      if (resultId === null) {
+        set({ viewingResult: null, viewingResultId: null });
         return;
       }
       api
-        .getRun(runId)
-        .then((v) => set({ viewingRun: v, viewingRunId: runId }))
+        .getResult(resultId)
+        .then((v) => set({ viewingResult: v, viewingResultId: resultId }))
         .catch(fail);
     },
     [set, fail],
   );
 
-  /** Open a saved run straight from setup. Runs are snapshots of finished
-   *  drafts with no draft id, so the report shows them read-only. */
-  const openRun = useCallback(
-    (runId: string) => {
+  /** Open a saved result straight from setup. Results are snapshots of
+   *  finished drafts with no session id, so the report shows them read-only. */
+  const openResult = useCallback(
+    (resultId: string) => {
       api
-        .getRun(runId)
+        .getResult(resultId)
         .then((v) =>
           set({
             view: v,
-            phase: "draft",
-            viewingRun: v,
-            viewingRunId: runId,
+            phase: "room",
+            viewingResult: v,
+            viewingResultId: resultId,
             inspectedId: null,
             browseAll: false,
-            screen: "draft",
+            screen: "room",
             turnArrivedAt: null,
-            justDrafted: null,
+            justPicked: null,
           }),
         )
         .catch(fail);
@@ -382,13 +382,13 @@ export function useSession() {
       phase: "setup",
       view: null,
       inspectedId: null,
-      viewingRun: null,
-      screen: "draft",
+      viewingResult: null,
+      screen: "room",
       turnArrivedAt: null,
-      justDrafted: null,
+      justPicked: null,
     });
-    api.listDrafts().then((d) => set({ savedDrafts: d })).catch(() => {});
-    api.listRuns().then((r) => set({ runs: r })).catch(() => {});
+    api.listSessions().then((d) => set({ savedSessions: d })).catch(() => {});
+    api.listResults().then((r) => set({ results: r })).catch(() => {});
   }, [set]);
 
   const clearError = useCallback(() => set({ error: null }), [set]);
@@ -397,46 +397,46 @@ export function useSession() {
     () => ({
       state,
       actions: {
-        startDraft,
-        resumeDraft,
-        userPick,
-        draftWithPunt,
-        autoPunts,
+        create,
+        open,
+        pick,
+        pickWithConcede,
+        autoConcedes,
         pause,
         resume,
         setSpeed,
-        togglePunt,
+        toggleConcede,
         setBrowseAll,
         setScreen,
         inspect,
-        dismissJustDrafted,
+        dismissJustPicked,
         setBoardPrefs,
         rewind,
-        viewRun,
-        openRun,
+        viewResult,
+        openResult,
         reset,
         clearError,
       },
     }),
     [
       state,
-      startDraft,
-      resumeDraft,
-      userPick,
-      draftWithPunt,
-      autoPunts,
+      create,
+      open,
+      pick,
+      pickWithConcede,
+      autoConcedes,
       pause,
       resume,
       setSpeed,
-      togglePunt,
+      toggleConcede,
       setBrowseAll,
       setScreen,
       inspect,
-      dismissJustDrafted,
+      dismissJustPicked,
       setBoardPrefs,
       rewind,
-      viewRun,
-      openRun,
+      viewResult,
+      openResult,
       reset,
       clearError,
     ],

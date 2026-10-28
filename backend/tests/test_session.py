@@ -3,20 +3,20 @@ reproducibility, serialization."""
 
 import pytest
 
-from app.engine.bots import choose_bot_pick
-from app.engine.draft import (
-    apply_pick,
-    available_players,
-    create_draft,
-    current_team_id,
-    deserialize_draft,
-    is_complete,
-    is_user_turn,
-    serialize_draft,
+from lab.domain.autopilot import autopilot_pick
+from lab.domain.session import (
+    record_pick,
+    undrafted_players,
+    open_session,
+    on_clock,
+    session_from,
+    draft_done,
+    user_turn,
+    session_dict,
 )
-from app.engine.snake import build_snake_order
+from lab.domain.snake import build_snake_order
 
-from .conftest import NUM_TEAMS, make_config, run_draft
+from .conftest import LEAGUE_SIZE, make_config, run_draft
 
 
 class TestSnakeOrder:
@@ -33,56 +33,56 @@ class TestSnakeOrder:
 class TestDraftEngine:
     def test_full_draft_156_unique_picks(self, pool, values):
         state = run_draft(make_config(), pool, values)
-        assert is_complete(state)
-        assert len(state.picks) == 156
-        ids = {p.player_id for p in state.picks}
+        assert draft_done(state)
+        assert len(state.selections) == 156
+        ids = {p.pid for p in state.selections}
         assert len(ids) == 156
-        for roster in state.rosters:
+        for roster in state.squads:
             assert len(roster) == 13
-        for i, pick in enumerate(state.picks):
+        for i, pick in enumerate(state.selections):
             assert pick.index == i
-            assert pick.team_id == state.order[i]
-            assert pick.round == i // NUM_TEAMS + 1
+            assert pick.squad == state.order[i]
+            assert pick.round == i // LEAGUE_SIZE + 1
 
     def test_rejects_illegal_picks(self, pool, values):
-        state = create_draft(make_config())
-        first = choose_bot_pick(state, pool, values, 0)
-        state = apply_pick(state, pool, first)
+        state = open_session(make_config())
+        first = autopilot_pick(state, pool, values, 0)
+        state = record_pick(state, pool, first)
         with pytest.raises(ValueError, match="already drafted"):
-            apply_pick(state, pool, first)
+            record_pick(state, pool, first)
         with pytest.raises(ValueError, match="Unknown player"):
-            apply_pick(state, pool, "not-a-player")
+            record_pick(state, pool, "not-a-player")
 
     def test_reproducible_same_seed(self, pool, values):
-        a = run_draft(make_config(user_slot=3), pool, values)
-        b = run_draft(make_config(user_slot=3), pool, values)
-        assert serialize_draft(a) == serialize_draft(b)
+        a = run_draft(make_config(seat=3), pool, values)
+        b = run_draft(make_config(seat=3), pool, values)
+        assert session_dict(a) == session_dict(b)
 
     def test_different_seeds_differ(self, pool, values):
         a = run_draft(make_config(seed="seed-a"), pool, values)
         b = run_draft(make_config(seed="seed-b"), pool, values)
-        assert [p.player_id for p in a.picks] != [
-            p.player_id for p in b.picks
+        assert [p.pid for p in a.selections] != [
+            p.pid for p in b.selections
         ]
 
     def test_serialize_restore_roundtrip(self, pool, values):
-        state = create_draft(make_config(user_slot=5))
+        state = open_session(make_config(seat=5))
         for _ in range(40):
-            t = current_team_id(state)
-            pid = choose_bot_pick(state, pool, values, t)
-            state = apply_pick(state, pool, pid)
-        restored = deserialize_draft(serialize_draft(state), pool)
+            t = on_clock(state)
+            pid = autopilot_pick(state, pool, values, t)
+            state = record_pick(state, pool, pid)
+        restored = session_from(session_dict(state), pool)
         assert restored == state
 
-    def test_user_slot_positioning(self, pool, values):
-        state = create_draft(make_config(user_slot=11))
-        assert not is_user_turn(state)
+    def test_seat_positioning(self, pool, values):
+        state = open_session(make_config(seat=11))
+        assert not user_turn(state)
         assert list(state.order).index(11) == 11
         assert list(state.order).index(11, 12) == 12  # snake wrap
 
     def test_available_pool_shrinks(self, pool, values):
-        state = create_draft(make_config())
-        before = len(available_players(state, pool))
-        pid = choose_bot_pick(state, pool, values, 0)
-        state = apply_pick(state, pool, pid)
-        assert len(available_players(state, pool)) == before - 1
+        state = open_session(make_config())
+        before = len(undrafted_players(state, pool))
+        pid = autopilot_pick(state, pool, values, 0)
+        state = record_pick(state, pool, pid)
+        assert len(undrafted_players(state, pool)) == before - 1

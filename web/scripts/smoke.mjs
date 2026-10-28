@@ -102,14 +102,14 @@ const myRoster = () => count(".team-panel .roster li:not(.now):not(.empty)");
 // ---- 1. Setup ----
 await send("Page.navigate", { url: URL });
 await sleep(2500);
-log("setup screen renders", await bodyHas("Choose your draft slot"));
+log("setup screen renders", await bodyHas("Choose your session slot"));
 
-// pick slot 4 (index 3) so bots pick first
+// pick slot 4 (index 3) so rivals pick first
 await evalJs(`document.querySelectorAll('.slot-grid .slot')[3].click()`);
 await sleep(600);
 log("opponents preview shown", await bodyHas("Your opponents"));
 await evalJs(
-  `[...document.querySelectorAll('button')].find(b => b.innerText.startsWith('Start draft'))?.click()`,
+  `[...document.querySelectorAll('button')].find(b => b.innerText.startsWith('Start session'))?.click()`,
 );
 await sleep(800);
 await setSpeed("instant");
@@ -131,17 +131,17 @@ await evalJs(`document.querySelector('.build-detail .btn.primary')?.click()`);
 
 // ---- 4. Draft room ----
 log("draft room renders", await waitFor(() => bodyHas("Available players")));
-log("build banner shows punt", await bodyHas("Your build"));
+log("build banner shows concede", await bodyHas("Your build"));
 await waitFor(() => bodyHas("Draft ") && evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
 log("roster has 2 players", (await myRoster()) === 2);
-// Table state survives the bot run and the board holds while they pick.
+// Table state survives the rival run and the board holds while rivals pick.
 await evalJs(`document.querySelector('[aria-label="Sort by Value"]')?.click()`);
 await evalJs(`document.querySelector('.player-panel .btn.primary')?.click()`);
 await sleep(120);
-log("taken rows stay in place during the bot run", await evalJs(`document.querySelectorAll('.fit-table tr.taken').length > 0`));
-log("board held while bots pick", await bodyHas("Board held"));
+log("taken rows stay in place during the rival run", await evalJs(`document.querySelectorAll('.fit-table tr.taken').length > 0`));
+log("board held while rivals pick", await bodyHas("Board held"));
 await waitFor(() => evalJs(`!!document.querySelector('.player-panel .btn.primary:not(:disabled)')`));
-log("sort survives the bot run", await evalJs(`document.querySelector('.sort-btn.on')?.innerText.trim() === 'Value'`));
+log("sort survives the rival run", await evalJs(`document.querySelector('.sort-btn.on')?.innerText.trim() === 'Value'`));
 log("taken rows settle on your turn", await evalJs(`document.querySelectorAll('.fit-table tr.taken').length === 0`));
 await evalJs(`document.querySelector('[aria-label="Sort by Fit"]')?.click()`);
 
@@ -150,7 +150,7 @@ await sleep(500);
 await send("Page.navigate", { url: URL });
 await sleep(1800);
 log("resume offered after reload", await bodyHas("Pick up where you left off"));
-await clickText("Resume draft");
+await clickText("Resume session");
 await waitFor(() => bodyHas("Available players"));
 log("roster restored", (await myRoster()) === 3);
 
@@ -180,13 +180,13 @@ log("draft completes", await bodyHas("Draft complete"));
 log("paper record shown", await evalJs(`!!document.querySelector('.recap-num.record')`));
 log("week-to-week win rate shown next to it", await evalJs(`/^\\d+%$/.test(document.querySelectorAll('.recap-num')[1]?.innerText ?? '')`));
 log("standings carry both columns", await bodyHas("Category standings") && await bodyHas("Week to week"));
-log("punted category keeps its rank", await evalJs(`[...document.querySelectorAll('.standings-table .rank-cell.punted')].every(c => /^\\d+$/.test(c.innerText))`));
-log("matchup for every opponent", (await count('.matchup-row')) === 11);
-log("matchup detail explains with players", await evalJs(`document.querySelectorAll('.tape .tape-row').length === 9 && document.querySelectorAll('.tape .driver').length >= 9`));
-const firstDetail = await evalJs(`document.querySelector('.matchup-detail h3')?.innerText`);
-await evalJs(`document.querySelectorAll('.matchup-row')[3]?.click()`);
+log("conceded category keeps its rank", await evalJs(`[...document.querySelectorAll('.standings-table .rank-cell.conceded')].every(c => /^\\d+$/.test(c.innerText))`));
+log("matchup for every opponent", (await count('.duel-row')) === 11);
+log("matchup detail explains with players", await evalJs(`document.querySelectorAll('.tape .tape-row').length === 9 && document.querySelectorAll('.tape .decider').length >= 9`));
+const firstDetail = await evalJs(`document.querySelector('.duel-detail h3')?.innerText`);
+await evalJs(`document.querySelectorAll('.duel-row')[3]?.click()`);
 await sleep(200);
-log("picking an opponent switches the detail", firstDetail !== (await evalJs(`document.querySelector('.matchup-detail h3')?.innerText`)));
+log("picking an opponent switches the detail", firstDetail !== (await evalJs(`document.querySelector('.duel-detail h3')?.innerText`)));
 log("pick history shown", (await count(".picks-card .roster li")) === 13);
 
 // ---- 8. Rewind ----

@@ -1,22 +1,22 @@
-"""Milestone 3 acceptance: z-scores, roster aggregation, punt rankings."""
+"""Milestone 3 acceptance: z-scores, roster aggregation, concede rankings."""
 
-from app.analysis.category_weights import needs_weights
-from app.analysis.player_values import (
-    UNIFORM_WEIGHTS,
-    compute_player_values,
-    punt_weights,
-    score_player,
+from lab.metrics.weighting import shortfall_weights
+from lab.metrics.ratings import (
+    EVEN_WEIGHTS,
+    score_pool,
+    concede_weights,
+    line_score,
 )
-from app.analysis.roster_profile import build_roster_profile, rank_teams
-from app.data.pool import PLAYERS
-from app.engine.types import CATEGORIES
+from lab.metrics.profile import roster_line, cat_ranks
+from lab.pool.loader import PLAYERS
+from lab.domain.model import CATEGORIES
 
 import pytest
 
 
 @pytest.fixture(scope="module")
 def values_and_pool():
-    return compute_player_values(PLAYERS)
+    return score_pool(PLAYERS)
 
 
 def top_by_score(values, weights, n=10):
@@ -24,7 +24,7 @@ def top_by_score(values, weights, n=10):
         p.id
         for p in sorted(
             PLAYERS,
-            key=lambda p: score_player(values[p.id], weights),
+            key=lambda p: line_score(values[p.id], weights),
             reverse=True,
         )[:n]
     ]
@@ -39,22 +39,23 @@ class TestPlayerValues:
                 assert z[c] == z[c]  # not NaN
 
     def test_top_ranked_are_plausible(self, values_and_pool):
+        """The top of the board is star production: heavy minutes and
+        franchise counting lines, not specialists."""
         values, _ = values_and_pool
-        top = {
-            PLAYERS[[p.id for p in PLAYERS].index(pid)].name
-            for pid in top_by_score(values, UNIFORM_WEIGHTS, 15)
-        }
-        studs = {
-            "Nikola Jokić", "Shai Gilgeous-Alexander", "Victor Wembanyama",
-            "Luka Dončić", "Giannis Antetokounmpo", "Cade Cunningham",
-            "Jalen Johnson", "Josh Giddey", "Tyrese Maxey",
-        }
-        assert len(top & studs) >= 3
+        top = [
+            p for p in sorted(
+                PLAYERS, key=lambda p: line_score(values[p.id], EVEN_WEIGHTS),
+                reverse=True,
+            )[:15]
+        ]
+        assert all(p.mpg >= 25 for p in top)
+        assert sum(p.pts + p.reb + p.ast for p in top) / len(top) > 30
 
     def test_turnovers_reversed(self, values_and_pool):
         values, _ = values_and_pool
-        high_to = next(p for p in PLAYERS if p.name.endswith("Westbrook"))
-        careful = next(p for p in PLAYERS if p.tov <= 1.0 and p.min > 20)
+        rotation = [p for p in PLAYERS if p.mpg > 20]
+        high_to = max(rotation, key=lambda p: p.tov)
+        careful = min(rotation, key=lambda p: p.tov)
         assert values[careful.id]["TO"] > values[high_to.id]["TO"]
 
     def test_fg_pct_uses_volume(self, values_and_pool):
@@ -64,10 +65,10 @@ class TestPlayerValues:
 
     def test_punt_weights_change_ranking_not_stats(self, values_and_pool):
         values, _ = values_and_pool
-        a = top_by_score(values, UNIFORM_WEIGHTS, 20)
-        b = top_by_score(values, punt_weights({"FT%"}), 20)
+        a = top_by_score(values, EVEN_WEIGHTS, 20)
+        b = top_by_score(values, concede_weights({"FT%"}), 20)
         assert a != b
-        w = punt_weights({"FT%"})
+        w = concede_weights({"FT%"})
         assert w["FT%"] == 0.0
         assert all(w[c] == 1.0 for c in CATEGORIES if c != "FT%")
 
@@ -76,7 +77,7 @@ class TestRosterProfile:
     def test_aggregates_and_recomputes_percentages(self, values_and_pool):
         values, _ = values_and_pool
         roster = PLAYERS[:3]
-        prof = build_roster_profile(roster, values)
+        prof = roster_line(roster, values)
         assert prof.size == 3
         assert prof.totals["pts"] == pytest.approx(sum(p.pts for p in roster))
         expected_fg = sum(p.fgm for p in roster) / sum(p.fga for p in roster)
@@ -84,8 +85,8 @@ class TestRosterProfile:
 
     def test_per_slot_fair_comparison(self, values_and_pool):
         values, _ = values_and_pool
-        strong = build_roster_profile(PLAYERS[:5], values)
-        weak = build_roster_profile(PLAYERS[100:113], values)
+        strong = roster_line(PLAYERS[:5], values)
+        weak = roster_line(PLAYERS[100:113], values)
         # 5 great players beat 13 mediocre ones per slot, lose on totals.
         assert strong.per_slot_z["PTS"] > weak.per_slot_z["PTS"]
         assert weak.totals["pts"] > strong.totals["pts"]
@@ -93,10 +94,10 @@ class TestRosterProfile:
     def test_rank_teams(self, values_and_pool):
         values, _ = values_and_pool
         profiles = [
-            build_roster_profile(PLAYERS[:13], values),
-            build_roster_profile(PLAYERS[13:26], values),
+            roster_line(PLAYERS[:13], values),
+            roster_line(PLAYERS[13:26], values),
         ]
-        ranks = rank_teams(profiles)
+        ranks = cat_ranks(profiles)
         for c in CATEGORIES:
             assert sorted(ranks[c]) == [1, 2]
 
@@ -104,9 +105,9 @@ class TestRosterProfile:
 class TestNeedsWeights:
     def test_capped_for_extreme_deficits(self, values_and_pool):
         values, _ = values_and_pool
-        empty = build_roster_profile([], values)
-        full = build_roster_profile(PLAYERS[:13], values)
-        w = needs_weights([empty, full], 1)
+        empty = roster_line([], values)
+        full = roster_line(PLAYERS[:13], values)
+        w = shortfall_weights([empty, full], 1)
         for c in CATEGORIES:
             assert 0.6 <= w[c] <= 2.0
 
@@ -123,4 +124,4 @@ class TestDatasetIntegrity:
             assert p.fga > 0
             assert len(p.positions) > 0
             # pts ≈ 2*fgm + tpm + ftm (within rounding of per-game averages)
-            assert abs(p.pts - (2 * p.fgm + p.tpm + p.ftm)) < 1.5
+            assert abs(p.pts - (2 * p.fgm + p.threes + p.ftm)) < 1.5

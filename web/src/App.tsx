@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { useSession, userPickCount } from "./state/useSession";
-import { SetupScreen } from "./components/SetupScreen";
-import { DraftHeader, PickFeed } from "./components/DraftHeader";
-import { BuildScreen } from "./components/BuildScreen";
-import { DraftRoom } from "./components/DraftRoom";
-import { DraftReport } from "./components/DraftReport";
-import { TeamsScreen } from "./components/TeamsScreen";
+import { useSession, picksMade } from "./state/session";
+import { Lobby } from "./components/Lobby";
+import { TopBar, PickFeed } from "./components/TopBar";
+import { Builds } from "./components/Builds";
+import { Room } from "./components/Room";
+import { Report } from "./components/Report";
+import { League } from "./components/League";
 
 const TITLE = "Fantasy Draft Lab — Draft Simulator";
 
@@ -18,21 +18,21 @@ export default function App() {
     playerMap,
     speed,
     inspectedId,
-    suggestions,
+    advice,
     browseAll,
     screen,
-    savedDrafts,
-    runs,
-    viewingRun,
-    viewingRunId,
+    savedSessions,
+    results,
+    viewingResult,
+    viewingResultId,
     boardPrefs,
     turnArrivedAt,
-    justDrafted,
+    justPicked,
     error,
   } = state;
 
   // The tab says so when it's your pick — the draft keeps going while you're elsewhere.
-  const yourTurn = phase === "draft" && !!view && view.isUserTurn && !view.complete;
+  const yourTurn = phase === "room" && !!view && view.yourPick && !view.complete;
   useEffect(() => {
     document.title = yourTurn ? `● Your pick — ${TITLE}` : TITLE;
     return () => {
@@ -42,12 +42,12 @@ export default function App() {
 
   // Which body is showing. A change of phase (build → room, room → report)
   // fades the body in and starts it at the top; picks inside a phase don't.
-  const buildTurn = view && view.isUserTurn && !browseAll ? userPickCount(view) : null;
+  const buildTurn = view && view.yourPick && !browseAll ? picksMade(view) : null;
   const phaseKey =
-    phase !== "draft" || !view
+    phase !== "room" || !view
       ? "setup"
-      : screen === "teams"
-        ? "teams"
+      : screen === "league"
+        ? "league"
         : view.complete
           ? "report"
           : buildTurn === 0 || buildTurn === 1
@@ -67,64 +67,64 @@ export default function App() {
     return (
       <>
         {errorBanner}
-        <SetupScreen
+        <Lobby
           playerCount={players?.length ?? 0}
-          savedDrafts={savedDrafts}
-          runs={runs}
-          onStart={actions.startDraft}
-          onResume={actions.resumeDraft}
-          onOpenRun={actions.openRun}
+          savedSessions={savedSessions}
+          results={results}
+          onStart={actions.create}
+          onResume={actions.open}
+          onOpenResult={actions.openResult}
         />
       </>
     );
   }
 
   // The user's first two turns get the build screens unless they chose to browse.
-  const ready = suggestions && suggestions.stage !== null ? suggestions : null;
+  const ready = advice && advice.stage !== null ? advice : null;
 
   let body;
-  if (phaseKey === "teams") {
-    body = <TeamsScreen view={viewingRun ?? view} playerMap={playerMap} />;
+  if (phaseKey === "league") {
+    body = <League view={viewingResult ?? view} playerMap={playerMap} />;
   } else if (phaseKey === "report") {
     body = (
-      <DraftReport
-        view={viewingRun ?? view}
-        isLive={!viewingRun && !!view.id}
+      <Report
+        view={viewingResult ?? view}
+        isLive={!viewingResult && !!view.id}
         playerMap={playerMap}
-        runs={runs}
-        selectedRun={viewingRunId}
-        onSelectRun={actions.viewRun}
-        onNewDraft={actions.reset}
+        results={results}
+        selectedResult={viewingResultId}
+        onSelectResult={actions.viewResult}
+        onNew={actions.reset}
         onRewind={actions.rewind}
       />
     );
   } else if (phaseKey === "build") {
     body = (
-      <BuildScreen
-        key={view.pickIndex}
+      <Builds
+        key={view.atPick}
         view={view}
         playerMap={playerMap}
         result={ready?.stage === (buildTurn === 0 ? "first" : "second") ? ready : null}
-        onDraft={actions.draftWithPunt}
+        onPick={actions.pickWithConcede}
         onBrowse={() => actions.setBrowseAll(true)}
       />
     );
   } else {
     body = (
-      <DraftRoom
+      <Room
         view={view}
         playerMap={playerMap}
         inspectedId={inspectedId}
-        justDrafted={justDrafted}
+        justPicked={justPicked}
         prefs={boardPrefs}
         onPrefs={actions.setBoardPrefs}
         onInspect={actions.inspect}
-        onDismissJustDrafted={actions.dismissJustDrafted}
-        onDraft={actions.userPick}
-        onTogglePunt={actions.togglePunt}
-        onAutoPunts={actions.autoPunts}
-        onBackToBuild={
-          view.isUserTurn && browseAll && userPickCount(view) < 2
+        onDismiss={actions.dismissJustPicked}
+        onPick={actions.pick}
+        onConcede={actions.toggleConcede}
+        onAuto={actions.autoConcedes}
+        onBack={
+          view.yourPick && browseAll && picksMade(view) < 2
             ? () => actions.setBrowseAll(false)
             : null
         }
@@ -135,7 +135,7 @@ export default function App() {
   return (
     <div className={phaseKey === "room" || phaseKey === "build" ? "page page-fixed" : "page"}>
       {errorBanner}
-      <DraftHeader
+      <TopBar
         view={view}
         speed={speed}
         screen={screen}

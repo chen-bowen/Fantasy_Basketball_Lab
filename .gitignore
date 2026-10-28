@@ -65,4 +65,4 @@ yarn-error.log*
 *.sqlite3
 
 # Fantasy draft lab runtime state
-backend/app/store/
+backend/lab/store/
