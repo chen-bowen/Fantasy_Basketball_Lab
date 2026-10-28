@@ -20,6 +20,8 @@ from .analysis.fit import (
     settled_categories,
     window_max_rank,
 )
+from .analysis.matchups import matchup_breakdown, week_pcts
+from .analysis.player_values import PoolStats
 from .analysis.punt_plan import suggest_punts
 from .analysis.roster_profile import build_roster_profile, rank_teams
 from .analysis.standings import records
@@ -96,6 +98,7 @@ def draft_view(
     punt_mode: str = "auto",
     lookahead: dict[str, Any] | None = None,
     market_rank: dict[str, int] | None = None,
+    pool_stats: PoolStats | None = None,
 ) -> dict[str, Any]:
     profiles = [
         build_roster_profile([pool[i] for i in roster], values)
@@ -123,6 +126,28 @@ def draft_view(
         candidate_window(list(fit), values, pick_index + 1, n, market_rank), values, fit_w
     )
     user_ranks = {c: ranks[c][state.config.user_slot] for c in CATEGORIES}
+    complete = is_complete(state)
+    # The week-to-week view (analysis/matchups.py): every team's win rate
+    # over a round against the league, and the user's week against each
+    # team — the latter only once rosters are complete.
+    punts_by_team = [
+        set(user_punts) if t == state.config.user_slot
+        else {s.punt_category} if s.kind == "punt" and s.punt_category else set()
+        for t, s in enumerate(state.config.bot_specs)
+    ]
+    matchups = (
+        matchup_breakdown(
+            state.config.user_slot,
+            profiles,
+            ranks,
+            [[pool[i] for i in r] for r in state.rosters],
+            values,
+            pool_stats,
+            punts_by_team,
+        )
+        if complete
+        else None
+    )
     return {
         "id": draft_id,
         "status": state.status,
@@ -139,7 +164,7 @@ def draft_view(
         ),
         "onClock": current_team_id(state),
         "isUserTurn": is_user_turn(state) and state.status == "in_progress",
-        "complete": is_complete(state),
+        "complete": complete,
         "picks": [p.to_dict() for p in state.picks],
         "rosters": [list(r) for r in state.rosters],
         "draftedIds": sorted(drafted),
@@ -163,7 +188,9 @@ def draft_view(
         },
         "profiles": [profile_to_json(p) for p in profiles],
         "ranks": ranks,
-        "records": records(ranks),
+        "records": records(ranks),  # on paper: ranks higher in more categories
+        "weekPct": week_pcts(profiles),  # week to week: share of matchups won in a typical week
+        "matchups": matchups,
         "userPunts": list(user_punts),
         "puntMode": punt_mode,  # "auto": punts follow the roster; "manual": set by hand
         "puntPlan": punt_plan,  # what the roster says to punt, and why

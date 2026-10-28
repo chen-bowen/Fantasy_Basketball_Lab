@@ -16,7 +16,7 @@ from app.analysis.fit import (
     settled_categories,
     window_max_rank,
 )
-from app.analysis.market import MARKET_WEIGHTS
+from app.analysis.standings import H2H_WEIGHTS
 from app.analysis.player_values import score_player
 from app.analysis.roster_profile import build_roster_profile, rank_teams
 from app.engine.bots import choose_bot_pick
@@ -117,20 +117,23 @@ def test_inside_the_window_order_is_by_fit_not_market(pool, values):
     assert reordered > 0
 
 
-def test_fit_is_market_value_on_an_empty_roster(pool, values):
-    """Same yardstick as the Value column: Fit deviates from it only for
-    what this roster needs, and there is nothing to need yet."""
+def test_fit_is_head_to_head_worth_on_an_empty_roster(pool, values):
+    """With nothing drafted, Fit is what a z-unit is worth toward winning a
+    week (1 / noise): it deviates from that only for what this roster
+    needs, and there is nothing to need yet."""
     state = create_draft(make_config(user_slot=0, seed="empty"))
     w, swing = fit_shape(_profiles(state, pool, values), 0, set(), ROSTER_SIZE)
-    assert w == MARKET_WEIGHTS
+    assert w == H2H_WEIGHTS
+    assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 1e-9  # on the market's scale
+    assert w["PTS"] > w["STL"] and w["TO"] > w["FT%"]  # reliable categories count most
     assert needed_categories(swing) == [] and settled_categories(swing) == []
     w = fit_weights(_profiles(state, pool, values), 0, {"TO"}, ROSTER_SIZE)
     assert w["TO"] == 0.0
-    rest = {c: w[c] / MARKET_WEIGHTS[c] for c in CATEGORIES if c != "TO"}
-    assert max(rest.values()) - min(rest.values()) < 1e-9  # market shape, rescaled
+    rest = {c: w[c] / H2H_WEIGHTS[c] for c in CATEGORIES if c != "TO"}
+    assert max(rest.values()) - min(rest.values()) < 1e-9  # same shape, rescaled
 
 
-def test_fit_is_close_to_market_value_after_one_pick(pool, values):
+def test_fit_is_close_to_its_base_after_one_pick(pool, values):
     """One player is not a team shape: nothing is settled, so Fit doesn't
     swing to the categories he happens to lack."""
     state = create_draft(make_config(user_slot=0, seed="one"))
@@ -142,7 +145,7 @@ def test_fit_is_close_to_market_value_after_one_pick(pool, values):
         state = apply_pick(state, pool, choose_bot_pick(state, pool, values, current_team_id(state)))
     profiles = _profiles(state, pool, values)
     w, swing = fit_shape(profiles, 0, set(), ROSTER_SIZE)
-    assert all(abs(w[c] / MARKET_WEIGHTS[c] - 1.0) < 0.1 for c in CATEGORIES)
+    assert all(abs(w[c] / H2H_WEIGHTS[c] - 1.0) < 0.1 for c in CATEGORIES)
     assert needed_categories(swing) == [] and settled_categories(swing) == []
     # The old deficit weighting would already be reaching for rebounds here.
     old = needs_weights(profiles, 0)
@@ -201,7 +204,7 @@ def test_fit_discounts_a_category_already_locked_up(pool, values):
     profiles = _profiles(state, pool, values)
     assert rank_teams(profiles)["REB"][slot] == 1
     w, swing = fit_shape(profiles, slot, set(), ROSTER_SIZE)
-    assert w["REB"] < MARKET_WEIGHTS["REB"] and "REB" in settled_categories(swing)
+    assert w["REB"] < H2H_WEIGHTS["REB"] and "REB" in settled_categories(swing)
     assert all(MIN_SWING <= swing[c] <= MAX_SWING for c in CATEGORIES)
     assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 1e-9  # on the market's scale
 
@@ -215,11 +218,12 @@ def test_fit_weights_zero_punts_and_renormalize_the_rest(pool, values):
     assert abs(sum(rest) / len(rest) - 1.0) < 1e-9
 
 
-def test_scoresheet_arbitrage_no_longer_wins_the_sims(pool, values):
-    """A roster that hoards the noisy categories the room underpays for
-    (steals, FT%, turnovers) and concedes points is not a winner under
-    category-specific noise; the balanced Fit roster projects better."""
-    from app.analysis.player_values import UNIFORM_WEIGHTS
+def test_fit_beats_a_plain_scoresheet_draft(pool, values):
+    """Fit's shape term earns its keep: against the same bots, a roster
+    drafted by Fit projects more weekly wins than one that takes the best
+    plain z sum in the window every turn — and it gets there without
+    conceding points, which a uniform scoresheet weighting drifts into
+    because it prices every category the same however often it flips."""
     from app.analysis.standings import expected_wins
     from app.analysis.punt_plan import suggest_punts
     ranks = market_ranks(values)
@@ -247,11 +251,12 @@ def test_scoresheet_arbitrage_no_longer_wins_the_sims(pool, values):
     def fit(profiles, punts):
         return fit_weights(profiles, 3, punts, ROSTER_SIZE)
 
-    u = [play(s, 3, uniform) for s in ("arb-1", "arb-2", "arb-3")]
-    f = [play(s, 3, fit) for s in ("arb-1", "arb-2", "arb-3")]
-    assert sum(w for w, _ in f) / 3 > sum(w for w, _ in u) / 3
-    # The uniform roster is the arbitrage shape: elite in steals, nowhere in points.
-    assert sum(r["STL"][3] for _, r in u) / 3 < 5 and sum(r["PTS"][3] for _, r in u) / 3 > 8
+    seeds = ("arb-1", "arb-2", "arb-3", "arb-4")
+    u = [play(s, 3, uniform) for s in seeds]
+    f = [play(s, 3, fit) for s in seeds]
+    assert sum(w for w, _ in f) / len(seeds) > sum(w for w, _ in u) / len(seeds)
+    # The uniform roster drifts away from points; the Fit roster does not.
+    assert sum(r["PTS"][3] for _, r in f) / len(seeds) < sum(r["PTS"][3] for _, r in u) / len(seeds)
 
 
 def test_draft_view_exposes_candidates_in_fit_order(pool, values):

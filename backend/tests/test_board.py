@@ -86,20 +86,23 @@ def test_bot_strategies_build_on_market_weights():
         assert 0.6 * MARKET_WEIGHTS[c] <= w[c] <= 2.0 * MARKET_WEIGHTS[c]
 
 
-def test_user_fit_is_on_the_markets_yardstick():
-    """Fit and Value share one yardstick: with no roster Fit is market value,
-    and a roster's shape only scales each category's market weight. The
-    scoresheet's uniform weights would call a low-turnover 3-and-D guard a
-    better player than a star with an ugly FT% line — a roto valuation, not
-    a head-to-head one."""
+def test_user_fit_is_on_the_markets_scale_not_its_prices():
+    """Fit and Value share a scale (weights average 1.0) but not a price
+    list: with no roster Fit is what a z-unit is worth toward winning a
+    week, which counts turnovers and rebounds more than the draft table
+    does and steals and FT% less. The candidate window, not the weights,
+    is what keeps Fit from reaching for a specialist in round one."""
+    from app.analysis.standings import H2H_WEIGHTS
     values, _ = compute_player_values(PLAYERS)
     empty = [build_roster_profile([], values) for _ in range(NUM_TEAMS)]
-    assert fit_weights(empty, 0, set()) == MARKET_WEIGHTS
+    assert fit_weights(empty, 0, set()) == H2H_WEIGHTS
     assert fit_weights(empty, 0, set()) != UNIFORM_WEIGHTS
+    assert abs(sum(H2H_WEIGHTS.values()) / len(CATEGORIES) - 1.0) < 1e-9
+    assert H2H_WEIGHTS["TO"] > MARKET_WEIGHTS["TO"] and H2H_WEIGHTS["STL"] < 0.6
     full = list(empty)
     full[0] = build_roster_profile(PLAYERS[:5], values)
     w = fit_weights(full, 0, set())
-    assert all(0.4 * MARKET_WEIGHTS[c] <= w[c] <= 2.0 * MARKET_WEIGHTS[c] for c in CATEGORIES)
+    assert all(0.4 * H2H_WEIGHTS[c] <= w[c] <= 2.0 * H2H_WEIGHTS[c] for c in CATEGORIES)
     assert abs(sum(w.values()) / len(CATEGORIES) - 1.0) < 1e-9
 
 
@@ -110,9 +113,11 @@ def test_standings_noise_follows_category_reliability():
     from app.analysis.standings import CATEGORY_NOISE, NOISE, category_win_prob
     assert NOISE["PTS"] < NOISE["REB"] < NOISE["STL"]
     assert category_win_prob(0.3, NOISE["PTS"]) > 0.75 > category_win_prob(0.3, NOISE["FT%"])
-    # A z-unit is worth 1 / noise; on average that is still 1 / CATEGORY_NOISE.
-    worth = sum(1 / NOISE[c] for c in CATEGORIES) / len(CATEGORIES)
-    assert abs(worth - 1 / CATEGORY_NOISE) < 1e-9
+    # The fit is from game-level variance, not the market's punt discount:
+    # turnovers are a few per game but steady, so a TO lead is about as
+    # safe as a rebounding lead, and nowhere near as loose as steals.
+    assert NOISE["TO"] < NOISE["BLK"] < NOISE["STL"]
+    assert min(NOISE.values()) < CATEGORY_NOISE < max(NOISE.values())
 
 
 def test_pool_is_indexed_consistently():

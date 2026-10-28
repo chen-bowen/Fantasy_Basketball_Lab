@@ -59,12 +59,14 @@ backend/
     data/         pool.py (frozen pool loader) + players.json
     store.py      JSON-file persistence (sessions + saved runs)
     analysis/     … fit.py (needs-aware Fit) · standings.py (head-to-head records)
+                  · matchups.py (your week against each team, explained by players)
     suggestions.py  first/second-pick build options: every player in range,
                     by simulating the rest of the draft (process pool, cached
                     per draft position)
     views.py      DraftView serializer (state + derived analysis per response)
     main.py       FastAPI routes
   scripts/fetch_players.py   data pipeline
+  scripts/fit_market_weights.py · fit_category_noise.py   calibrations
   tests/          pytest suite
 ```
 
@@ -100,9 +102,10 @@ opt-in under `prefers-reduced-motion: no-preference`.
 **Fit** (in every DraftView as `fit`, with the recommended players in
 `candidates`) is a player's category z-scores weighted by what a z-unit in
 each category can still do for the user's head-to-head record, with
-punted categories zeroed. It starts from market value — the same
-yardstick as the Value column — and moves only with the roster's shape.
-Two rules keep it from wasting picks (`analysis/fit.py`):
+punted categories zeroed. It starts from what a z-unit is worth toward
+winning a week (`standings.H2H_WEIGHTS`, 1 / category noise) and moves
+only with the roster's shape. Two rules keep it from wasting picks
+(`analysis/fit.py`):
 
 - **Candidates belong at this pick.** Fit only recommends players whose
   market rank is within 1.5 rounds of the current pick (`fitWindow`; never
@@ -114,15 +117,17 @@ Two rules keep it from wasting picks (`analysis/fit.py`):
 - **Weights follow leverage, not deficit.** A category's weight is the
   marginal win probability of a z-unit there: the normal density of the
   projected end-of-draft gap against each opponent, divided by the
-  category's noise (the expected-wins model, tighter sigma), averaged
-  over opponents. The 1/noise factor is the market weight, so with an
-  empty roster Fit *is* market value; the density is a swing multiplier
-  (normalized to mean 1, clamped to [0.5, 1.6]) that raises categories
-  still up for grabs (`neededCategories`) and lowers ones the team has
-  locked up or can't catch (`settledCategories`). A roster hopeless in
-  steals is therefore not steered into steals specialists. The gap is
-  projected by the share of the roster drafted, so after one or two
-  picks nothing is settled and Fit is still essentially market value.
+  category's noise (the expected-wins model, wider sigma), averaged
+  over opponents. The 1/noise factor is the head-to-head worth, so with
+  an empty roster Fit *is* that worth — on the market's scale (weights
+  average 1) but not its price list: a turnover lead is about as safe
+  as a rebounding lead, whatever the draft table pays for it. The
+  density is a swing multiplier (normalized to mean 1, clamped to
+  [0.5, 1.6]) that raises categories still up for grabs
+  (`neededCategories`) and lowers ones the team has locked up or can't
+  catch (`settledCategories`). A roster hopeless in steals is therefore
+  not steered into steals specialists. The gap is projected by the share
+  of the roster drafted, so after one or two picks nothing is settled.
 
 **Build suggestions** fix
 the candidate pick(s), let every later user pick take the best Fit under
@@ -133,7 +138,10 @@ a probabilistic win (normal CDF of the per-slot z gap over the category's
 noise, `NOISE[c]`), so comfortable leads count for more than narrow ones
 and the estimate keeps resolving between good options — under the
 deterministic record a Fit-drafted team already shows 10–11 wins whatever
-its second pick is, and the ordering of options was noise.
+its second pick is, and the ordering of options was noise. The screens
+show it as a **win rate** — "wins 57% of weekly matchups, about 6–5 in a
+round against the league" — never as "6.3 wins": the same unit as the
+report's week-to-week view below.
 
 Every player in range is tested — the same candidate window the draft
 room uses — each with no punt and with the punts the roster-plus-him
@@ -173,6 +181,46 @@ every pick — a puntable category the team sits in the bottom third of is
 conceded, a punt is kept while the team is still weak there and replaced
 only once it isn't. Setting punts by hand switches to manual; `PUT
 /punts` with `mode: "auto"` hands the decision back.
+
+## The report: on paper vs. week to week
+
+The draft report (and any saved run opened from it) puts two records side
+by side, in the same unit, and explains the gap with players rather than
+probabilities (`analysis/matchups.py`, `matchups` + `weekPct` in the view):
+
+- **On paper** — `records`: you beat a team if you rank higher in more of
+  the 9 categories. Every lead counts the same, however small. 10–1.
+- **Week to week** — the chance of actually winning each matchup in a
+  typical week (`matchup_win_prob`, the model the build screens score
+  with), averaged over the 11 opponents: *wins 50% of matchups, about
+  6–5*. Both views get a league place, and the standings table carries
+  both columns, so a 50% that is 7th of 12 reads differently from one
+  that is 2nd.
+
+A short story under the numbers says why they differ — *9 of your 10
+paper wins are 5–4, and the leads that carry them are often toss-ups
+(FT%, AST, STL)* — and what a punt costs: *with FG% punted and REB and BLK
+against you most weeks, you need 5 of the other 6 every week.*
+
+**Your week against each team** lists the 11 opponents with their chance
+and, for the selected one, a tale of the tape: per-game roster totals for
+both teams (availability-adjusted the way the model is, so the numbers
+never contradict the labels), a label per category — **likely win /
+toss-up / likely loss**, at 60% bands on the rounded percent — and the
+players who decide it: the two best on the favoured side, one per side
+for a toss-up, the biggest turnover sources for TO. The verdict is one
+line in category names (*Edge: 3PM, AST, PTS, FT%, STL. Enough only if
+all 5 hold — STL is the thinnest*), and the chance of the week is always
+the verdict: five likely wins at 60–70% each are still a coin flip, so
+the text never promises more than the number. The category noise is
+untouched — a 217–213 lead in PTS is a toss-up while 28.8–14.3 in 3PM is
+a lock — and one fixed line says why steals, free throws and turnovers
+flip more often than points. A punted category keeps its rank everywhere
+(dashed mark), because you still finish somewhere in it.
+
+All of it is an equal-games comparison of drafted rosters, not a forecast:
+no NBA schedule, no later injuries, no lineup moves — and the report says
+so.
 
 ## Availability and injury risk
 
@@ -219,29 +267,42 @@ with the uniform weights.
 
 The market is mostly right about this, and for a reason the scoresheet
 hides: a week of points is hundreds of events and a per-slot edge there
-is a real favourite, while a week of steals, free throws or turnovers is a
-handful and the same edge is close to a coin flip. (An independent
-count-noise estimate from per-game rates ranks the categories the same
-way, turnovers aside — drafters discount those mostly because they are
-the classic punt.) A z-sum valuation is a rotisserie valuation; in
-head-to-head the worth of a z-unit is what it does to the chance of
-winning the category. So the engine uses one yardstick throughout:
+is a real favourite, while a week of steals or free throws is a handful
+and the same edge is close to a coin flip. A z-sum valuation is a
+rotisserie valuation; in head-to-head the worth of a z-unit is what it
+does to the chance of winning the category. So the engine keeps two
+yardsticks apart:
 
 | | used for |
 | --- | --- |
-| **Market weights** `w_c` | bot drafting (punt/needs/risk on top), the UI's Value stars and `#rank`, the candidate window, the base of the user's Fit |
-| **Category noise** `NOISE[c] = 0.75 / w_c` | expected wins (standings, the build suggestions' objective), Fit's swing multipliers |
-| **Uniform** | the deterministic league table only (`records`: who ranks higher in more categories) |
+| **Market weights** `w_c` | bot drafting (punt/needs/risk on top), the UI's Value stars and `#rank`, the candidate window |
+| **Category noise** `NOISE[c]` | expected wins (standings, the build suggestions' objective, the report's week-to-week view and matchup labels), Fit's swing multipliers, and — as `H2H_WEIGHTS = 1 / NOISE`, scaled to average 1 — the base of the user's Fit |
+| **Uniform** | the deterministic league table only (`records`: who ranks higher in more categories — "on paper") |
 
-Bots draft like the room (rank correlation of their picks with ADP: 0.90,
-up from 0.74); Fit starts from the same board and departs from it only
-for what *this* roster still needs; and the simulations no longer reward
-hoarding the noisy categories the room underpays for (under a single
-uniform noise a team 1st in steals and 10th in points projected as a
-winner — and Fit recommended the 3-and-D specialists that build it).
-Market rank is also what the candidate window is measured in: it is
-where the bots will take a player, so "usually drafted later" means later
-in this league, not just in a consensus ADP list.
+**Where the noise comes from.** `scripts/fit_category_noise.py` derives
+`NOISE[c]` — the per-slot z gap at which a team is a one-sigma favourite
+in category c — from game-level variance on bot-drafted rosters: each
+player plays 3.5 games a week, his game-to-game variance is Poisson for
+steals, blocks, threes and turnovers and wider for points, rebounds and
+assists, and the percentages are binomial in the makes plus the swing in
+attempts. Points come out at 0.29, rebounds and assists about 0.3,
+turnovers 0.40, threes 0.43, blocks 0.53, steals and the percentages
+0.85–0.91. An earlier version took the noise from the market weights
+instead (`0.75 / w_c`), which overstated the swing in rebounds, threes,
+FT% and especially turnovers — the market discounts those for being
+punted, not for being random — and squeezed every matchup toward 50%:
+the league's weekly win rates ran 41–58% and first-round options sat
+within 5 points of each other. Fitted, the league runs about 30–68% and
+the options 14 points apart, and a punt costs what it costs.
+
+Bots draft like the room (rank correlation of their picks with ADP:
+0.90); Fit chooses among the same players (the window is measured in
+market rank — where the bots will take a player — so "usually drafted
+later" means later in this league) but prefers, inside it, what wins
+weeks: a Fit-drafted roster projects about 65% of weekly matchups
+against these bots, ahead of a plain scoresheet sum in the same window
+(`tests/test_fit.py`). Refit both calibrations after
+`npm run data:fetch`.
 | `GET /api/runs` / `GET /api/runs/{id}` | saved runs for comparison |
 
 Every mutation returns a full `DraftView` — draft state plus derived

@@ -94,7 +94,9 @@ export interface DraftView {
   fitWindow: { pick: number; maxRank: number; size: number };
   profiles: ProfileView[];
   ranks: Record<Category, number[]>;
-  records: TeamRecord[];
+  records: TeamRecord[]; // on paper: a team beats another by ranking higher in more categories
+  weekPct: number[]; // week to week: share of matchups each team wins in a typical equal-games week, 0–100
+  matchups: MatchupBreakdown | null; // the user's week against each team; null until rosters are complete
   userPunts: Category[];
   puntMode: "auto" | "manual"; // auto: punts follow the roster after every pick
   puntPlan: PuntPlan;
@@ -106,6 +108,65 @@ export interface TeamRecord {
   wins: number;
   losses: number;
   ties: number;
+}
+
+export type Outlook = "win" | "tossup" | "loss"; // likely win / toss-up / likely loss (60% bands)
+export type WeekBand = "favored" | "tossup" | "underdog";
+
+/** A player who decides a category: his per-game line (a rate plus attempts for FG%/FT%). */
+export interface Driver {
+  playerId: string;
+  side: "you" | "them";
+  stat: number;
+  att: number | null;
+}
+
+/** One category of one matchup: two totals, a label, and who drives it. */
+export interface MatchupCategory {
+  cat: Category;
+  pct: number; // chance you win this category in a typical week, 0–100
+  outlook: Outlook;
+  you: number | null; // per-game roster total (a rate for FG%/FT%), availability-adjusted
+  them: number | null;
+  youAtt: number | null; // attempts per game behind a rate
+  themAtt: number | null;
+  paperLead: boolean; // you rank higher in it
+  puntedByYou: boolean;
+  puntedByThem: boolean;
+  drivers: Driver[];
+}
+
+/** Your week against one team. */
+export interface Matchup {
+  teamId: number;
+  winPct: number; // chance you win the week, 0–100
+  band: WeekBand;
+  paper: { won: number; lost: number; tied: number; result: "win" | "loss" | "tie" }; // category count on paper
+  need: number; // toss-ups you need if every likely win holds
+  categories: MatchupCategory[];
+}
+
+/** How a category goes for you across the league. */
+export interface CategorySummary {
+  win: number; // opponents it's a likely win against
+  tossup: number;
+  loss: number;
+  you: number | null; // your per-game total (a rate for FG%/FT%)
+  leagueMedian: number | null; // the median opponent's
+  best: Driver | null; // your best player in it (for TO, your biggest turnover source)
+  punted: boolean;
+}
+
+export interface MatchupBreakdown {
+  teamId: number;
+  winPct: number; // your week-to-week win rate: the average of the 11 chances
+  favored: number; // matchups by band
+  tossup: number;
+  underdog: number;
+  oneCategoryWins: number; // paper wins decided 5–4
+  tossupLeads: Partial<Record<Category, number>>; // paper leads that are really toss-ups, by category
+  categories: Record<Category, CategorySummary>;
+  opponents: Matchup[]; // best chance first
 }
 
 /** Why a player, next to what you already have — plain roster arithmetic, no simulation. */

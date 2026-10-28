@@ -26,13 +26,13 @@ def _profiles(state, pool, values):
     return [build_roster_profile([pool[i] for i in r], values) for r in state.rosters]
 
 
-def test_fit_zeroes_punts_and_is_market_value_on_empty_roster(pool, values):
-    from app.analysis.market import MARKET_WEIGHTS
+def test_fit_zeroes_punts_and_is_h2h_worth_on_empty_roster(pool, values):
+    from app.analysis.standings import H2H_WEIGHTS
     state = create_draft(make_config(user_slot=3))
     w = fit_weights(_profiles(state, pool, values), 3, {"FT%"})
     assert w["FT%"] == 0.0
     live = [c for c in CATEGORIES if c != "FT%"]
-    ratio = {c: w[c] / MARKET_WEIGHTS[c] for c in live}
+    ratio = {c: w[c] / H2H_WEIGHTS[c] for c in live}
     assert max(ratio.values()) - min(ratio.values()) < 1e-9
     assert abs(sum(w[c] for c in live) / len(live) - 1.0) < 1e-9
 

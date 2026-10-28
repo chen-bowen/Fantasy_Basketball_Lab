@@ -56,6 +56,17 @@ export function places(wins: number[]): string[] {
   });
 }
 
+/** "about 6–5": a week-to-week win rate as a record over `games` matchups. */
+export function weekRecord(pct: number, games: number): string {
+  const w = Math.round((pct / 100) * games);
+  return `${w}–${games - w}`;
+}
+
+/** Expected matchup wins out of `games` as a win rate, 0–100 — the unit the report uses. */
+export function winRate(wins: number, games: number): number {
+  return Math.round((wins / games) * 100);
+}
+
 export function recordText(view: DraftView, teamId: number): string {
   const r = view.records[teamId];
   return `${r.wins}–${r.losses}${r.ties ? `–${r.ties}` : ""}`;

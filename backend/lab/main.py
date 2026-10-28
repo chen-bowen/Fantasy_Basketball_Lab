@@ -96,6 +96,7 @@ def _view(draft_id: str, state: DraftState, blob: dict[str, Any]):
         punt_mode=blob.get("puntMode", "auto"),
         lookahead=lookahead,
         market_rank=OVERALL_RANK,
+        pool_stats=POOL_STATS,
     )
 
 
@@ -325,5 +326,5 @@ def get_run(run_id: str):
     state = deserialize_draft(blob["draft"], PLAYER_POOL)
     return draft_view(
         None, state, blob.get("userPunts", []), PLAYER_POOL, PLAYER_VALUES,
-        market_rank=OVERALL_RANK,
+        market_rank=OVERALL_RANK, pool_stats=POOL_STATS,
     )

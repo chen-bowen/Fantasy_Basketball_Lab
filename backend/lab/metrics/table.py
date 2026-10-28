@@ -17,13 +17,14 @@ Two views:
 The noise is not the same in every category. A week of points is hundreds
 of events and a per-slot edge there is a real favourite; a week of steals,
 free throws or turnovers is a handful, and the same edge is close to a
-coin flip. The market's category weights (market.py) are taken as the
-measure of how reliably a z-unit converts into a category win — an
-independent count-noise estimate ranks the categories the same way,
-turnovers aside — so the noise in category c is CATEGORY_NOISE / w_c:
-points about 0.37, steals and free throws about 1.6–1.9. Without this,
-the model rewards hoarding the noisy categories the room underpays for
-and a team that is 1st in steals and 10th in points looks like a winner.
+coin flip. NOISE[c] is the per-slot z gap at which a team is a one-sigma
+(84%) favourite in category c, fitted from game-level variance on typical
+drafted rosters (scripts/fit_category_noise.py): points about 0.3, steals
+and the percentages about 0.9. An earlier version took the noise from the
+market's category weights instead (NOISE = 0.75 / w_c); that overstated
+the swing in rebounds, threes, FT% and especially turnovers — the market
+discounts those for being punted, not for being random — and squeezed
+every matchup toward 50%.
 """
 
 from __future__ import annotations
@@ -31,18 +32,34 @@ from __future__ import annotations
 from math import erf, sqrt
 
 from ..engine.types import CATEGORIES, Category
-from .market import MARKET_WEIGHTS
 from .roster_profile import RosterProfile
 
-# Per-slot z gap at which an average category is a one-sigma (84%)
-# favourite. Drafted teams sit about 0.3 apart in a typical category, which
-# makes that matchup roughly 65/35; the strongest and weakest teams (~1.2
-# apart) about 95/5.
-CATEGORY_NOISE = 0.75
-# Per category: reliable categories (the ones the market pays for) resolve
-# on smaller gaps, noisy ones need bigger ones. The worth of a z-unit
-# (1 / noise) averages 1 / CATEGORY_NOISE, as the market weights average 1.
-NOISE: dict[Category, float] = {c: CATEGORY_NOISE / MARKET_WEIGHTS[c] for c in CATEGORIES}
+# Per-slot z gap worth one sigma in each category — the output of
+# scripts/fit_category_noise.py on the current pool (refit after
+# `npm run data:fetch`). Drafted teams sit about 0.3 apart in a typical
+# category, which makes a points matchup roughly 85/15 and a steals
+# matchup about 64/36.
+FITTED_NOISE: dict[Category, float] = {
+    "PTS": 0.29,
+    "REB": 0.33,
+    "AST": 0.30,
+    "STL": 0.86,
+    "BLK": 0.53,
+    "3PM": 0.43,
+    "FG%": 0.91,
+    "FT%": 0.85,
+    "TO": 0.40,
+}
+NOISE: dict[Category, float] = dict(FITTED_NOISE)
+# The average category, for callers that don't name one.
+CATEGORY_NOISE = sum(NOISE.values()) / len(NOISE)
+# What a z-unit is worth toward winning a week: 1 / noise, scaled to average
+# 1.0 like the market weights. The base of the user's Fit (fit.py) — the
+# categories a per-slot edge converts into wins most reliably count most.
+_inv = {c: 1.0 / NOISE[c] for c in CATEGORIES}
+H2H_WEIGHTS: dict[Category, float] = {
+    c: _inv[c] * len(CATEGORIES) / sum(_inv.values()) for c in CATEGORIES
+}
 
 MAJORITY = len(CATEGORIES) // 2 + 1  # categories needed to win a matchup
 
@@ -75,17 +92,31 @@ def category_win_prob(gap: float, noise: float = CATEGORY_NOISE) -> float:
     return 0.5 * (1 + erf(gap / (noise * sqrt(2))))
 
 
-def matchup_win_prob(a: RosterProfile, b: RosterProfile) -> float:
-    """P(a wins at least MAJORITY of the 9 categories), categories independent."""
-    dist = [1.0]  # dist[k] = P(k category wins so far)
+def category_win_probs(a: RosterProfile, b: RosterProfile) -> dict[Category, float]:
+    """P(a wins each category against b), from the per-slot gap and the
+    category's noise — the same z gap is a stronger lead in PTS than in STL."""
+    return {
+        c: category_win_prob(a.per_slot_z[c] - b.per_slot_z[c], NOISE[c])
+        for c in CATEGORIES
+    }
+
+
+def win_count_distribution(probs: dict[Category, float]) -> list[float]:
+    """dist[k] = P(exactly k category wins), categories independent."""
+    dist = [1.0]
     for c in CATEGORIES:
-        p = category_win_prob(a.per_slot_z[c] - b.per_slot_z[c], NOISE[c])
+        p = probs[c]
         nxt = [0.0] * (len(dist) + 1)
         for k, q in enumerate(dist):
             nxt[k] += q * (1 - p)
             nxt[k + 1] += q * p
         dist = nxt
-    return sum(dist[MAJORITY:])
+    return dist
+
+
+def matchup_win_prob(a: RosterProfile, b: RosterProfile) -> float:
+    """P(a wins at least MAJORITY of the 9 categories), categories independent."""
+    return sum(win_count_distribution(category_win_probs(a, b))[MAJORITY:])
 
 
 def expected_wins(profiles: list[RosterProfile]) -> list[float]:

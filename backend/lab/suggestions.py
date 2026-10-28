@@ -352,6 +352,7 @@ def _tiers(wins: list[float], tie: float = TIE_WINS) -> list[int]:
         if head is None or head - w > tie:
             tier += 1
             head = w
+        head = max(head, w)  # the order is by shrunk wins, so a later option can lead its tier
         tiers.append(tier)
     return tiers
 

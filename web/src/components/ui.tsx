@@ -171,24 +171,32 @@ const Z_WORDS: Record<string, string> = {
   bottom: "hurts a lot",
 };
 
-/** Nine category squares coloured by league rank (1 = best). */
+/**
+ * Nine category squares coloured by league rank (1 = best). A punted
+ * category keeps its rank and colour and gets a dashed punt mark — you
+ * still finish somewhere in it. With `showRanks` the rank is printed too.
+ */
 export function RankStrip({
   ranks,
   punts,
   size = "md",
+  showRanks = false,
 }: {
   ranks: number[];
   punts: ReadonlySet<Category>;
   size?: "sm" | "md";
+  showRanks?: boolean;
 }) {
   const label = CATEGORIES.map((c, j) =>
-    `${c} ${punts.has(c) ? "punted" : ordinal(ranks[j])}`,
+    `${c} ${ordinal(ranks[j])}${punts.has(c) ? " (punted)" : ""}`,
   ).join(", ");
   return (
-    <span className={`strip ${size}`} role="img" aria-label={label}>
+    <span className={`strip ${size}${showRanks ? " ranked" : ""}`} role="img" aria-label={label}>
       {CATEGORIES.map((c, j) => (
         <span key={c} className="strip-cell">
-          <span className={`sq ${punts.has(c) ? "punted" : rankTone(ranks[j])}`} />
+          <span className={`sq ${rankTone(ranks[j])}${punts.has(c) ? " punted" : ""}`}>
+            {showRanks && ranks[j]}
+          </span>
           <span className="strip-label">{c}</span>
         </span>
       ))}
@@ -223,6 +231,7 @@ export function RankLegend() {
       <span><i className="sq good" />4th–6th</span>
       <span><i className="sq low" />7th–9th</span>
       <span><i className="sq bottom" />Bottom 3</span>
+      <span><i className="sq avg punted" />Punted (rank still counts)</span>
     </span>
   );
 }
@@ -299,14 +308,20 @@ export function RankLegendItems() {
       <span><i className="sq good" />4th–6th</span>
       <span><i className="sq low" />7th–9th</span>
       <span><i className="sq bottom" />Bottom 3</span>
-      <span><i className="sq punted" />Punted</span>
+      <span><i className="sq avg punted" />Punted (rank still counts)</span>
     </>
   );
 }
 
-/** One row per team, one rank cell per category, sorted by projected record. */
+/**
+ * One row per team, one rank cell per category, sorted by the paper record.
+ * Next to W–L sits the week-to-week win rate: the share of matchups the
+ * roster wins in a typical equal-games week, which counts how close each
+ * category is rather than who ranks higher.
+ */
 export function Standings({ view, teams }: { view: DraftView; teams: number[] }) {
   const place = places(view.records.map((r) => r.wins));
+  const weekPlace = places(view.weekPct);
   const order = [...teams].sort(
     (a, b) => view.records[b].wins - view.records[a].wins || view.records[a].losses - view.records[b].losses,
   );
@@ -325,7 +340,8 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
             <tr>
               <th scope="col" className="left">#</th>
               <th scope="col" className="left">Team</th>
-              <th scope="col">W–L</th>
+              <th scope="col" title="Beats a team by ranking higher in more categories">On paper</th>
+              <th scope="col" title="Share of matchups won in a typical equal-games week">Week to week</th>
               {CATEGORIES.map((c) => (
                 <th key={c} scope="col" className="cat">{c}</th>
               ))}
@@ -347,16 +363,21 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
                     </span>
                   </th>
                   <td className="ink">{recordText(view, t)}</td>
+                  <td className="week-col">
+                    <span className="ink">{view.weekPct[t]}%</span>
+                    <span className="muted small"> {weekPlace[t].startsWith("T") ? `T-${weekPlace[t].slice(1)}` : ordinal(Number(weekPlace[t]))}</span>
+                  </td>
                   {CATEGORIES.map((c) => {
                     const r = view.ranks[c][t];
                     const punted = punts.has(c);
                     return (
                       <td key={c} className="cat">
                         <span
-                          className={`rank-cell ${punted ? "punted" : rankTone(r)}`}
-                          aria-label={`${c} ${punted ? "punted" : ordinal(r)}`}
+                          className={`rank-cell ${rankTone(r)}${punted ? " punted" : ""}`}
+                          aria-label={`${c} ${ordinal(r)}${punted ? ", punted" : ""}`}
+                          title={punted ? `${c}: punted, still ${ordinal(r)} of ${view.numTeams}` : undefined}
                         >
-                          {punted ? "–" : r}
+                          {r}
                         </span>
                       </td>
                     );
@@ -368,8 +389,11 @@ export function Standings({ view, teams }: { view: DraftView; teams: number[] })
         </table>
       </div>
       <p className="muted small pad-x foot-pad standings-foot">
-        Record: each roster against every other, winning a matchup by ranking better in
-        more of the 9 categories. Numbers are category ranks, 1st to {ordinal(view.numTeams)}.
+        On paper: each roster against every other, beating a team by ranking higher in more of
+        the 9 categories — every lead counts, however small. Week to week: the share of those
+        matchups it wins in a typical week when both sides play the same number of games, which
+        counts how close each category is. Numbers are category ranks, 1st to {ordinal(view.numTeams)};
+        a punted category still has one.
       </p>
     </section>
   );

@@ -19,18 +19,24 @@ Two ideas, both about not wasting a pick.
        w_c  ∝  mean_o  φ(gap_{c,o} / s_c) / s_c
 
    The 1/s_c factor is the worth of a z-unit in a reliable category over
-   a noisy one — with an empty roster every gap is zero and Fit is exactly
-   market value (market.py), the same yardstick as the Value column. The
-   density is the roster's shape: against each opponent the team is
-   either in the fight for a category, has it locked up, or is out of
-   reach, and only the first is worth spending a pick on. So a roster
-   hopeless in steals is not steered into steals specialists, and one
-   that owns blocks is not told to keep buying them. The gap is projected
-   by the share of the roster drafted so far: after one pick nothing is
-   settled and Fit is still market value; by the late rounds it is
-   pointed at the categories still up for grabs. Punted categories are
-   zeroed and the rest renormalized, so Fit stays on Value's scale and
-   "Fit above Value" means this roster makes him worth more than his price.
+   a noisy one (standings.H2H_WEIGHTS): with an empty roster every gap is
+   zero and Fit is that worth alone — what wins weeks, which is not quite
+   what the draft table pays for. The market (market.py, the Value column
+   and the candidate window) discounts turnovers and FT% for being the
+   classic punts; the week-to-week noise says a turnover lead is about as
+   safe as a rebounding lead. The window keeps the difference honest:
+   Fit only ever chooses among the players the draft expects to go here,
+   so "Fit above Value" means the room underprices what he does for a
+   head-to-head record, never that a late-round specialist belongs in
+   round one. The density is the roster's shape: against each opponent
+   the team is either in the fight for a category, has it locked up, or
+   is out of reach, and only the first is worth spending a pick on. So a
+   roster hopeless in steals is not steered into steals specialists, and
+   one that owns blocks is not told to keep buying them. The gap is
+   projected by the share of the roster drafted so far: after one pick
+   nothing is settled; by the late rounds Fit is pointed at the
+   categories still up for grabs. Punted categories are zeroed and the
+   rest renormalized, so Fit stays on Value's scale.
 """
 
 from __future__ import annotations
@@ -41,7 +47,7 @@ from ..engine.types import CATEGORIES, Category
 from .market import MARKET_WEIGHTS
 from .player_values import CategoryWeights, CategoryZ, score_player
 from .roster_profile import RosterProfile
-from .standings import NOISE
+from .standings import H2H_WEIGHTS, NOISE
 
 # --- candidate window -----------------------------------------------------
 
@@ -52,10 +58,12 @@ MIN_CANDIDATES = 10
 
 # --- weights ---------------------------------------------------------------
 
-# The gap is judged against this share of the weekly noise: the question
+# The gap is judged against this multiple of the weekly noise: the question
 # here is whether a category is still in play for the season, not who wins
-# it this week, and Fit should have an opinion by mid-draft.
-SWING_SCALE = 2 / 3
+# it this week, and Fit should have an opinion by mid-draft. (Tuned at 2/3
+# when the noise averaged 1.0 per category; the fitted noise averages about
+# half that, so the multiple doubled to keep Fit's resolution where it was.)
+SWING_SCALE = 1.2
 # Bounds on the swing multiplier (the shape term, on top of market weight):
 # enough to point Fit at the categories in play, not enough to make a
 # one-category specialist the best player.
@@ -129,15 +137,15 @@ def fit_shape(
     punts: set[str],
     roster_size: int = 13,
 ) -> tuple[CategoryWeights, dict[Category, float]]:
-    """(weights, swing): market weight × swing multiplier per category, with
-    punts zeroed and the rest renormalized to the market's scale (mean 1);
+    """(weights, swing): head-to-head worth × swing multiplier per category,
+    with punts zeroed and the rest renormalized to the market's scale (mean 1);
     and the swing multipliers themselves, for explaining the weights."""
     live: list[Category] = [c for c in CATEGORIES if c not in punts]
     w: CategoryWeights = {c: 0.0 for c in CATEGORIES}
     if not live:
         return w, {}
     swing = swing_multipliers(profiles, team_id, live, roster_size)
-    raw = {c: MARKET_WEIGHTS[c] * swing[c] for c in live}
+    raw = {c: H2H_WEIGHTS[c] * swing[c] for c in live}
     scale = len(live) / sum(raw.values())
     for c in live:
         w[c] = raw[c] * scale

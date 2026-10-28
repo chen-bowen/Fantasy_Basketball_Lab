@@ -8,7 +8,7 @@ import {
   type Category,
   type DraftView,
 } from "../api/client";
-import { andList, ordinal } from "../state/teams";
+import { andList, ordinal, weekRecord, winRate } from "../state/teams";
 import { Headshot, PairingNotes, PlayerMeta, RankLegend, RankStrip, Stars, initials, valueTier } from "./common";
 
 
@@ -26,6 +26,21 @@ const GONE_SURE = 0.75;
 const WAIT_SURE = 0.25;
 /** A top tier wider than this isn't a shortlist; the headline says the sims can't separate it. */
 const WIDE_TIE = 6;
+/** A build is scored over one week against each other team. */
+const MATCHUPS = 11;
+/** Expected matchup wins as the share of weekly matchups won — the unit shown everywhere. */
+const rate = (wins: number) => winRate(wins, MATCHUPS);
+const tiePoints = (tieWins: number) => Math.round((tieWins / MATCHUPS) * 100);
+/** "+4 vs the market's pick" — the option against the yardstick, in points of win rate. */
+function vsMarket(o: BuildOption, result: BuildOptions): { text: string; short: string; tone: "up" | "down" | "even" | "market" } | null {
+  const c = result.consensus;
+  if (!c) return null;
+  if (c.playerId === o.playerId && c.punt === o.punt) return { text: "the market's pick", short: "market pick", tone: "market" };
+  const d = rate(o.wins) - rate(c.wins);
+  if (d === 0) return { text: "same as the market's pick", short: "= market pick", tone: "even" };
+  const sign = d > 0 ? "+" : "−";
+  return { text: `${sign}${Math.abs(d)} vs the market's pick`, short: `${sign}${Math.abs(d)} vs market`, tone: d > 0 ? "up" : "down" };
+}
 
 function lastName(p: ApiPlayer): string {
   return p.name.split(" ").slice(1).join(" ") || initials(p.name);
@@ -209,8 +224,8 @@ function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<
     const next = result.options[1];
     return (
       <>
-        <strong>{bestP.name}</strong> is the best tested here: {best.wins.toFixed(1)} wins of 11
-        {next ? `, ${(best.wins - next.wins).toFixed(1)} clear of the next option` : ""}.
+        <strong>{bestP.name}</strong> is the best tested here: the team you'd finish with wins {rate(best.wins)}% of its weeks
+        {next ? `, ${rate(best.wins) - rate(next.wins)} points clear of the next option` : ""}.
         {best.gone != null && best.gone >= GONE_THRESHOLD && result.nextPick != null && !backToBack
           ? ` He won't be there at #${result.nextPick}.`
           : ""}
@@ -228,8 +243,8 @@ function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<
     // Most of the range is a wash: say so, and point at what decides the pick.
     return (
       <>
-        <strong>The simulations can't separate the top {top.length} here</strong> ({lo.toFixed(1)}–
-        {hi.toFixed(1)} wins of 11), so this pick is about{" "}
+        <strong>The simulations can't separate the top {top.length} here</strong> (the team you'd finish with wins {rate(lo)}–
+        {rate(hi)}% of its weeks whichever you take), so this pick is about{" "}
         {backToBack
           ? `the build you want — you pick again right after this one (#${result.nextPick}), so take any two.`
           : goneCount > 0 && result.nextPick != null
@@ -244,7 +259,7 @@ function Headline({ result, playerMap }: { result: BuildOptions; playerMap: Map<
       <strong>
         {top.length} players are a toss-up
       </strong>{" "}
-      by the simulations ({lo.toFixed(1)}–{hi.toFixed(1)} wins of 11): {listed}.{" "}
+      by the simulations (the team you'd finish with wins {rate(lo)}–{rate(hi)}% of its weeks): {listed}.{" "}
       {backToBack
         ? `You pick again right after this one (#${result.nextPick}), so nobody here is gone — take any two.`
         : goneCount > 0 && result.nextPick != null
@@ -279,8 +294,10 @@ function TeamSoFar({
           {result?.nextPick != null && <span className="muted"> · then #{result.nextPick}</span>}
         </strong>
         <span className="muted small">
-          Wins are expected weekly-matchup wins of 11, averaged over simulated drafts against
-          these bots. Within {result?.tieWins ?? 0.3} of each other is a toss-up.
+          The percentage on each option is not the player's: it's the team you'd finish with if you
+          take him now and draft by Fit from here — the share of its weekly matchups it wins against
+          these {MATCHUPS} bots, averaged over simulated drafts. The market's pick is the yardstick;
+          within {tiePoints(result?.tieWins ?? 0.3)} points of each other is a toss-up.
         </span>
       </div>
     );
@@ -352,10 +369,10 @@ function TopCards({
         <strong>{topCount > 1 ? "Toss-up for the top spot" : "The best tested here"}</strong>
         <span className="muted small">
           {topCount > CARDS
-            ? `the best ${CARDS} of ${topCount} within ${result.tieWins} wins of each other`
+            ? `the best ${CARDS} of ${topCount} within ${tiePoints(result.tieWins)} points of each other`
             : topCount > 1
-              ? `within ${result.tieWins} wins of each other`
-              : "by expected wins"}
+              ? `within ${tiePoints(result.tieWins)} points of each other`
+              : "by the finished team's share of weeks won"}
         </span>
       </div>
       <div className="build-cards" role="radiogroup" aria-label="Top options at this pick">
@@ -391,8 +408,11 @@ function TopCards({
                   </span>
                 </span>
                 <span className="build-card-wins">
-                  <strong>{o.wins.toFixed(1)}</strong>
-                  <span className="muted small">wins of 11</span>
+                  <strong>{rate(o.wins)}%</strong>
+                  <span className="stack-0">
+                    <span className="muted small">of weeks, finished team</span>
+                    {vsMarket(o, result) && <span className={`small vs ${vsMarket(o, result)!.tone}`}>{vsMarket(o, result)!.text}</span>}
+                  </span>
                 </span>
                 <span className="meter dark"><span style={{ width: bar(o.wins) }} /></span>
                 <span className="build-card-chips">
@@ -450,7 +470,7 @@ function BuildFilters({
           b.key,
           buildLabel(b.punt, b.punt === current, current),
           es.length,
-          top != null ? `Best under this build: ${top.toFixed(1)} wins` : undefined,
+          top != null ? `Best under this build: wins ${rate(top)}% of matchups` : undefined,
         );
       })}
     </div>
@@ -518,15 +538,13 @@ function OptionList({
               <span className="build-plan">
                 <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
                 {isAlt && (
-                  <span className="muted small">best: {buildLabel(best.punt, best.keepsPunt, current)} {best.wins.toFixed(1)}</span>
+                  <span className="muted small">best: {buildLabel(best.punt, best.keepsPunt, current)} {rate(best.wins)}%</span>
                 )}
               </span>
               <span className="build-wins">
                 <span className="meter dark"><span style={{ width: bar(o.wins) }} /></span>
-                <strong>{o.wins.toFixed(1)}</strong>
-                <span className="muted small">
-                  {o.winsRange ? `${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)}` : ""}
-                </span>
+                <strong>{rate(o.wins)}%</strong>
+                <span className={`small vs ${vsMarket(o, result)?.tone ?? ""}`} title={vsMarket(o, result)?.text}>{vsMarket(o, result)?.short ?? ""}</span>
               </span>
               <span className="build-status">{goneLabel(o.gone, nextPick, backToBack)}</span>
             </div>
@@ -571,12 +589,19 @@ function OptionDetail({
         <span className={o.punt ? "chip dark" : "chip"}>{buildLabel(o.punt, o.keepsPunt, current)}</span>
       </div>
       <div className="wins-row">
-        <strong className="title-lg">{o.wins.toFixed(1)}</strong>
-        <span className="muted small">
-          wins of 11{o.winsRange ? ` · ${o.winsRange[0].toFixed(1)}–${o.winsRange[1].toFixed(1)} across ${o.runs} test drafts` : ""}
-          {isAlt
-            ? ` · his best build is ${buildLabel(listed!.punt, listed!.keepsPunt, current).toLowerCase()} (${listed!.wins.toFixed(1)})`
-            : ` · ${ordinal(rank)} of ${result.tested}${o.tier === 1 ? ", in the top tier" : ""}`}
+        <strong className="title-lg">{rate(o.wins)}%</strong>
+        <span className="stack-0">
+          <span className="small ink">
+            of weeks won by the team you'd finish with
+            {vsMarket(o, result) ? <> · <span className={`vs ${vsMarket(o, result)!.tone}`}>{vsMarket(o, result)!.text}</span></> : null}
+          </span>
+          <span className="muted small">
+            About {weekRecord(rate(o.wins), MATCHUPS)} in a round against the league
+            {o.winsRange ? ` · ${rate(o.winsRange[0])}–${rate(o.winsRange[1])}% across ${o.runs} test drafts` : ""}
+            {isAlt
+              ? ` · his best build is ${buildLabel(listed!.punt, listed!.keepsPunt, current).toLowerCase()} (${rate(listed!.wins)}%)`
+              : ` · ${ordinal(rank)} of ${result.tested}${o.tier === 1 ? ", in the top tier" : ""}`}
+          </span>
         </span>
       </div>
       <PairingNotes why={o.why} anchor={firstPlayer?.name ?? null} punt={o.punt} />

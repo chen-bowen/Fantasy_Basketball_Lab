@@ -177,8 +177,16 @@ for (let i = 0; i < 16; i++) {
 await sleep(1200);
 log("remaining 10 user picks made", drafted >= 10);
 log("draft completes", await bodyHas("Draft complete"));
-log("record shown", await evalJs(`!!document.querySelector('.record')`));
-log("league table shown", await bodyHas("League table"));
+log("paper record shown", await evalJs(`!!document.querySelector('.recap-num.record')`));
+log("week-to-week win rate shown next to it", await evalJs(`/^\\d+%$/.test(document.querySelectorAll('.recap-num')[1]?.innerText ?? '')`));
+log("standings carry both columns", await bodyHas("Category standings") && await bodyHas("Week to week"));
+log("punted category keeps its rank", await evalJs(`[...document.querySelectorAll('.standings-table .rank-cell.punted')].every(c => /^\\d+$/.test(c.innerText))`));
+log("matchup for every opponent", (await count('.matchup-row')) === 11);
+log("matchup detail explains with players", await evalJs(`document.querySelectorAll('.tape .tape-row').length === 9 && document.querySelectorAll('.tape .driver').length >= 9`));
+const firstDetail = await evalJs(`document.querySelector('.matchup-detail h3')?.innerText`);
+await evalJs(`document.querySelectorAll('.matchup-row')[3]?.click()`);
+await sleep(200);
+log("picking an opponent switches the detail", firstDetail !== (await evalJs(`document.querySelector('.matchup-detail h3')?.innerText`)));
 log("pick history shown", (await count(".picks-card .roster li")) === 13);
 
 // ---- 8. Rewind ----

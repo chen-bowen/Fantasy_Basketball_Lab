@@ -21,11 +21,11 @@ is unchanged to two decimals (0.89) while the same user averages 9 of 11.
 
 Market weights drive where bots take players and the "value" rank the UI
 shows, so both look like a real draft. They are also the base of the
-user's Fit (fit.py) and, as 1 / weight, the per-category noise of the
-standings' expected wins (standings.py): the market's ordering of the
-categories is mostly a statement about how reliably an edge in each one
-turns into a category win, which a uniform scoresheet weighting hides.
-The deterministic league table (records) stays uniform — a category is a
+user's Fit (fit.py). The per-category noise of the standings' expected
+wins (standings.NOISE) used to be derived from them too; it is now fitted
+from game-level variance, which ranks the categories much the same way
+but without the market's punt discount on turnovers and FT%. The
+deterministic league table (records) stays uniform — a category is a
 category on the scoresheet.
 
 Refit when players.json is regenerated (the ADP column is the target).
